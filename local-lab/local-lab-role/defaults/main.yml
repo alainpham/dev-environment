@@ -1,0 +1,38 @@
+---
+docker:
+  registries:
+    - registry.hpel.lan
+  dns: 
+    - 192.168.8.254
+    - 8.8.8.8
+
+
+ips:
+  rentman: 172.18.0.20 
+  bqueue: 172.18.0.21
+  plex: 172.18.0.22
+  teddycast: 172.18.0.23
+  
+
+  portainer: 172.18.0.40
+  nexus: 172.18.0.41
+  registry: 172.18.0.42
+  regui: 172.18.0.45
+  traefik: 172.18.0.43
+  fileserver: 172.18.0.47
+
+  zookeeper: 172.18.0.61
+  kafka: 172.18.0.62
+  kafdrop: 172.18.0.63
+  kafkaexporter: 172.18.0.64
+
+  prometheus: 172.18.0.70
+  grafana: 172.18.0.71
+  loki: 172.18.0.72
+
+  amqbroker: 172.18.0.115
+  
+
+# states can absent present stopped started
+appstate: started
+recreate: false
