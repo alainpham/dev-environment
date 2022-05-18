@@ -16,24 +16,25 @@
   file:
     path: /home/{{ ansible_user }}/apps/{{appname}}/data/
     state: directory
-    owner: "65534"
-    group: "65534"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
 
 - name: Copy config {{appname}} config
   copy:
-    src: ./../{{appname}}/config/
+    src: templates/{{appname}}/config/
     dest: /home/{{ ansible_user }}/apps/{{appname}}/config/
     mode: '0644'
 
 - name: "Manage {{appname}} container state - {{appstate}} - {{ips[appname]}}"
   docker_container:
     name: "{{appname}}"
-    image: prom/prometheus
+    image: prom/prometheus:v2.35.0
     state: "{{appstate}}"
     recreate: "{{recreate}}"
     restart_policy: unless-stopped
     container_default_behavior: no_defaults
     detach: true
+    user: "1000:1000"
     env:
     ports:
     labels: |
@@ -43,7 +44,7 @@
       }
     volumes:
       - /home/{{ansible_user}}/apps/prometheus/data:/prometheus:rw
-      - /home/apham/apps/prometheus/config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - /home/{{ansible_user}}/apps/prometheus/config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
     networks_cli_compatible: yes
     network_mode: primenet
     networks:

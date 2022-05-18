@@ -155,7 +155,7 @@
         <Automation>
           <AutomationList automation-id="gain" id="245591" interpolation-style="Linear" state="Off"/>
         </Automation>
-        <Controllable name="gaincontrol" id="58" flags="GainLike" value="0.097090035676956177"/>
+        <Controllable name="gaincontrol" id="58" flags="GainLike" value="0.055985309183597565"/>
       </Processor>
       <Processor id="87" name="Master" active="1" user-latency="0" use-user-latency="0" own-input="1" own-output="0" output="Master" type="main-outs" role="Main">
         <PannerShell bypassed="0" user-panner="http://ardour.org/plugin/panner_balance" linked-to-route="1"/>
@@ -188,8 +188,8 @@
           <Connection other="to-obs-desktop:front-right"/>
         </Port>
       </IO>
-      <MuteMaster mute-point="PostFader,Listen,Main" muted="0"/>
-      <Controllable name="mute" id="2352" flags="Toggle,RealTime" value="0"/>
+      <MuteMaster mute-point="PostFader,Listen,Main" muted="1"/>
+      <Controllable name="mute" id="2352" flags="Toggle,RealTime" value="1"/>
       <Controllable name="phase" id="2354" flags="Toggle" value="0" phase-invert="00"/>
       <Automation>
         <AutomationList automation-id="solo" id="245631" interpolation-style="Discrete" state="Off"/>
@@ -299,7 +299,7 @@
           <Port symbol="thr" value="-45"/>
           <Port symbol="mak" value="0"/>
           <Port symbol="sidech" value="1"/>
-          <Port symbol="enable" value="1"/>
+          <Port symbol="enable" value="0"/>
         </lv2>
         <Controllable name="Attack" id="8864" flags="" value="20" parameter="0" symbol="att"/>
         <Controllable name="Release" id="8866" flags="" value="700" parameter="1" symbol="rel"/>
@@ -308,7 +308,7 @@
         <Controllable name="Threshold" id="8872" flags="" value="-45" parameter="4" symbol="thr"/>
         <Controllable name="Makeup" id="8874" flags="" value="0" parameter="5" symbol="mak"/>
         <Controllable name="Sidechain" id="8876" flags="Toggle" value="1" parameter="9" symbol="sidech"/>
-        <Controllable name="Enable" id="8878" flags="Toggle" value="1" parameter="10" symbol="enable"/>
+        <Controllable name="Enable" id="8878" flags="Toggle" value="0" parameter="10" symbol="enable"/>
       </Processor>
       <Processor id="2372" name="Amp" active="1" user-latency="0" use-user-latency="0" type="amp">
         <Automation>
@@ -491,12 +491,8 @@
         </Port>
       </IO>
       <IO name="dock-master" id="13956" direction="Output" default-type="audio">
-        <Port type="audio" name="dock-master/audio_out 1">
-          <Connection other="speaker:playback_1"/>
-        </Port>
-        <Port type="audio" name="dock-master/audio_out 2">
-          <Connection other="speaker:playback_2"/>
-        </Port>
+        <Port type="audio" name="dock-master/audio_out 1"/>
+        <Port type="audio" name="dock-master/audio_out 2"/>
       </IO>
       <MuteMaster mute-point="PostFader,Listen,Main" muted="0"/>
       <Controllable name="mute" id="13937" flags="Toggle,RealTime" value="0"/>
@@ -534,7 +530,7 @@
         <Automation>
           <AutomationList automation-id="gain" id="245785" interpolation-style="Linear" state="Off"/>
         </Automation>
-        <Controllable name="gaincontrol" id="13931" flags="GainLike" value="0.084326930344104767"/>
+        <Controllable name="gaincontrol" id="13931" flags="GainLike" value="0.98427402973175049"/>
       </Processor>
       <Processor id="13960" name="dock-master" active="1" user-latency="0" use-user-latency="0" own-input="1" own-output="0" output="dock-master" type="main-outs" role="Main">
         <PannerShell bypassed="0" user-panner="http://ardour.org/plugin/panner_2in2out" linked-to-route="1"/>

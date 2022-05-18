@@ -98,7 +98,7 @@ Go to system settings
 
 
 ```
-ncdu git ansible docker.io docker-compose apparmor tmux vim openjdk-11-jdk prometheus-node-exporter htop curl lshw rsync mediainfo ffmpeg python3-mutagen iperf dnsmasq qemu-system qemu-utils virtinst libvirt-clients libvirt-daemon-system bridge-utils libosinfo-bin jackd2 qjackctl pulseaudio-module-jack lsp-plugins-lv2 calf-plugins ardour v4l-utils flatpak snapd virt-manager mediainfo-gui v4l2loopback-utils easytag gimp avldrums.lv2 libreoffice-plasma libreoffice openssh-server linux-tools-common linux-tools-generic
+ncdu git ansible docker.io docker-compose apparmor tmux vim openjdk-11-jdk prometheus-node-exporter htop curl lshw rsync mediainfo ffmpeg python3-mutagen iperf dnsmasq qemu-system qemu-utils virtinst libvirt-clients libvirt-daemon-system bridge-utils libosinfo-bin jackd2 qjackctl pulseaudio-module-jack lsp-plugins-lv2 calf-plugins ardour v4l-utils flatpak snapd virt-manager mediainfo-gui v4l2loopback-utils easytag gimp avldrums.lv2 libreoffice-plasma libreoffice openssh-server linux-tools-common linux-tools-generic freeplane
 ```
 
 ### Downloaded packages
@@ -131,14 +131,14 @@ Create file with following content
 ```
 ACTION=="add", SUBSYSTEM=="sound", DEVPATH=="/devices/pci0000:00/0000:00:14.0/usb3/3-6/3-6.2/3-6.2.3/3-6.2.3:1.0/sound/card?", ATTR{id}="dock"
 
-ACTION=="add", SUBSYSTEM=="sound", DEVPATH=="/devices/pci0000:00/0000:00:14.0/usb3/3-6/3-6.2/3-6.2.4/3-6.2.4:1.0/sound/card?", ATTR{id}="s2i2"
+ACTION=="add", SUBSYSTEM=="sound", DEVPATH=="/devices/pci0000:00/0000:00:14.0/usb3/3-1/3-1:1.0/sound/card?", ATTR{id}="s2i2"
 ```
 
 Copy to rules folders and reload reboot
 
 ```
 sudo cp 70-my-sound-cards.rules /etc/udev/rules.d/
-sudo udevadm control --reload-rules && sudo udevadm trigger*
+sudo udevadm control --reload-rules && sudo udevadm trigger
 sudo reboot now
 ```
 
@@ -253,3 +253,4 @@ Think about customizing settings.xml if needed
 sudo snap install obs-studio
 sudo snap install dbeaver-ce postman sweethome3d-homedesign 
 ```
+

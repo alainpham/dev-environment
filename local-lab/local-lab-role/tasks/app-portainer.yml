@@ -7,7 +7,7 @@
   file:
     path: /home/{{ ansible_user }}/apps/{{appname}}/data
     state: directory
-    owner: "1000"
+    owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: '0755'
 
@@ -15,7 +15,7 @@
 - name: "Manage {{appname}} container state - {{appstate}} - {{ips[appname]}}"
   docker_container:
     name: "{{appname}}"
-    image: portainer/portainer-ce:2.11.1
+    image: portainer/portainer-ce:2.13.1
     state: "{{appstate}}"
     recreate: "{{recreate}}"
     restart_policy: unless-stopped

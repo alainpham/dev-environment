@@ -1,7 +1,7 @@
 # my global config
 global:
-  scrape_interval: 12s 
-  evaluation_interval: 12s 
+  scrape_interval: 8s 
+  evaluation_interval: 8s 
 scrape_configs:
   # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
 
@@ -14,13 +14,7 @@ scrape_configs:
         replacement: $1
     static_configs:
       - targets: 
-          - "asus:9100"
-          - "ampi:9100"
-          - "hpel:9100"
           - "work:9100"
-          - "hppa:9100"
-          - "leol:9100"
-          - "bbee:9100"
 
   - job_name: 'traefik'
     relabel_configs:
@@ -31,12 +25,7 @@ scrape_configs:
         replacement: $1
     static_configs:
       - targets: 
-          - "asus:8080"
-          - "hpel:8080"
           - "work:8080"
-          - "hppa:8080"
-          - "leol:8080"
-          - "bbee:8080"
 
   - job_name: 'amqbroker'
     relabel_configs:
@@ -63,7 +52,7 @@ scrape_configs:
         replacement: amq
     static_configs:
       - targets: 
-          - "amqbrokercons.hpel.lan"
+          - "amqbrokercons.work.lan"
 
 
   - job_name: 'camelquarkus'
@@ -89,12 +78,6 @@ scrape_configs:
     static_configs:
       - targets: 
           - "bqueue.work.lan"
-          - "bqueue.hpel.lan"
-          - "bqueue.hppa.lan"
-          - "bqueue.leol.lan"
-
-          - "rentman.bbee.lan"
-          - "teddycast.bbee.lan"
 
 
   - job_name: 'kafka'
