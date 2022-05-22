@@ -18,6 +18,10 @@
     - [VSCode](#vscode)
     - [Maven](#maven)
   - [Install snaps](#install-snaps)
+  - [Setup Kubernetes on vms](#setup-kubernetes-on-vms)
+    - [Current env](#current-env)
+    - [Delete vms example](#delete-vms-example)
+    - [Simple approach with microk8s](#simple-approach-with-microk8s)
 
 # Workstation Installs
 
@@ -98,7 +102,7 @@ Go to system settings
 
 
 ```
-ncdu git ansible docker.io docker-compose apparmor tmux vim openjdk-11-jdk prometheus-node-exporter htop curl lshw rsync mediainfo ffmpeg python3-mutagen iperf dnsmasq qemu-system qemu-utils virtinst libvirt-clients libvirt-daemon-system bridge-utils libosinfo-bin jackd2 qjackctl pulseaudio-module-jack lsp-plugins-lv2 calf-plugins ardour v4l-utils flatpak snapd virt-manager mediainfo-gui v4l2loopback-utils easytag gimp avldrums.lv2 libreoffice-plasma libreoffice openssh-server linux-tools-common linux-tools-generic freeplane
+ncdu git ansible docker.io docker-compose apparmor tmux vim openjdk-11-jdk openjdk-18-jdk prometheus-node-exporter htop curl lshw rsync mediainfo ffmpeg python3-mutagen iperf dnsmasq qemu-system qemu-utils virtinst libvirt-clients libvirt-daemon-system libguestfs-tools bridge-utils libosinfo-bin jackd2 qjackctl pulseaudio-module-jack lsp-plugins-lv2 calf-plugins ardour v4l-utils flatpak snapd virt-manager mediainfo-gui v4l2loopback-utils easytag gimp avldrums.lv2 libreoffice-plasma libreoffice openssh-server linux-tools-common linux-tools-generic freeplane
 ```
 
 ### Downloaded packages
@@ -190,7 +194,7 @@ _EOF_'
 
 sudo bash -c 'cat > /etc/NetworkManager/dnsmasq.d/dev.conf << _EOF_
 #/etc/NetworkManager/dnsmasq.d/dev.conf
-address=/${HOSTNAME}.lan/127.0.0.1
+address=/${HOSTNAME}.lan/192.168.122.1
 _EOF_'
 
 ```
@@ -254,3 +258,54 @@ sudo snap install obs-studio
 sudo snap install dbeaver-ce postman sweethome3d-homedesign 
 ```
 
+## Setup Kubernetes on vms
+
+### Current env
+
+```
+
+ssh-keygen -f ~/.ssh/vm
+
+```
+
+```
+
+vmcreate master 4096 4 debian-10-genericcloud-amd64 10 40G debian10
+vmcreate node01 4096 4 debian-10-genericcloud-amd64 11 40G debian10
+vmcreate node02 4096 4 debian-10-genericcloud-amd64 12 40G debian10
+vmcreate node03 4096 4 debian-10-genericcloud-amd64 13 40G debian10
+
+
+vmcreate master 4096 4 debian-11-genericcloud-amd64 10 40G debian11
+vmcreate node01 4096 4 debian-11-genericcloud-amd64 11 40G debian11
+vmcreate node02 4096 4 debian-11-genericcloud-amd64 12 40G debian11
+vmcreate node03 4096 4 debian-11-genericcloud-amd64 13 40G debian11
+
+
+vmcreate master 4096 4 ubuntu-22.04-server-cloudimg-amd64 10 40G ubuntu22.04
+vmcreate node01 4096 4 ubuntu-22.04-server-cloudimg-amd64 11 40G ubuntu22.04
+vmcreate node02 4096 4 ubuntu-22.04-server-cloudimg-amd64 12 40G ubuntu22.04
+vmcreate node03 4096 4 ubuntu-22.04-server-cloudimg-amd64 13 40G ubuntu22.04
+
+
+```
+
+
+### Delete vms example
+
+```
+dvm master
+dvm node01
+dvm node02
+dvm node03
+
+```
+
+### Simple approach with microk8s
+
+```
+
+sudo snap install microk8s --channel=1.24/stable --classic
+sudo usermod -a -G microk8s apham
+
+```

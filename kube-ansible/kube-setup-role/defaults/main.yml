@@ -1,0 +1,7 @@
+---
+initial_app_namespaces:
+  - amq-messaging
+  - keycloak
+  - kafka
+
+import_pull_secrets: false

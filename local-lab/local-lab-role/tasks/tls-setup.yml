@@ -31,6 +31,7 @@
     -keysize 4096 \
     -storetype PKCS12 \
     -dname "cn=*.{{ansible_hostname}}.lan" \
+    -ext "SAN=dns:{{ansible_hostname}}.lan,dns:*.{{ansible_hostname}}.lan" \
     -validity 365000 \
     -keystore /home/{{ ansible_user }}/apps/tls/{{ansible_hostname}}.p12
 
