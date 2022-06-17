@@ -30,7 +30,7 @@
   docker_container:
     name: "artemis"
     # image: quay.io/artemiscloud/activemq-artemis-broker-kubernetes:1.0.5
-    image: artemis:1.0.5
+    image: alainpham/artemis:1.0.5
     state: "{{appstate}}"
     recreate: "{{recreate}}"
     restart_policy: unless-stopped
