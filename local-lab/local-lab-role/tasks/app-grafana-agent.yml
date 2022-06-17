@@ -1,6 +1,6 @@
 ---
 - set_fact:
-    appname: grafana
+    appname: grafana-agent
 
 - name: Create {{appname}} folders
   become: true
@@ -13,14 +13,23 @@
 
 - name: Copy config {{appname}} config
   copy:
-    src: "templates/{{appname}}/config/"
+    src: ./../{{appname}}/config/
     dest: /home/{{ ansible_user }}/apps/{{appname}}/config/
     mode: '0644'
+
+- name: Create {{appname}} folders
+  become: true
+  file:
+    path: /home/{{ ansible_user }}/apps/{{appname}}/data
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0755'
 
 - name: "Manage {{appname}} container state - {{appstate}} - {{ips[appname]}}"
   docker_container:
     name: "{{appname}}"
-    image: grafana/grafana:9.0.0
+    image: grafana/agent:v0.24.2
     state: "{{appstate}}"
     recreate: "{{recreate}}"
     restart_policy: unless-stopped
@@ -31,12 +40,11 @@
     ports:
     labels: |
       {
-        "traefik.http.routers.{{appname}}.entrypoints": "http",
-        "traefik.http.routers.{{appname}}.tls": "false"
+        "traefik.enable": "false"
       }
     volumes:
-      - /home/{{ansible_user}}/apps/grafana/config/grafana-datasources.yml:/etc/grafana/provisioning/datasources/grafana-datasources.yml:ro
-      - /home/{{ansible_user}}/apps/grafana/config/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - /home/{{ ansible_user }}/apps/{{appname}}/config/agent.yml:/etc/agent/agent.yaml:ro
+      - /home/{{ ansible_user }}/apps/{{appname}}/data:/etc/agent/data:rw
     networks_cli_compatible: yes
     network_mode: primenet
     networks:

@@ -20,22 +20,30 @@
     restart_policy: unless-stopped
     container_default_behavior: no_defaults
     detach: true
+    user: "1000:1000"
+    # command: postgres -c ssl=on -c ssl_cert_file=/var/lib/postgresql/tls/work.pem -c ssl_key_file=/var/lib/postgresql/tls/work.key
     env:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: password
       POSTGRES_DB: db
     labels: |
       {
-        "traefik.tcp.services.{{appname}}.loadbalancer.server.port": "61616",
-        "traefik.tcp.routers.{{appname}}.entrypoints": "https",
-        "traefik.tcp.routers.{{appname}}.tls": "true",
-        "traefik.tcp.routers.{{appname}}.rule": "HostSNI(`{{appname}}.{{ansible_hostname}}.lan`)",
-        "traefik.tcp.routers.{{appname}}.service": "{{appname}}",
+        "traefik.enable": "false",
+
       }
     volumes:
-      - "/home/{{ansible_user}}/apps/{{appname}}/data:/amqdata:rw"
+      - "/home/{{ansible_user}}/apps/{{appname}}/data:/var/lib/postgresql/data:rw"
+      # - "/home/{{ansible_user}}/apps/tls/:/var/lib/postgresql/tls:ro"
     networks_cli_compatible: yes
     network_mode: primenet
     networks:
       - name: primenet
         ipv4_address: "{{ips[appname]}}"
+
+- name: add to /etc/hosts
+  become: true
+  lineinfile:
+    dest: /etc/hosts
+    regexp: '^.*{{ips[appname]}}\s.*$'
+    line: "{{ips[appname]}} {{appname}}"
+    state: present

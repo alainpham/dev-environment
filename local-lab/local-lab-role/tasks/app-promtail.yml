@@ -1,6 +1,21 @@
 ---
 - set_fact:
-    appname: regui
+    appname: promtail
+
+- name: Create {{appname}} folders
+  become: true
+  file:
+    path: /home/{{ ansible_user }}/apps/{{appname}}/config/
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0755'
+
+- name: Copy config {{appname}} config
+  copy:
+    src: templates/{{appname}}/config/
+    dest: /home/{{ ansible_user }}/apps/{{appname}}/config/
+    mode: '0644'
 
 - name: Create {{appname}} folders
   become: true
@@ -11,27 +26,28 @@
     group: "{{ ansible_user }}"
     mode: '0755'
 
-
 - name: "Manage {{appname}} container state - {{appstate}} - {{ips[appname]}}"
   docker_container:
     name: "{{appname}}"
-    image: joxit/docker-registry-ui:latest
+    image: grafana/promtail:2.5.0
     state: "{{appstate}}"
     recreate: "{{recreate}}"
     restart_policy: unless-stopped
     container_default_behavior: no_defaults
     detach: true
     user: "1000:1000"
+    command: 
+      - -config.file=/mnt/config/config.yml
     env:
-      NGINX_PROXY_PASS_URL: "http://registry:5000"
-      DELETE_IMAGES: "true"
-      SINGLE_REGISTRY: "true"
+    ports:
     labels: |
       {
         "traefik.http.routers.{{appname}}.entrypoints": "http",
         "traefik.http.routers.{{appname}}.tls": "false"
       }
     volumes:
+      - /home/{{ ansible_user }}/apps/{{appname}}/config/config.yml:/mnt/config/config.yml:ro
+      - /home/{{ ansible_user }}/apps/{{appname}}/data/:/var/log/:rw
     networks_cli_compatible: yes
     network_mode: primenet
     networks:

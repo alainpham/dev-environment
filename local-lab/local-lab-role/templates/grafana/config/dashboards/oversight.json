@@ -3,7 +3,10 @@
     "list": [
       {
         "builtIn": 1,
-        "datasource": "-- Grafana --",
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
         "enable": true,
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
@@ -22,12 +25,133 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 13,
-  "iteration": 1644364583723,
+  "id": 14,
+  "iteration": 1655423325324,
   "links": [],
   "liveNow": false,
   "panels": [
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "green",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "MBs"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "up"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 33,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "9.0.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "rate(node_network_receive_bytes_total{device=\"enp59s0\"}[$__rate_interval]) / (1024*1024)",
+          "legendFormat": "down",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "rate(node_network_transmit_bytes_total{device=\"enp59s0\"}[$__rate_interval]) / (1024*1024)",
+          "hide": false,
+          "legendFormat": "up",
+          "range": true,
+          "refId": "B"
+        }
+      ],
+      "title": "Network usage",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -53,9 +177,9 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 3,
-        "w": 24,
-        "x": 0,
+        "h": 8,
+        "w": 12,
+        "x": 12,
         "y": 0
       },
       "id": 2,
@@ -74,7 +198,7 @@
         "text": {},
         "textMode": "name"
       },
-      "pluginVersion": "8.3.4",
+      "pluginVersion": "9.0.0",
       "targets": [
         {
           "datasource": {
@@ -94,6 +218,10 @@
       "type": "stat"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -121,7 +249,7 @@
         "h": 7,
         "w": 3,
         "x": 0,
-        "y": 3
+        "y": 8
       },
       "id": 27,
       "options": {
@@ -139,7 +267,7 @@
         "text": {},
         "textMode": "name"
       },
-      "pluginVersion": "8.3.4",
+      "pluginVersion": "9.0.0",
       "targets": [
         {
           "datasource": {
@@ -147,7 +275,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": false,
-          "expr": "sum by (kubernetes_pod_name) (up{job=\"amqbroker\"})",
+          "expr": "sum by (kubernetes_pod_name) (up{job=\"activemq-artemis\"})",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -159,6 +287,10 @@
       "type": "stat"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -187,7 +319,7 @@
         "h": 7,
         "w": 3,
         "x": 3,
-        "y": 3
+        "y": 8
       },
       "id": 31,
       "options": {
@@ -205,7 +337,7 @@
         "text": {},
         "textMode": "name"
       },
-      "pluginVersion": "8.3.4",
+      "pluginVersion": "9.0.0",
       "targets": [
         {
           "datasource": {
@@ -225,6 +357,10 @@
       "type": "stat"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -253,7 +389,7 @@
         "h": 7,
         "w": 3,
         "x": 6,
-        "y": 3
+        "y": 8
       },
       "id": 30,
       "options": {
@@ -271,7 +407,7 @@
         "text": {},
         "textMode": "name"
       },
-      "pluginVersion": "8.3.4",
+      "pluginVersion": "9.0.0",
       "targets": [
         {
           "datasource": {
@@ -291,6 +427,10 @@
       "type": "stat"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -319,7 +459,7 @@
         "h": 7,
         "w": 15,
         "x": 9,
-        "y": 3
+        "y": 8
       },
       "id": 29,
       "options": {
@@ -337,7 +477,7 @@
         "text": {},
         "textMode": "name"
       },
-      "pluginVersion": "8.3.4",
+      "pluginVersion": "9.0.0",
       "targets": [
         {
           "datasource": {
@@ -358,20 +498,24 @@
     }
   ],
   "refresh": "5s",
-  "schemaVersion": 34,
+  "schemaVersion": 36,
   "style": "dark",
   "tags": [],
   "templating": {
     "list": [
       {
         "current": {
-          "selected": false,
+          "selected": true,
           "text": [
             "All"
           ],
           "value": [
             "$__all"
           ]
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
         },
         "definition": "label_values(up,job)",
         "hide": 0,
@@ -391,13 +535,17 @@
       },
       {
         "current": {
-          "selected": false,
+          "selected": true,
           "text": [
             "All"
           ],
           "value": [
             "$__all"
           ]
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
         },
         "definition": "label_values(up{job=~\"$job\"},node_name)",
         "hide": 0,
@@ -423,8 +571,8 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Oversight",
-  "uid": "xsjsoA-nk",
-  "version": 18,
+  "title": "cons. V2",
+  "uid": "-n57rQC7k",
+  "version": 3,
   "weekStart": ""
 }

@@ -47,7 +47,7 @@
 - name: "Manage zookeeper container state - {{appstate}} - {{ips.zookeeper}}"
   docker_container:
     name: "zookeeper"
-    image: quay.io/strimzi/kafka:0.28.0-kafka-3.1.0
+    image: quay.io/strimzi/kafka:0.29.0-kafka-3.1.0
     state: "{{appstate}}"
     recreate: "{{recreate}}"
     restart_policy: unless-stopped
@@ -78,7 +78,7 @@
 - name: "Manage {{appname}} container state - {{appstate}} - {{ips[appname]}}"
   docker_container:
     name: "{{appname}}"
-    image: quay.io/strimzi/kafka:0.28.0-kafka-3.1.0
+    image: quay.io/strimzi/kafka:0.29.0-kafka-3.1.0
     state: "{{appstate}}"
     recreate: "{{recreate}}"
     restart_policy: unless-stopped
@@ -90,8 +90,8 @@
       - --override listeners=PLAINTEXT://0.0.0.0:9092,SSL://0.0.0.0:9093 
       - --override advertised.listeners=PLAINTEXT://{{ips[appname]}}:9092,SSL://kafka.{{ansible_hostname}}.lan:443 
       - --override ssl.keystore.location=/certs/{{ansible_hostname}}.p12 
-      - --override ssl.keystore.password=password 
-      - --override ssl.key.password=password 
+      - --override ssl.keystore.password=password
+      - --override ssl.key.password=password
       - --override zookeeper.connect=zookeeper:2181
       - --override log.dirs=/kafka-data
     env:
@@ -127,7 +127,7 @@
 - name: "Manage kafdrop container state - {{appstate}} - {{ips[appname]}}"
   docker_container:
     name: "kafdrop"
-    image: obsidiandynamics/kafdrop:3.28.0
+    image: obsidiandynamics/kafdrop:3.30.0
     state: "{{appstate}}"
     recreate: "{{recreate}}"
     restart_policy: unless-stopped
@@ -155,14 +155,14 @@
 - name: "Manage kafkaexporter container state - {{appstate}} - {{ips.kafkaexporter}}"
   docker_container:
     name: "kafkaexporter"
-    image: quay.io/strimzi/kafka:0.28.0-kafka-3.1.0
+    image: quay.io/strimzi/kafka:0.29.0-kafka-3.1.0
     state: "{{appstate}}"
     recreate: "{{recreate}}"
     restart_policy: unless-stopped
     container_default_behavior: no_defaults
     detach: true
     user: "1000:1000"
-    command: /opt/kafka-exporter/kafka_exporter --kafka.server=kafka:9092
+    command: "/opt/kafka-exporter/kafka_exporter --kafka.server={{ips[appname]}}:9092"
     env:
     labels: |
       {

@@ -1,74 +1,77 @@
 # my global config
 global:
-  scrape_interval: 8s 
-  evaluation_interval: 8s 
+  scrape_interval: 8s
+  evaluation_interval: 8s
+remote_write:
+  - url: https://prometheus-prod-01-eu-west-0.grafana.net/api/prom/push
+    basic_auth:
+      username: 433408
+      password: 
 scrape_configs:
   # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
-
-  - job_name: 'node'
+  - job_name: "node"
     relabel_configs:
-      - source_labels: [ __address__ ]
+      - source_labels: [__address__]
         separator: ";"
-        regex: '(.+):(.+)'
+        regex: "(.+):(.+)"
         target_label: node_name
         replacement: $1
     static_configs:
-      - targets: 
-          - "work:9100"
+      - targets:
+          - "work.lan:9100"
 
-  - job_name: 'traefik'
+  - job_name: "traefik"
     relabel_configs:
-      - source_labels: [ __address__ ]
+      - source_labels: [__address__]
         separator: ";"
-        regex: '(.+):(.+)'
+        regex: "(.+):(.+)"
         target_label: node_name
         replacement: $1
     static_configs:
-      - targets: 
-          - "work:8080"
+      - targets:
+          - "work.lan:8080"
 
-  - job_name: 'amqbroker'
+  - job_name: "activemq-artemis"
     relabel_configs:
       - target_label: application
-        replacement: amq-broker
-      - source_labels: [ __address__ ]
+        replacement: activemq-artemis
+      - source_labels: [__address__]
         separator: ";"
         regex: '(.+)\.(.+)\.(.+)'
         target_label: node_name
         replacement: $2
-      - source_labels: [ __address__ ]
+      - source_labels: [__address__]
         separator: ";"
         regex: '(.+)\.(.+)\.(.+)'
         target_label: kubernetes_pod_name
-        replacement: amq-broker-$2
-      - source_labels: [ __address__ ]
+        replacement: activemq-artemis-$2
+      - source_labels: [__address__]
         separator: ";"
         regex: '(.+)\.(.+)\.(.+)'
         target_label: statefulset_kubernetes_io_pod_name
-        replacement: amq-broker-$2
+        replacement: activemq-artemis-$2
       - target_label: broker
-        replacement: amq-broker
+        replacement: activemq-artemis
       - target_label: namespace
-        replacement: amq
+        replacement: activemq-artemis
     static_configs:
-      - targets: 
-          - "amqbrokercons.work.lan"
+      - targets:
+          - "artemis-console.work.lan"
 
-
-  - job_name: 'camelquarkus'
+  - job_name: "camelquarkus"
     metrics_path: /q/metrics
     relabel_configs:
-      - source_labels: [ __address__ ]
+      - source_labels: [__address__]
         separator: ";"
         regex: '(.+)\.(.+)\.(.+)'
         target_label: application
         replacement: $1
-      - source_labels: [ __address__ ]
+      - source_labels: [__address__]
         separator: ";"
         regex: '(.+)\.(.+)\.(.+)'
         target_label: node_name
         replacement: $2
-      - source_labels: [ __address__ ]
+      - source_labels: [__address__]
         separator: ";"
         regex: '(.+)\.(.+)\.(.+)'
         target_label: kubernetes_pod_name
@@ -76,20 +79,19 @@ scrape_configs:
       - target_label: namespace
         replacement: camel
     static_configs:
-      - targets: 
+      - targets:
           - "bqueue.work.lan"
 
-
-  - job_name: 'kafka'
+  - job_name: "kafka"
     relabel_configs:
       - target_label: application
         replacement: kafka
-      - source_labels: [ __address__ ]
+      - source_labels: [__address__]
         separator: ";"
         regex: '(.+)\.(.+)\.(.+)'
         target_label: node_name
         replacement: $2
-      - source_labels: [ __address__ ]
+      - source_labels: [__address__]
         separator: ";"
         regex: '(.+)\.(.+)\.(.+)'
         target_label: kubernetes_pod_name
@@ -99,20 +101,20 @@ scrape_configs:
       - target_label: strimzi_io_cluster
         replacement: kafka
     static_configs:
-      - targets: 
+      - targets:
           - "kafka-metrics.work.lan"
           - "kafkaexporter.work.lan"
 
-  - job_name: 'zookeeper'
+  - job_name: "zookeeper"
     relabel_configs:
       - target_label: application
         replacement: kafka
-      - source_labels: [ __address__ ]
+      - source_labels: [__address__]
         separator: ";"
         regex: '(.+)\.(.+)\.(.+)'
         target_label: node_name
         replacement: $2
-      - source_labels: [ __address__ ]
+      - source_labels: [__address__]
         separator: ";"
         regex: '(.+)\.(.+)\.(.+)'
         target_label: kubernetes_pod_name
@@ -122,5 +124,5 @@ scrape_configs:
       - target_label: strimzi_io_cluster
         replacement: kafka
     static_configs:
-      - targets: 
+      - targets:
           - "zookeeper-metrics.work.lan"

@@ -1,6 +1,6 @@
 ---
 - set_fact:
-    appname: regui
+    appname: adminer
 
 - name: Create {{appname}} folders
   become: true
@@ -15,17 +15,13 @@
 - name: "Manage {{appname}} container state - {{appstate}} - {{ips[appname]}}"
   docker_container:
     name: "{{appname}}"
-    image: joxit/docker-registry-ui:latest
+    image: adminer:4.8.1
     state: "{{appstate}}"
-    recreate: "{{recreate}}"
     restart_policy: unless-stopped
     container_default_behavior: no_defaults
     detach: true
     user: "1000:1000"
     env:
-      NGINX_PROXY_PASS_URL: "http://registry:5000"
-      DELETE_IMAGES: "true"
-      SINGLE_REGISTRY: "true"
     labels: |
       {
         "traefik.http.routers.{{appname}}.entrypoints": "http",

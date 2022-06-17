@@ -26,6 +26,7 @@
     restart_policy: unless-stopped
     container_default_behavior: no_defaults
     detach: true
+    user: "1000:1000"
     env:
     ports:
     labels: |

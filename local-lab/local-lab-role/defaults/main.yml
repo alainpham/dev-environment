@@ -21,16 +21,27 @@ ips:
   traefik: 172.18.0.43
   fileserver: 172.18.0.47
 
+  mysql: 172.18.0.50
+  oracle: 172.18.0.51 
+  couchbase: 172.18.0.52 
+  infinispan: 172.18.0.53 
+  postgres: 172.18.0.54
+  elastic: 172.18.0.55
+  kibana: 172.18.0.56
+  adminer: 172.18.0.57
+
   zookeeper: 172.18.0.61
   kafka: 172.18.0.62
   kafdrop: 172.18.0.63
   kafkaexporter: 172.18.0.64
+  artemis: 172.18.0.65
 
   prometheus: 172.18.0.70
   grafana: 172.18.0.71
   loki: 172.18.0.72
+  promtail: 172.18.0.73
+  grafana-enterprise: 172.18.0.74
 
-  amqbroker: 172.18.0.115
   
 
 # states can absent present stopped started

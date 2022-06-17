@@ -78,6 +78,18 @@
         name: local-lab-role
         tasks_from: app-grafana
 
+- name: grafana-enterprise
+  hosts:
+    - work.lan
+  vars:
+    appstate: started
+    recreate: true
+  tasks:
+    - include_role:
+        name: local-lab-role
+        tasks_from: app-grafana-enterprise
+
+
 - name: loki
   hosts:
     - work.lan
@@ -100,3 +112,36 @@
     - include_role:
         name: local-lab-role
         tasks_from: app-kafka
+
+- name: artemis
+  hosts:
+    - work.lan
+  vars:
+    appstate: started
+    recreate: false
+  tasks:
+    - include_role:
+        name: local-lab-role
+        tasks_from: app-artemis
+
+- name: postgres
+  hosts:
+    - work.lan
+  vars:
+    appstate: started
+    recreate: false
+  tasks:
+    - include_role:
+        name: local-lab-role
+        tasks_from: app-postgres
+
+- name: adminer
+  hosts:
+    - work.lan
+  vars:
+    appstate: started
+    recreate: false
+  tasks:
+    - include_role:
+        name: local-lab-role
+        tasks_from: app-adminer
