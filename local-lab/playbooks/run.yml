@@ -67,27 +67,27 @@
         name: local-lab-role
         tasks_from: app-prometheus
 
-# - name: grafana
-#   hosts:
-#     - work.lan
-#   vars:
-#     appstate: started
-#     recreate: false
-#   tasks:
-#     - include_role:
-#         name: local-lab-role
-#         tasks_from: app-grafana
+- name: grafana
+  hosts:
+    - work.lan
+  vars:
+    appstate: started
+    recreate: true
+  tasks:
+    - include_role:
+        name: local-lab-role
+        tasks_from: app-grafana
 
-# - name: grafana-enterprise
-#   hosts:
-#     - work.lan
-#   vars:
-#     appstate: started
-#     recreate: true
-#   tasks:
-#     - include_role:
-#         name: local-lab-role
-#         tasks_from: app-grafana-enterprise
+- name: grafana-enterprise
+  hosts:
+    - work.lan
+  vars:
+    appstate: started
+    recreate: true
+  tasks:
+    - include_role:
+        name: local-lab-role
+        tasks_from: app-grafana-enterprise
 
 
 # - name: loki
