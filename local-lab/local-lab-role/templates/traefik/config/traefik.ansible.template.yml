@@ -25,6 +25,9 @@ entryPoints:
   https:
     address: ":443"
 
+serversTransport:
+  insecureSkipVerify: true
+
 metrics:
   prometheus:
     addEntryPointsLabels: true

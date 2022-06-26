@@ -145,3 +145,14 @@
     - include_role:
         name: local-lab-role
         tasks_from: app-adminer
+
+- name: keycloak
+  hosts:
+    - work.lan
+  vars:
+    appstate: started
+    recreate: false
+  tasks:
+    - include_role:
+        name: local-lab-role
+        tasks_from: app-keycloak

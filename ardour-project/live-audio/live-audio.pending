@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Session version="6000" name="live-audio" sample-rate="48000" end-is-free="0" session-range-is-free="0" id-counter="313392" name-counter="13" event-counter="508720" vca-counter="1">
+<Session version="6000" name="live-audio" sample-rate="48000" end-is-free="0" session-range-is-free="0" id-counter="314670" name-counter="13" event-counter="508720" vca-counter="1">
   <ProgramVersion created-with="Ardour 5.12" modified-with="Ardour 6.9.0~ds0-1build1"/>
   <MIDIPorts>
     <Port name="MIDI Clock out" direction="output"/>
@@ -92,9 +92,7 @@
     <Region name="Simple Synth-3" muted="0" opaque="1" locked="0" video-locked="0" automatic="0" whole-file="0" import="0" external="0" sync-marked="0" left-of-split="0" right-of-split="0" hidden="0" position-locked="0" valid-transients="0" start="0" length="36000" position="36000" beat="1.5" sync-position="0" ancestral-start="0" ancestral-length="0" stretch="1" shift="1" positional-lock-style="MusicTime" layering-index="1" tags="" contents="0" start-beats="0" length-beats="1.5" id="293803" type="midi" first-edit="nothing" source-0="293801" master-source-0="293801"/>
     <Region name="mic-01-mono-1" muted="0" opaque="1" locked="0" video-locked="0" automatic="1" whole-file="1" import="0" external="0" sync-marked="0" left-of-split="0" right-of-split="0" hidden="0" position-locked="0" valid-transients="0" start="0" length="208880" position="0" beat="0" sync-position="0" ancestral-start="0" ancestral-length="0" stretch="1" shift="1" positional-lock-style="AudioTime" layering-index="0" tags="" contents="0" envelope-active="0" default-fade-in="0" default-fade-out="0" fade-in-active="1" fade-out-active="1" scale-amplitude="1" id="313363" type="audio" first-edit="nothing" source-0="313118" master-source-0="313118" channels="1"/>
   </Regions>
-  <Selection>
-    <StripableAutomationControl stripable="91236" control="0" order="0"/>
-  </Selection>
+  <Selection/>
   <Locations>
     <Location id="245579" name="session" start="0" end="240000" flags="IsSessionRange" locked="0" position-lock-style="AudioTime" timestamp="1642524683"/>
     <Location id="258393" name="Loop" start="0" end="192000" flags="IsAutoLoop" locked="0" position-lock-style="AudioTime" timestamp="1642524683"/>
@@ -159,7 +157,7 @@
         <Automation>
           <AutomationList automation-id="gain" id="245591" interpolation-style="Linear" state="Off"/>
         </Automation>
-        <Controllable name="gaincontrol" id="58" flags="GainLike" value="0.12337742000818253"/>
+        <Controllable name="gaincontrol" id="58" flags="GainLike" value="0.10015451908111572"/>
       </Processor>
       <Processor id="87" name="Master" active="1" user-latency="0" use-user-latency="0" own-input="1" own-output="0" output="Master" type="main-outs" role="Main">
         <PannerShell bypassed="0" user-panner="http://ardour.org/plugin/panner_balance" linked-to-route="1"/>

@@ -6,7 +6,7 @@ positions:
   filename: /tmp/positions.yaml
 
 clients:
-  - url: https://215674:eyJrIjoiYTkxNzVhY2Y0ZDUyN2Y4NmVmZTkyNzRkNmI2NjNiY2Y2OWMzYzljZSIsIm4iOiJhbGFpbi1zdGFuZGFyZC1sb2tpIiwiaWQiOjY0MTQ4Mn0=@logs-prod-eu-west-0.grafana.net/loki/api/v1/push
+  - url: <YOURKEY>
 
 scrape_configs:
 - job_name: system

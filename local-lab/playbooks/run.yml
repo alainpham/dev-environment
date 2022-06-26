@@ -56,38 +56,38 @@
 #         tasks_from: app-nexus
 
 
-- name: prometheus
-  hosts:
-    - work.lan
-  vars:
-    appstate: started
-    recreate: true
-  tasks:
-    - include_role:
-        name: local-lab-role
-        tasks_from: app-prometheus
+# - name: prometheus
+#   hosts:
+#     - work.lan
+#   vars:
+#     appstate: started
+#     recreate: true
+#   tasks:
+#     - include_role:
+#         name: local-lab-role
+#         tasks_from: app-prometheus
 
-- name: grafana
-  hosts:
-    - work.lan
-  vars:
-    appstate: started
-    recreate: true
-  tasks:
-    - include_role:
-        name: local-lab-role
-        tasks_from: app-grafana
+# - name: grafana
+#   hosts:
+#     - work.lan
+#   vars:
+#     appstate: started
+#     recreate: true
+#   tasks:
+#     - include_role:
+#         name: local-lab-role
+#         tasks_from: app-grafana
 
-- name: grafana-enterprise
-  hosts:
-    - work.lan
-  vars:
-    appstate: started
-    recreate: true
-  tasks:
-    - include_role:
-        name: local-lab-role
-        tasks_from: app-grafana-enterprise
+# - name: grafana-enterprise
+#   hosts:
+#     - work.lan
+#   vars:
+#     appstate: started
+#     recreate: true
+#   tasks:
+#     - include_role:
+#         name: local-lab-role
+#         tasks_from: app-grafana-enterprise
 
 
 # - name: loki
@@ -113,16 +113,16 @@
 #         name: local-lab-role
 #         tasks_from: app-kafka
 
-- name: artemis
-  hosts:
-    - work.lan
-  vars:
-    appstate: started
-    recreate: true
-  tasks:
-    - include_role:
-        name: local-lab-role
-        tasks_from: app-artemis
+# - name: artemis
+#   hosts:
+#     - work.lan
+#   vars:
+#     appstate: started
+#     recreate: true
+#   tasks:
+#     - include_role:
+#         name: local-lab-role
+#         tasks_from: app-artemis
 
 # - name: postgres
 #   hosts:
@@ -145,3 +145,14 @@
 #     - include_role:
 #         name: local-lab-role
 #         tasks_from: app-adminer
+
+- name: keycloak
+  hosts:
+    - work.lan
+  vars:
+    appstate: started
+    recreate: true
+  tasks:
+    - include_role:
+        name: local-lab-role
+        tasks_from: app-keycloak

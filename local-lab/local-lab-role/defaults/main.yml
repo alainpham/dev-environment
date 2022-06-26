@@ -42,7 +42,7 @@ ips:
   promtail: 172.18.0.73
   grafana-enterprise: 172.18.0.74
 
-  
+  keycloak: 172.18.0.80
 
 # states can absent present stopped started
 appstate: started

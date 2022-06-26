@@ -8,8 +8,20 @@
   register: truststore
 
 - stat:
+    path: "/home/{{ ansible_user }}/apps/tls/{{ansible_hostname}}-root-ca.key"
+  register: rootcaprivkey
+
+- stat:
+    path: "/home/{{ ansible_user }}/apps/tls/{{ansible_hostname}}-root-ca.pem"
+  register: rootcapubkey
+
+- stat:
     path: "/home/{{ ansible_user }}/apps/tls/{{ansible_hostname}}.key"
   register: privkey
+
+- stat:
+    path: "/home/{{ ansible_user }}/apps/tls/{{ansible_hostname}}.csr"
+  register: privcsr
 
 - stat:
     path: "/home/{{ ansible_user }}/apps/tls/{{ansible_hostname}}.pem"
@@ -20,6 +32,35 @@
     path: /home/{{ ansible_user }}/apps/tls
     state: directory
     mode: '0755'
+
+- name: Generate root ca privkey
+  when: not rootcaprivkey.stat.exists
+  shell: |
+    openssl genrsa -out /home/{{ ansible_user }}/apps/tls/{{ansible_hostname}}-root-ca.key 4096
+
+- name: Generate root ca pubkey
+  when: not rootcapubkey.stat.exists
+  shell: |
+    openssl req -x509 -new -nodes \
+    -key /home/{{ ansible_user }}/apps/tls/{{ansible_hostname}}-root-ca.key \
+    -sha256 \
+    -days 365000 \
+    -subj "/CN=*.{{ansible_hostname}}.lan" \
+    -out /home/{{ ansible_user }}/apps/tls/{{ansible_hostname}}-root-ca.pem
+
+# - name: Generate privkey
+#   when: not privkey.stat.exists
+#   shell: |
+#     openssl genrsa -out /home/{{ ansible_user }}/apps/tls/{{ansible_hostname}}.key 4096
+
+# - name: Generate privcsr
+#   when: not privcsr.stat.exists
+#   shell: |
+#     openssl req -new \
+#     -key /home/{{ ansible_user }}/apps/tls/{{ansible_hostname}}.key \
+#     -subj "/CN=*.{{ansible_hostname}}.lan" \
+#     -out /home/{{ ansible_user }}/apps/tls/{{ansible_hostname}}.csr
+
 
 - name: Generate key pair
   when: not keystore.stat.exists
@@ -44,18 +85,53 @@
     -password pass:password -nocerts \
     -out /home/{{ ansible_user }}/apps/tls/{{ansible_hostname}}.key
 
-- name: Change permissions on privkey
-  file:
-    path: /home/{{ ansible_user }}/apps/tls/{{ansible_hostname}}.key
+- name: Generate Generate privcsr
+  when: not privkey.stat.exists
+  shell: |
+    keytool -certreq \
+    -alias {{ansible_hostname}} \
+    -storepass password \
+    -storetype PKCS12 \
+    -noprompt \
+    -keystore /home/{{ ansible_user }}/apps/tls/{{ansible_hostname}}.p12 \
+    > /home/{{ ansible_user }}/apps/tls/{{ansible_hostname}}.csr
+
+- name: Template openssl csr config
+  ansible.builtin.template: 
+    src: templates/tls/csr.cnf
+    dest: /home/{{ ansible_user }}/apps/tls/{{ansible_hostname}}.cnf
     mode: '0644'
 
-- name: Extract pub key
+- name: Sign Generate pubkey
   when: not pubkey.stat.exists
   shell: |
-    keytool -export \
-    -alias {{ansible_hostname}} \
-    -rfc \
+    openssl x509 -req \
+    -in /home/{{ ansible_user }}/apps/tls/{{ansible_hostname}}.csr \
+    -CA /home/{{ ansible_user }}/apps/tls/{{ansible_hostname}}-root-ca.pem \
+    -CAkey /home/{{ ansible_user }}/apps/tls/{{ansible_hostname}}-root-ca.key  \
+    -CAcreateserial \
+    -days 365000 -sha256  \
+    -extfile /home/{{ ansible_user }}/apps/tls/{{ansible_hostname}}.cnf \
+    -out /home/{{ ansible_user }}/apps/tls/{{ansible_hostname}}.pem \
+
+- name: Create truststore
+  when: not truststore.stat.exists
+  shell: |
+    keytool -import \
+    -alias {{ansible_hostname}}-root-ca \
     -storepass password \
+    -storetype PKCS12 \
+    -noprompt \
+    -keystore /home/{{ ansible_user }}/apps/tls/{{ansible_hostname}}.p12 \
+    -file /home/{{ ansible_user }}/apps/tls/{{ansible_hostname}}-root-ca.pem
+
+- name: Reimport signed pubkey
+  shell: |
+    keytool -import \
+    -alias {{ansible_hostname}} \
+    -storepass password \
+    -storetype PKCS12 \
+    -noprompt \
     -keystore /home/{{ ansible_user }}/apps/tls/{{ansible_hostname}}.p12 \
     -file /home/{{ ansible_user }}/apps/tls/{{ansible_hostname}}.pem
 
@@ -63,9 +139,9 @@
   when: not truststore.stat.exists
   shell: |
     keytool -import \
-    -alias {{ansible_hostname}} \
+    -alias {{ansible_hostname}}-root-ca \
     -storepass password \
     -storetype PKCS12 \
     -noprompt \
     -keystore /home/{{ ansible_user }}/apps/tls/{{ansible_hostname}}-truststore.p12 \
-    -file /home/{{ ansible_user }}/apps/tls/{{ansible_hostname}}.pem
+    -file /home/{{ ansible_user }}/apps/tls/{{ansible_hostname}}-root-ca.pem
