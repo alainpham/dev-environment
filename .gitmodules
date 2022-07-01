@@ -1,0 +1,3 @@
+[submodule "local-lab/group_vars"]
+	path = local-lab/group_vars
+	url = git@github.com:alainpham/dev-environment-private.git
