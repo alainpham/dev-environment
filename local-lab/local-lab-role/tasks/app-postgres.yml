@@ -12,24 +12,25 @@
     mode: '0755'
 
 
-- name: "Manage {{appname}} container state - {{appstate}} - {{ips[appname]}}"
+- name: "Manage {{appname}} container state - {{appstate}} - {{appconfig[appname].ip}}"
   docker_container:
     name: "{{appname}}"
-    image: postgres:14.3
+    image: "{{appconfig[appname].image}}"
     state: "{{appstate}}"
     restart_policy: unless-stopped
     container_default_behavior: no_defaults
     detach: true
     user: "1000:1000"
     # command: postgres -c ssl=on -c ssl_cert_file=/var/lib/postgresql/tls/work.pem -c ssl_key_file=/var/lib/postgresql/tls/work.key
+    command:
     env:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: password
       POSTGRES_DB: db
+    ports:
     labels: |
       {
         "traefik.enable": "false",
-
       }
     volumes:
       - "/home/{{ansible_user}}/apps/{{appname}}/data:/var/lib/postgresql/data:rw"
@@ -38,12 +39,12 @@
     network_mode: primenet
     networks:
       - name: primenet
-        ipv4_address: "{{ips[appname]}}"
+        ipv4_address: "{{appconfig[appname].ip}}"
 
 - name: add to /etc/hosts
   become: true
   lineinfile:
     dest: /etc/hosts
-    regexp: '^.*{{ips[appname]}}\s.*$'
-    line: "{{ips[appname]}} {{appname}}"
+    regexp: '^.*{{appconfig[appname].ip}}\s.*$'
+    line: "{{appconfig[appname].ip}} {{appname}}"
     state: present

@@ -145,3 +145,11 @@
     -noprompt \
     -keystore /home/{{ ansible_user }}/apps/tls/{{ansible_hostname}}-truststore.p12 \
     -file /home/{{ ansible_user }}/apps/tls/{{ansible_hostname}}-root-ca.pem
+
+- name: manual instructions to be done if wanted
+  debug:
+    msg: copy {{ansible_hostname}}-root-ca.pem to /usr/local/share/ca-certificates and run sudo update-ca-certificates
+
+- name: import in chrome certificates
+  debug:
+    msg: import in certificates {{ansible_hostname}}-root-ca.pem

@@ -12,24 +12,26 @@
     mode: '0755'
 
 
-- name: "Manage {{appname}} container state - {{appstate}} - {{ips[appname]}}"
+- name: "Manage {{appname}} container state - {{appstate}} - {{appconfig[appname].ip}}"
   docker_container:
     name: "{{appname}}"
-    image: adminer:4.8.1
+    image: "{{appconfig[appname].image}}"
     state: "{{appstate}}"
     restart_policy: unless-stopped
     container_default_behavior: no_defaults
     detach: true
     user: "1000:1000"
+    command: 
     env:
+    ports:
     labels: |
       {
-        "traefik.http.routers.{{appname}}.entrypoints": "http",
-        "traefik.http.routers.{{appname}}.tls": "false"
+        "traefik.http.routers.{{appname}}.entrypoints": "https",
+        "traefik.http.routers.{{appname}}.tls": "true"
       }
     volumes:
     networks_cli_compatible: yes
     network_mode: primenet
     networks:
       - name: primenet
-        ipv4_address: "{{ips[appname]}}"
+        ipv4_address: "{{appconfig[appname].ip}}"

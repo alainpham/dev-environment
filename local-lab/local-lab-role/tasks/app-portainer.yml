@@ -12,21 +12,27 @@
     mode: '0755'
 
 
-- name: "Manage {{appname}} container state - {{appstate}} - {{ips[appname]}}"
+- name: "Manage {{appname}} container state - {{appstate}} - {{appconfig[appname].ip}}"
   docker_container:
     name: "{{appname}}"
-    image: portainer/portainer-ce:2.13.1
+    image: "{{appconfig[appname].image}}"
     state: "{{appstate}}"
     recreate: "{{recreate}}"
     restart_policy: unless-stopped
     container_default_behavior: no_defaults
     detach: true
-    user: "1000:1000"
+    # user: "1000:1000"
+
+    # to generate password run tje following command
+    # docker run --rm httpd:2.4-alpine htpasswd -nbB admin 'superpassword' | cut -d ":" -f 2
+    command: --admin-password '$2y$05$G.3gCZNL2WoeYrPj7i6NYeFfOaSHRKMB2PCzqZfzjkmcVX1lVMEZ2'
+    
     env:
+    ports:
     labels: |
       {
-        "traefik.http.routers.{{appname}}.entrypoints": "http",
-        "traefik.http.routers.{{appname}}.tls": "false",
+        "traefik.http.routers.{{appname}}.entrypoints": "https",
+        "traefik.http.routers.{{appname}}.tls": "true",
         "traefik.http.services.{{appname}}.loadbalancer.server.port": "9000"
       }
     volumes:
@@ -36,4 +42,4 @@
     network_mode: primenet
     networks:
       - name: primenet
-        ipv4_address: "{{ips[appname]}}"
+        ipv4_address: "{{appconfig[appname].ip}}"

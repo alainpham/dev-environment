@@ -44,10 +44,10 @@
     dest: /home/{{ ansible_user }}/apps/{{appname}}/config/
     mode: '0644'
 
-- name: "Manage zookeeper container state - {{appstate}} - {{ips.zookeeper}}"
+- name: "Manage zookeeper container state - {{appstate}} - {{appconfig.zookeeper.ip}}"
   docker_container:
     name: "zookeeper"
-    image: quay.io/strimzi/kafka:0.29.0-kafka-3.1.0
+    image: "{{appconfig[appname].image}}"
     state: "{{appstate}}"
     recreate: "{{recreate}}"
     restart_policy: unless-stopped
@@ -58,6 +58,7 @@
     env:
       LOG_DIR: /tmp/logs
       KAFKA_OPTS: -javaagent:/opt/kafka/libs/jmx_prometheus_javaagent-0.16.1.jar=9779:/config/zookeeper-metrics-config.yml
+    ports:
     labels: |
       {
         "traefik.enable": "true",
@@ -73,12 +74,12 @@
     network_mode: primenet
     networks:
       - name: primenet
-        ipv4_address: "{{ips.zookeeper}}"
+        ipv4_address: "{{appconfig.zookeeper.ip}}"
 
-- name: "Manage {{appname}} container state - {{appstate}} - {{ips[appname]}}"
+- name: "Manage {{appname}} container state - {{appstate}} - {{appconfig[appname].ip}}"
   docker_container:
     name: "{{appname}}"
-    image: quay.io/strimzi/kafka:0.29.0-kafka-3.1.0
+    image: "{{appconfig[appname].image}}"
     state: "{{appstate}}"
     recreate: "{{recreate}}"
     restart_policy: unless-stopped
@@ -88,7 +89,7 @@
     command: 
       - bin/kafka-server-start.sh config/server.properties 
       - --override listeners=PLAINTEXT://0.0.0.0:9092,SSL://0.0.0.0:9093 
-      - --override advertised.listeners=PLAINTEXT://{{ips[appname]}}:9092,SSL://kafka.{{ansible_hostname}}.lan:443 
+      - --override advertised.listeners=PLAINTEXT://{{appconfig[appname].ip}}:9092,SSL://kafka.{{ansible_hostname}}.lan:443 
       - --override ssl.keystore.location=/certs/{{ansible_hostname}}.p12 
       - --override ssl.keystore.password=password
       - --override ssl.key.password=password
@@ -97,6 +98,7 @@
     env:
       LOG_DIR: /tmp/logs
       KAFKA_OPTS: -javaagent:/opt/kafka/libs/jmx_prometheus_javaagent-0.16.1.jar=9779:/config/kafka-metrics-config.yml
+    ports:
     labels: |
       {
         "traefik.enable": "true",
@@ -121,48 +123,50 @@
     network_mode: primenet
     networks:
       - name: primenet
-        ipv4_address: "{{ips[appname]}}"
+        ipv4_address: "{{appconfig[appname].ip}}"
 
 
-- name: "Manage kafdrop container state - {{appstate}} - {{ips[appname]}}"
+- name: "Manage kafdrop container state - {{appstate}} - {{appconfig.kafkdrop.ip}}"
   docker_container:
     name: "kafdrop"
-    image: obsidiandynamics/kafdrop:3.30.0
+    image: "{{appconfig.kafdrop.image}}"
     state: "{{appstate}}"
     recreate: "{{recreate}}"
     restart_policy: unless-stopped
     container_default_behavior: no_defaults
     detach: true
     user: "1000:1000"
+    command:
     env:
-      KAFKA_BROKERCONNECT: "{{ips[appname]}}:9092"
+      KAFKA_BROKERCONNECT: "{{appconfig[appname].ip}}:9092"
       JVM_OPTS: -Xms32M -Xmx128M
       SERVER_SERVLET_CONTEXTPATH : "/"
+    ports:
     labels: |
       {
         "traefik.http.services.kafdrop.loadbalancer.server.port": "9000",
-        "traefik.http.routers.kafdrop.entrypoints": "http",
-        "traefik.http.routers.kafdrop.tls": "false",
+        "traefik.http.routers.kafdrop.entrypoints": "https",
+        "traefik.http.routers.kafdrop.tls": "true",
       }
     volumes:
     networks_cli_compatible: yes
     network_mode: primenet
     networks:
       - name: primenet
-        ipv4_address: "{{ips.kafdrop}}"
+        ipv4_address: "{{appconfig.kafdrop.ip}}"
 
 
-- name: "Manage kafkaexporter container state - {{appstate}} - {{ips.kafkaexporter}}"
+- name: "Manage kafkaexporter container state - {{appstate}} - {{appconfig.kafkaexporter.ip}}"
   docker_container:
     name: "kafkaexporter"
-    image: quay.io/strimzi/kafka:0.29.0-kafka-3.1.0
+    image: "{{appconfig[appname].image}}"
     state: "{{appstate}}"
     recreate: "{{recreate}}"
     restart_policy: unless-stopped
     container_default_behavior: no_defaults
     detach: true
     user: "1000:1000"
-    command: "/opt/kafka-exporter/kafka_exporter --kafka.server={{ips[appname]}}:9092"
+    command: "/opt/kafka-exporter/kafka_exporter --kafka.server={{appconfig[appname].ip}}:9092"
     env:
     labels: |
       {
@@ -175,4 +179,33 @@
     network_mode: primenet
     networks:
       - name: primenet
-        ipv4_address: "{{ips.kafkaexporter}}"
+        ipv4_address: "{{appconfig.kafkaexporter.ip}}"
+
+
+- name: "Manage kafkaui container state - {{appstate}} - {{appconfig.kafkaui.ip}}"
+  docker_container:
+    name: "kafkaui"
+    image: "{{appconfig.kafkaui.image}}"
+    state: "{{appstate}}"
+    recreate: "{{recreate}}"
+    restart_policy: unless-stopped
+    container_default_behavior: no_defaults
+    detach: true
+    user: "1000:1000"
+    command:
+    env:
+      KAFKA_CLUSTERS_0_NAME: kafka.work.lan
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: "{{appconfig[appname].ip}}:9092"
+    ports:
+    labels: |
+      {
+        "traefik.http.services.kafkaui.loadbalancer.server.port": "8080",
+        "traefik.http.routers.kafkaui.entrypoints": "https",
+        "traefik.http.routers.kafkaui.tls": "true",
+      }
+    volumes:
+    networks_cli_compatible: yes
+    network_mode: primenet
+    networks:
+      - name: primenet
+        ipv4_address: "{{appconfig.kafkaui.ip}}"

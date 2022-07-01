@@ -11,18 +11,20 @@
     group: "{{ ansible_user }}"
     mode: '0755'
 
-- name: "Manage {{appname}} container state - {{appstate}} - {{ips[appname]}}"
+- name: "Manage {{appname}} container state - {{appstate}} - {{appconfig[appname].ip}}"
   docker_container:
     name: "{{appname}}"
-    image: registry:latest
+    image: "{{appconfig[appname].image}}"
     state: "{{appstate}}"
     recreate: "{{recreate}}"
     restart_policy: unless-stopped
     container_default_behavior: no_defaults
     detach: true
     user: "1000:1000"
+    command:
     env:
       REGISTRY_STORAGE_DELETE_ENABLED: "true"
+    ports:
     labels: |
       {
         "traefik.http.routers.{{appname}}.entrypoints": "https",
@@ -34,4 +36,4 @@
     network_mode: primenet
     networks:
       - name: primenet
-        ipv4_address: "{{ips[appname]}}"
+        ipv4_address: "{{appconfig[appname].ip}}"

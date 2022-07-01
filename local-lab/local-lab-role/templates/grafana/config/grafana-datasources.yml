@@ -8,4 +8,26 @@ datasources:
     url: http://prometheus:9090
     version: 1
     isDefault: true
-    editable: true
+    editable: false
+
+  - name: Loki
+    type: loki
+    access: proxy
+    url: http://loki
+    jsonData:
+      maxLines: 1000
+
+  - name: Postgres
+    type: postgres
+    url: postgres:5432
+    database: db
+    user: admin
+    secureJsonData:
+      password: 'password'
+    jsonData:
+      sslmode: 'disable' 
+      maxOpenConns: 5 
+      maxIdleConns: 2
+      connMaxLifetime: 14400 
+      postgresVersion: 1200
+      timescaledb: false

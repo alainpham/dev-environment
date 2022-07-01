@@ -17,22 +17,23 @@
     dest: /home/{{ ansible_user }}/apps/{{appname}}/config/
     mode: '0644'
 
-- name: "Manage {{appname}} container state - {{appstate}} - {{ips[appname]}}"
+- name: "Manage {{appname}} container state - {{appstate}} - {{appconfig[appname].ip}}"
   docker_container:
     name: "{{appname}}"
-    image: grafana/grafana:9.0.0
+    image: "{{appconfig[appname].image}}"
     state: "{{appstate}}"
     recreate: "{{recreate}}"
     restart_policy: unless-stopped
     container_default_behavior: no_defaults
     detach: true
     user: "1000:1000"
+    command: 
     env:
     ports:
     labels: |
       {
-        "traefik.http.routers.{{appname}}.entrypoints": "http",
-        "traefik.http.routers.{{appname}}.tls": "false"
+        "traefik.http.routers.{{appname}}.entrypoints": "https",
+        "traefik.http.routers.{{appname}}.tls": "true"
       }
     volumes:
       - /home/{{ansible_user}}/apps/grafana/config/grafana-datasources.yml:/etc/grafana/provisioning/datasources/grafana-datasources.yml:ro
@@ -41,4 +42,4 @@
     network_mode: primenet
     networks:
       - name: primenet
-        ipv4_address: "{{ips[appname]}}"
+        ipv4_address: "{{appconfig[appname].ip}}"

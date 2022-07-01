@@ -1,12 +1,3 @@
-# my global config
-global:
-  scrape_interval: 8s
-  evaluation_interval: 8s
-remote_write:
-  - url: https://prometheus-prod-01-eu-west-0.grafana.net/api/prom/push
-    basic_auth:
-      username: 433408
-      password: 
 scrape_configs:
   # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
   - job_name: "node"

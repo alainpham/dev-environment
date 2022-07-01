@@ -30,7 +30,7 @@
   docker_container:
     name: "artemis"
     # image: quay.io/artemiscloud/activemq-artemis-broker-kubernetes:1.0.5
-    image: alainpham/artemis:1.0.5
+    image: "{{appconfig[appname].image}}"
     state: "{{appstate}}"
     recreate: "{{recreate}}"
     restart_policy: unless-stopped
@@ -46,6 +46,7 @@
       AMQ_ENABLE_METRICS_PLUGIN: "true"
       AMQ_JOURNAL_TYPE: "nio"
       AMQ_DATA_DIR: /artemisdata
+    ports:
     labels: |
       {
         "traefik.enable": "true",
@@ -66,4 +67,4 @@
     network_mode: primenet
     networks:
       - name: primenet
-        ipv4_address: "{{ips[appname]}}"
+        ipv4_address: "{{appconfig[appname].ip}}"

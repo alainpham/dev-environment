@@ -19,16 +19,16 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
 
-- name: Copy config {{appname}} config
-  copy:
-    src: templates/{{appname}}/config/
-    dest: /home/{{ ansible_user }}/apps/{{appname}}/config/
+- name: Template {{appname}} config
+  ansible.builtin.template:
+    src: templates/{{appname}}/config/prometheus.template.yml
+    dest: /home/{{ ansible_user }}/apps/{{appname}}/config/prometheus.yml
     mode: '0644'
 
-- name: "Manage {{appname}} container state - {{appstate}} - {{ips[appname]}}"
+- name: "Manage {{appname}} container state - {{appstate}} - {{appconfig[appname].ip}}"
   docker_container:
     name: "{{appname}}"
-    image: prom/prometheus:v2.35.0
+    image: "{{appconfig[appname].image}}"
     state: "{{appstate}}"
     recreate: "{{recreate}}"
     restart_policy: unless-stopped
@@ -39,8 +39,8 @@
     ports:
     labels: |
       {
-        "traefik.http.routers.{{appname}}.entrypoints": "http",
-        "traefik.http.routers.{{appname}}.tls": "false"
+        "traefik.http.routers.{{appname}}.entrypoints": "https",
+        "traefik.http.routers.{{appname}}.tls": "true"
       }
     volumes:
       - /home/{{ansible_user}}/apps/prometheus/data:/prometheus:rw
@@ -49,4 +49,4 @@
     network_mode: primenet
     networks:
       - name: primenet
-        ipv4_address: "{{ips[appname]}}"
+        ipv4_address: "{{appconfig[appname].ip}}"
