@@ -78,27 +78,27 @@
 #         name: local-lab-role
 #         tasks_from: app-loki
 
-# - name: grafana
-#   hosts:
-#     - work.lan
-#   vars:
-#     appstate: started
-#     recreate: true
-#   tasks:
-#     - include_role:
-#         name: local-lab-role
-#         tasks_from: app-grafana
+- name: grafana
+  hosts:
+    - work.lan
+  vars:
+    appstate: started
+    recreate: true
+  tasks:
+    - include_role:
+        name: local-lab-role
+        tasks_from: app-grafana
 
-# - name: grafana-enterprise
-#   hosts:
-#     - work.lan
-#   vars:
-#     appstate: started
-#     recreate: true
-#   tasks:
-#     - include_role:
-#         name: local-lab-role
-#         tasks_from: app-grafana-enterprise
+- name: grafana-enterprise
+  hosts:
+    - work.lan
+  vars:
+    appstate: started
+    recreate: true
+  tasks:
+    - include_role:
+        name: local-lab-role
+        tasks_from: app-grafana-enterprise
 
 
 
@@ -146,13 +146,37 @@
 #         name: local-lab-role
 #         tasks_from: app-adminer
 
-- name: keycloak
-  hosts:
-    - work.lan
-  vars:
-    appstate: started
-    recreate: true
-  tasks:
-    - include_role:
-        name: local-lab-role
-        tasks_from: app-keycloak
+# - name: keycloak
+#   hosts:
+#     - work.lan
+#   vars:
+#     appstate: started
+#     recreate: true
+#   tasks:
+#     - include_role:
+#         name: local-lab-role
+#         tasks_from: app-keycloak
+
+
+# - name: promtail
+#   hosts:
+#     - work.lan
+#   vars:
+#     appstate: started
+#     recreate: true
+#   tasks:
+#     - include_role:
+#         name: local-lab-role
+#         tasks_from: app-promtail
+
+
+# - name: grafana-agent
+#   hosts:
+#     - work.lan
+#   vars:
+#     appstate: started
+#     recreate: false
+#   tasks:
+#     - include_role:
+#         name: local-lab-role
+#         tasks_from: app-grafana-agent

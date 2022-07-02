@@ -22,6 +22,37 @@ scrape_configs:
       - targets:
           - "work.lan:8080"
 
+  - job_name: "o11y"
+    relabel_configs:
+      - source_labels: [__address__]
+        separator: ";"
+        regex: '(.+)\.(.+)\.(.+)'
+        target_label: application
+        replacement: $1
+      - source_labels: [__address__]
+        separator: ";"
+        regex: '(.+)\.(.+)\.(.+)'
+        target_label: node_name
+        replacement: $2
+      - source_labels: [__address__]
+        separator: ";"
+        regex: '(.+)\.(.+)\.(.+)'
+        target_label: kubernetes_pod_name
+        replacement: $1-$2
+      - target_label: namespace
+        replacement: o11y
+    scheme: https
+    tls_config:
+      ca_file: /tls/root-ca.pem
+    static_configs:
+      - targets:
+          - "loki.work.lan"
+          - "promtail.work.lan"
+          - "prometheus.work.lan"
+          - "grafana-agent.work.lan"
+          - "grafana.work.lan"
+          - "grafana-enterprise.work.lan"
+
   - job_name: "activemq-artemis"
     relabel_configs:
       - target_label: application

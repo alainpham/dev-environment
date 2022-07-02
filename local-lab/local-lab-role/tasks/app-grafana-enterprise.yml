@@ -45,3 +45,33 @@
     networks:
       - name: primenet
         ipv4_address: "{{appconfig[appname].ip}}"
+
+- name: Check if server is up
+  when: appstate == 'started'
+  uri:
+    url: "https://{{appname}}.{{ansible_hostname}}.lan/api/health"
+    method: GET
+    status_code: 200
+  register: result
+  until: result.status == 200
+  retries: 60
+  delay: 2
+
+- name: Reset password
+  when: appstate == 'started'
+  ignore_errors: true
+  uri:
+    url: "https://{{appname}}.{{ansible_hostname}}.lan/api/user/password"
+    user: "admin"
+    password: "admin"
+    method: PUT
+    body: |
+      {
+        "oldPassword": "admin",
+        "newPassword": "password"
+      }
+    force_basic_auth: yes
+    status_code: 200
+    headers:
+      Content-Type: application/json
+      accept: application/json
