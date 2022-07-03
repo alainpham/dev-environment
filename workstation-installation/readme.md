@@ -9,6 +9,7 @@
   - [Configure Panel](#configure-panel)
   - [Packages installed](#packages-installed)
     - [From official repo](#from-official-repo)
+    - [Fonts](#fonts)
     - [Downloaded packages](#downloaded-packages)
   - [Add main user to groups](#add-main-user-to-groups)
   - [Configure sound](#configure-sound)
@@ -105,8 +106,15 @@ Go to system settings
 ncdu git ansible docker.io docker-compose apparmor tmux vim openjdk-11-jdk openjdk-17-jdk openjdk-18-jdk prometheus-node-exporter htop curl lshw rsync mediainfo ffmpeg python3-mutagen iperf dnsmasq qemu-system qemu-utils virtinst libvirt-clients libvirt-daemon-system libguestfs-tools bridge-utils libosinfo-bin jackd2 qjackctl pulseaudio-module-jack lsp-plugins-lv2 calf-plugins ardour v4l-utils flatpak snapd virt-manager mediainfo-gui v4l2loopback-utils easytag gimp avldrums.lv2 libreoffice-plasma libreoffice openssh-server linux-tools-common linux-tools-generic freeplane ifuse libimobiledevice-utils imagemagick xournal
 ```
 
-### Downloaded packages
+### Fonts
 
+Copy fonts to `/usr/local/share/fonts/`
+
+- https://dtinth.github.io/comic-mono-font/
+- https://github.com/gidole/Gidole-Typefaces/blob/master/gidole.zip
+- https://github.com/RedHatOfficial/Overpass/releases
+
+### Downloaded packages
 
 ```
 google-chrome-stable_current_amd64.deb zoom_amd64.deb slack-desktop-4.25.0-amd64.deb noise-repellent_0.1.5-1kxstudio2_amd64.deb
