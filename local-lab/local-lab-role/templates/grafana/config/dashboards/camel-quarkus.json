@@ -101,7 +101,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "exemplar": false,
           "expr": "count by (namespace) (application_camel_context_exchanges_completed_total{namespace=\"$namespace\",camelContext=\"$context\"})",
@@ -179,7 +179,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "exemplar": false,
           "expr": "topk(1,application_camel_route_count{namespace=\"$namespace\",camelContext=\"$context\"})",
@@ -257,7 +257,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "exemplar": false,
           "expr": "sum(application_camel_context_exchanges_inflight_count{namespace=\"$namespace\",camelContext=\"$context\"})",
@@ -336,7 +336,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "exemplar": false,
           "expr": "sum (application_camel_context_exchanges_completed_total{namespace=\"$namespace\",camelContext=\"$context\"})",
@@ -418,7 +418,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "exemplar": false,
           "expr": "sum (application_camel_context_exchanges_failed_total{namespace=\"$namespace\",camelContext=\"$context\"})",
@@ -502,7 +502,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "exemplar": false,
           "expr": "sum(irate(application_camel_route_exchanges_completed_total{namespace=\"$namespace\",camelContext=\"$context\",routeId=~\"$route\"}[30s]))",
@@ -564,7 +564,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "exemplar": true,
           "expr": "sum by (context) (irate(application_camel_route_exchanges_completed_total{namespace=\"$namespace\",camelContext=\"$context\",routeId=~\"$route\"}[30s]))",
@@ -654,7 +654,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "exemplar": true,
           "expr": "irate(application_camel_route_exchanges_completed_total{namespace=\"$namespace\",camelContext=\"$context\",routeId=~\"$route\"}[30s])",
@@ -760,7 +760,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "exemplar": false,
           "expr": "sum (application_camel_route_exchanges_inflight_count{namespace=\"$namespace\",camelContext=\"$context\",routeId=~\"$route\"})",
@@ -824,7 +824,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "exemplar": true,
           "expr": "sum by (context)  (application_camel_route_exchanges_inflight_count{namespace=\"$namespace\",camelContext=\"$context\",routeId=~\"$route\"})",
@@ -914,7 +914,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "exemplar": true,
           "expr": "sum by (kubernetes_pod_name) (application_camel_route_exchanges_inflight_count{namespace=\"$namespace\",camelContext=\"$context\",routeId=~\"$route\"})",
@@ -1023,7 +1023,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "exemplar": false,
           "expr": "sum (sum by (kubernetes_pod_name)(application_camel_route_processing_seconds_count{namespace=\"$namespace\",camelContext=\"$context\",routeId=~\"$route\"})*sum by (kubernetes_pod_name)(application_camel_route_processing_mean_seconds{namespace=\"$namespace\",camelContext=\"$context\",routeId=~\"$route\"})) / sum (application_camel_route_processing_seconds_count{namespace=\"$namespace\",camelContext=\"$context\",routeId=~\"$route\"})",
@@ -1084,7 +1084,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "exemplar": true,
           "expr": "sum (sum by (kubernetes_pod_name)(application_camel_route_processing_seconds_count{namespace=\"$namespace\",camelContext=\"$context\",routeId=~\"$route\"})*sum by (kubernetes_pod_name)(application_camel_route_processing_mean_seconds{namespace=\"$namespace\",camelContext=\"$context\",routeId=~\"$route\"})) / sum (application_camel_route_processing_seconds_count{namespace=\"$namespace\",camelContext=\"$context\",routeId=~\"$route\"})",
@@ -1171,7 +1171,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "exemplar": true,
           "expr": "application_camel_route_processing_mean_seconds{namespace=\"$namespace\",camelContext=\"$context\",routeId=~\"$route\"}",
@@ -1228,7 +1228,7 @@
         },
         "datasource": {
           "type": "prometheus",
-          "uid": "PBFA97CFB590B2093"
+          "uid": "grafanacloud-prom"
         },
         "definition": "label_values(application_camel_context_exchanges_completed_total,namespace)",
         "hide": 0,
@@ -1258,7 +1258,7 @@
         },
         "datasource": {
           "type": "prometheus",
-          "uid": "PBFA97CFB590B2093"
+          "uid": "grafanacloud-prom"
         },
         "definition": "label_values(application_camel_context_exchanges_completed_total{namespace=\"$namespace\"},camelContext)",
         "hide": 0,
@@ -1292,7 +1292,7 @@
         },
         "datasource": {
           "type": "prometheus",
-          "uid": "PBFA97CFB590B2093"
+          "uid": "grafanacloud-prom"
         },
         "definition": "label_values(application_camel_route_exchanges_completed_total{namespace=\"$namespace\",camelContext=\"$context\"},routeId)",
         "hide": 0,

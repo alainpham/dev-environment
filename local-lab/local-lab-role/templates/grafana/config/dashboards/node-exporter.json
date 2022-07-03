@@ -46,7 +46,7 @@
       "collapsed": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "grafanacloud-prom"
       },
       "gridPos": {
         "h": 1,
@@ -62,7 +62,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "grafanacloud-prom"
       },
       "description": "Busy state of all CPU cores together",
       "fieldConfig": {
@@ -141,7 +141,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "grafanacloud-prom"
       },
       "description": "Busy state of all CPU cores together (5 min average)",
       "fieldConfig": {
@@ -220,7 +220,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "grafanacloud-prom"
       },
       "description": "Busy state of all CPU cores together (15 min average)",
       "fieldConfig": {
@@ -298,7 +298,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "grafanacloud-prom"
       },
       "description": "Non available RAM memory",
       "fieldConfig": {
@@ -377,7 +377,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "grafanacloud-prom"
       },
       "description": "Used Swap",
       "fieldConfig": {
@@ -454,7 +454,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "grafanacloud-prom"
       },
       "description": "Used Root FS",
       "fieldConfig": {
@@ -532,7 +532,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "grafanacloud-prom"
       },
       "description": "Total number of CPU cores",
       "fieldConfig": {
@@ -608,7 +608,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "grafanacloud-prom"
       },
       "description": "System uptime",
       "fieldConfig": {
@@ -684,7 +684,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "grafanacloud-prom"
       },
       "description": "Total RootFS",
       "fieldConfig": {
@@ -765,7 +765,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "grafanacloud-prom"
       },
       "description": "Total RAM",
       "fieldConfig": {
@@ -840,7 +840,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "grafanacloud-prom"
       },
       "description": "Total SWAP",
       "fieldConfig": {
@@ -916,7 +916,7 @@
       "collapsed": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "grafanacloud-prom"
       },
       "gridPos": {
         "h": 1,
@@ -951,7 +951,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "grafanacloud-prom"
       },
       "decimals": 2,
       "description": "Basic CPU info",
@@ -1135,7 +1135,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "grafanacloud-prom"
       },
       "decimals": 2,
       "description": "Basic memory usage",
@@ -1312,7 +1312,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "grafanacloud-prom"
       },
       "description": "Basic network info per interface",
       "fieldConfig": {
@@ -1423,7 +1423,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "grafanacloud-prom"
       },
       "decimals": 3,
       "description": "Disk space used of all filesystems mounted",
@@ -1520,7 +1520,7 @@
       "collapsed": true,
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "grafanacloud-prom"
       },
       "gridPos": {
         "h": 1,
@@ -1548,7 +1548,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "decimals": 2,
           "description": "",
@@ -1733,7 +1733,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "decimals": 2,
           "description": "",
@@ -1914,7 +1914,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fieldConfig": {
             "defaults": {
@@ -2024,7 +2024,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "decimals": 3,
           "description": "",
@@ -2125,7 +2125,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "description": "",
           "fieldConfig": {
@@ -2319,7 +2319,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "decimals": 3,
           "description": "",
@@ -2456,7 +2456,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "decimals": 3,
           "description": "",
@@ -2560,7 +2560,7 @@
       "collapsed": true,
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "grafanacloud-prom"
       },
       "gridPos": {
         "h": 1,
@@ -2595,7 +2595,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "decimals": 2,
           "fill": 2,
@@ -2711,7 +2711,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "decimals": 2,
           "fill": 2,
@@ -2836,7 +2836,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "decimals": 2,
           "fill": 2,
@@ -2974,7 +2974,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "decimals": 2,
           "fill": 2,
@@ -3097,7 +3097,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "decimals": 2,
           "fill": 2,
@@ -3246,7 +3246,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "decimals": 2,
           "fill": 2,
@@ -3362,7 +3362,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "decimals": 2,
           "fill": 2,
@@ -3488,7 +3488,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "decimals": 2,
           "fill": 2,
@@ -3597,7 +3597,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "decimals": 2,
           "fill": 2,
@@ -3717,7 +3717,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "decimals": 2,
           "fill": 2,
@@ -3835,7 +3835,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "decimals": 2,
           "fill": 2,
@@ -3960,7 +3960,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "decimals": 2,
           "fill": 2,
@@ -4077,7 +4077,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "decimals": 2,
           "fill": 2,
@@ -4204,7 +4204,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "decimals": 2,
           "fill": 2,
@@ -4322,7 +4322,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "decimals": 2,
           "fill": 2,
@@ -4412,7 +4412,7 @@
       "collapsed": true,
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "grafanacloud-prom"
       },
       "gridPos": {
         "h": 1,
@@ -4429,7 +4429,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fill": 2,
           "fillGradient": 0,
@@ -4529,7 +4529,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fill": 2,
           "fillGradient": 0,
@@ -4647,7 +4647,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "decimals": 2,
           "fill": 2,
@@ -4782,7 +4782,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "decimals": 2,
           "fill": 2,
@@ -4875,7 +4875,7 @@
       "collapsed": true,
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "grafanacloud-prom"
       },
       "gridPos": {
         "h": 1,
@@ -4892,7 +4892,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "description": "",
           "fill": 2,
@@ -5006,7 +5006,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "description": "",
           "fill": 2,
@@ -5093,7 +5093,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "description": "",
           "fill": 2,
@@ -5194,7 +5194,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "description": "",
           "fill": 2,
@@ -5291,7 +5291,7 @@
       "collapsed": true,
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "grafanacloud-prom"
       },
       "gridPos": {
         "h": 1,
@@ -5308,7 +5308,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fill": 2,
           "fillGradient": 0,
@@ -5405,7 +5405,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fill": 2,
           "fillGradient": 0,
@@ -5495,7 +5495,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fill": 2,
           "fillGradient": 0,
@@ -5585,7 +5585,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fill": 2,
           "fillGradient": 0,
@@ -5704,7 +5704,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fill": 2,
           "fillGradient": 0,
@@ -5810,7 +5810,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fill": 2,
           "fillGradient": 0,
@@ -5914,7 +5914,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fill": 2,
           "fillGradient": 0,
@@ -6021,7 +6021,7 @@
       "collapsed": true,
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "grafanacloud-prom"
       },
       "gridPos": {
         "h": 1,
@@ -6038,7 +6038,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fill": 2,
           "fillGradient": 0,
@@ -6134,7 +6134,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fill": 2,
           "fillGradient": 0,
@@ -6239,7 +6239,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fill": 2,
           "fillGradient": 0,
@@ -6337,7 +6337,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fill": 2,
           "fillGradient": 0,
@@ -6426,7 +6426,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fill": 2,
           "fillGradient": 0,
@@ -6515,7 +6515,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fill": 2,
           "fillGradient": 0,
@@ -6604,7 +6604,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fill": 2,
           "fillGradient": 0,
@@ -6708,7 +6708,7 @@
       "collapsed": true,
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "grafanacloud-prom"
       },
       "gridPos": {
         "h": 1,
@@ -6725,7 +6725,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fill": 2,
           "fillGradient": 0,
@@ -6866,7 +6866,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fill": 2,
           "fillGradient": 0,
@@ -6971,7 +6971,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fill": 2,
           "fillGradient": 0,
@@ -7061,7 +7061,7 @@
       "collapsed": true,
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "grafanacloud-prom"
       },
       "gridPos": {
         "h": 1,
@@ -7078,7 +7078,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fill": 2,
           "fillGradient": 0,
@@ -7165,7 +7165,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fill": 2,
           "fillGradient": 0,
@@ -7309,7 +7309,7 @@
       "collapsed": true,
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "grafanacloud-prom"
       },
       "gridPos": {
         "h": 1,
@@ -7326,7 +7326,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "description": "The number (after merges) of I/O requests completed per second for the device",
           "fieldConfig": {
@@ -7537,7 +7537,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "description": "The number of bytes read from or written to the device per second",
           "fieldConfig": {
@@ -7729,7 +7729,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "description": "The average time for requests issued to the device to be served. This includes the time spent by the requests in queue and the time spent servicing them.",
           "fieldConfig": {
@@ -7925,7 +7925,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "description": "The average queue length of the requests that were issued to the device",
           "fieldConfig": {
@@ -8108,7 +8108,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "description": "The number of read and write requests merged per second that were queued to the device",
           "fieldConfig": {
@@ -8300,7 +8300,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "description": "Percentage of elapsed time during which I/O requests were issued to the device (bandwidth utilization for the device). Device saturation occurs when this value is close to 100% for devices serving requests serially.  But for devices  serving requests in parallel, such as RAID arrays and modern SSDs, this number does not reflect their performance limits.",
           "fieldConfig": {
@@ -8491,7 +8491,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "description": "The number of outstanding requests at the instant the sample was taken. Incremented as requests are given to appropriate struct request_queue and decremented as they finish.",
           "fieldConfig": {
@@ -8674,7 +8674,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "description": "",
           "fieldConfig": {
@@ -8883,7 +8883,7 @@
       "collapsed": true,
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "grafanacloud-prom"
       },
       "gridPos": {
         "h": 1,
@@ -8900,7 +8900,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "decimals": 3,
           "description": "",
@@ -9020,7 +9020,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "description": "",
           "fieldConfig": {
@@ -9120,7 +9120,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "description": "",
           "fieldConfig": {
@@ -9224,7 +9224,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "description": "",
           "fieldConfig": {
@@ -9324,7 +9324,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "description": "",
           "fieldConfig": {
@@ -9436,7 +9436,7 @@
       "collapsed": true,
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "grafanacloud-prom"
       },
       "gridPos": {
         "h": 1,
@@ -9458,7 +9458,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fill": 2,
           "fillGradient": 0,
@@ -9560,7 +9560,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fill": 2,
           "fillGradient": 0,
@@ -9664,7 +9664,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fill": 2,
           "fillGradient": 0,
@@ -9768,7 +9768,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fill": 2,
           "fillGradient": 0,
@@ -9872,7 +9872,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fill": 2,
           "fillGradient": 0,
@@ -9968,7 +9968,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fill": 2,
           "fillGradient": 0,
@@ -10072,7 +10072,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fill": 2,
           "fillGradient": 0,
@@ -10172,7 +10172,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fill": 2,
           "fillGradient": 0,
@@ -10263,7 +10263,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fill": 2,
           "fillGradient": 0,
@@ -10359,7 +10359,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fill": 2,
           "fillGradient": 0,
@@ -10463,7 +10463,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fill": 2,
           "fillGradient": 0,
@@ -10550,7 +10550,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fill": 2,
           "fillGradient": 0,
@@ -10638,7 +10638,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fill": 2,
           "fillGradient": 0,
@@ -10726,7 +10726,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fill": 2,
           "fillGradient": 0,
@@ -10814,7 +10814,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fill": 2,
           "fillGradient": 0,
@@ -10923,7 +10923,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fill": 2,
           "fillGradient": 0,
@@ -11017,7 +11017,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fill": 2,
           "fillGradient": 0,
@@ -11116,7 +11116,7 @@
       "collapsed": true,
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "grafanacloud-prom"
       },
       "gridPos": {
         "h": 1,
@@ -11133,7 +11133,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fieldConfig": {
             "defaults": {
@@ -11269,7 +11269,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fieldConfig": {
             "defaults": {
@@ -11386,7 +11386,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fieldConfig": {
             "defaults": {
@@ -11496,7 +11496,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fieldConfig": {
             "defaults": {
@@ -11611,7 +11611,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fieldConfig": {
             "defaults": {
@@ -11711,7 +11711,7 @@
       "collapsed": true,
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "grafanacloud-prom"
       },
       "gridPos": {
         "h": 1,
@@ -11728,7 +11728,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fieldConfig": {
             "defaults": {
@@ -11846,7 +11846,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fieldConfig": {
             "defaults": {
@@ -11950,7 +11950,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fieldConfig": {
             "defaults": {
@@ -12064,7 +12064,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fieldConfig": {
             "defaults": {
@@ -12169,7 +12169,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fieldConfig": {
             "defaults": {
@@ -12287,7 +12287,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fieldConfig": {
             "defaults": {
@@ -12422,7 +12422,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fieldConfig": {
             "defaults": {
@@ -12541,7 +12541,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "description": "",
           "fieldConfig": {
@@ -12682,7 +12682,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fieldConfig": {
             "defaults": {
@@ -12802,7 +12802,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "description": "",
           "fieldConfig": {
@@ -12930,7 +12930,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "fieldConfig": {
             "defaults": {
@@ -13040,7 +13040,7 @@
       "collapsed": true,
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "grafanacloud-prom"
       },
       "gridPos": {
         "h": 1,
@@ -13057,7 +13057,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "description": "",
           "fill": 2,
@@ -13147,7 +13147,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "description": "",
           "fill": 2,
@@ -13268,7 +13268,7 @@
         },
         "datasource": {
           "type": "prometheus",
-          "uid": "PBFA97CFB590B2093"
+          "uid": "grafanacloud-prom"
         },
         "definition": "",
         "hide": 0,
@@ -13298,7 +13298,7 @@
         },
         "datasource": {
           "type": "prometheus",
-          "uid": "PBFA97CFB590B2093"
+          "uid": "grafanacloud-prom"
         },
         "definition": "label_values(node_uname_info{job=\"$job\"}, instance)",
         "hide": 0,

@@ -48,6 +48,7 @@
     volumes:
       - /home/{{ ansible_user }}/apps/{{appname}}/config/agent.yml:/etc/agent/agent.yaml:ro
       - /home/{{ ansible_user }}/apps/{{appname}}/data:/etc/agent/data:rw
+      - /home/{{ansible_user}}/apps/tls/{{ansible_hostname}}-root-ca.pem:/tls/root-ca.pem:ro
     networks_cli_compatible: yes
     network_mode: primenet
     networks:

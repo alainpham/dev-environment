@@ -4,7 +4,7 @@ scrape_configs:
     relabel_configs:
       - source_labels: [__address__]
         separator: ";"
-        regex: "(.+):(.+)"
+        regex: '(.+)\.(.+):(.+)'
         target_label: node_name
         replacement: $1
     static_configs:
@@ -15,7 +15,7 @@ scrape_configs:
     relabel_configs:
       - source_labels: [__address__]
         separator: ";"
-        regex: "(.+):(.+)"
+        regex: '(.+)\.(.+):(.+)'
         target_label: node_name
         replacement: $1
     static_configs:

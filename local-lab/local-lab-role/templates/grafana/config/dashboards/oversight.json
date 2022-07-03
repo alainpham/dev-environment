@@ -33,7 +33,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "grafanacloud-prom"
       },
       "fieldConfig": {
         "defaults": {
@@ -140,7 +140,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -166,7 +166,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "grafanacloud-prom"
       },
       "fieldConfig": {
         "defaults": {
@@ -291,7 +291,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -305,7 +305,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -319,7 +319,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -345,7 +345,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "grafanacloud-prom"
       },
       "fieldConfig": {
         "defaults": {
@@ -434,7 +434,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "editorMode": "code",
           "expr": "rate(node_network_receive_bytes_total{device=\"enp59s0\"}[$__rate_interval]) / (1024*1024)",
@@ -445,7 +445,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "grafanacloud-prom"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -478,7 +478,7 @@
         },
         "datasource": {
           "type": "prometheus",
-          "uid": "PBFA97CFB590B2093"
+          "uid": "grafanacloud-prom"
         },
         "definition": "label_values(up,job)",
         "hide": 0,
@@ -508,7 +508,7 @@
         },
         "datasource": {
           "type": "prometheus",
-          "uid": "PBFA97CFB590B2093"
+          "uid": "grafanacloud-prom"
         },
         "definition": "label_values(up{job=~\"$job\"},node_name)",
         "hide": 0,
