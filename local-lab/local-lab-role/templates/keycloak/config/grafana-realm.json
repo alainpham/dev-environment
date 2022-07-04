@@ -46,6 +46,14 @@
   "roles": {
     "realm": [
       {
+        "id": "4be89ddb-e99b-44cd-bf2c-c849d3563444",
+        "name": "grafana-editor",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "grafana",
+        "attributes": {}
+      },
+      {
         "id": "b2f4c54a-a150-4c85-a7ee-590e03a7c46a",
         "name": "default-roles-grafana",
         "description": "${role_default-roles}",
@@ -76,9 +84,25 @@
         "attributes": {}
       },
       {
+        "id": "6bbf4528-945e-497d-b0a5-24c0e4ed95cb",
+        "name": "grafana-admin",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "grafana",
+        "attributes": {}
+      },
+      {
         "id": "5b387937-382c-45b9-8f92-2f8be55e1e7e",
         "name": "offline_access",
         "description": "${role_offline-access}",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "grafana",
+        "attributes": {}
+      },
+      {
+        "id": "d867ab22-a890-48e1-8e3c-6d5b5a4ba207",
+        "name": "grafana-viewer",
         "composite": false,
         "clientRole": false,
         "containerId": "grafana",
@@ -312,32 +336,7 @@
           "attributes": {}
         }
       ],
-      "grafana.work.lan": [
-        {
-          "id": "dcf77875-9d6a-4e74-acbe-d51ffaf709a9",
-          "name": "viewer",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "da024124-d4c9-4766-b92f-65da8c98bd8f",
-          "attributes": {}
-        },
-        {
-          "id": "006fe225-971e-4c08-86cc-28ab8a3e4aa3",
-          "name": "admin",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "da024124-d4c9-4766-b92f-65da8c98bd8f",
-          "attributes": {}
-        },
-        {
-          "id": "8d605daa-2999-45e3-8049-f1dc890c0b47",
-          "name": "editor",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "da024124-d4c9-4766-b92f-65da8c98bd8f",
-          "attributes": {}
-        }
-      ],
+      "grafana.work.lan": [],
       "account": [
         {
           "id": "7430130b-ca07-459a-87df-96dd0534e958",
@@ -416,7 +415,8 @@
           "containerId": "9776789e-611b-4a4f-8318-c052dde20596",
           "attributes": {}
         }
-      ]
+      ],
+      "grafana-enterprise.work.lan": []
     }
   },
   "groups": [],
@@ -466,6 +466,22 @@
   "webAuthnPolicyPasswordlessAvoidSameAuthenticatorRegister": false,
   "webAuthnPolicyPasswordlessAcceptableAaguids": [],
   "scopeMappings": [
+    {
+      "client": "grafana-enterprise.work.lan",
+      "roles": [
+        "grafana-editor",
+        "grafana-viewer",
+        "grafana-admin"
+      ]
+    },
+    {
+      "client": "grafana.work.lan",
+      "roles": [
+        "grafana-editor",
+        "grafana-viewer",
+        "grafana-admin"
+      ]
+    },
     {
       "clientScope": "offline_access",
       "roles": [
@@ -657,6 +673,95 @@
       ]
     },
     {
+      "id": "517e76d2-feaa-44da-b4d7-58eb6c8622fe",
+      "clientId": "grafana-enterprise.work.lan",
+      "rootUrl": "https://grafana-enterprise.work.lan",
+      "adminUrl": "",
+      "surrogateAuthRequired": false,
+      "enabled": true,
+      "alwaysDisplayInConsole": false,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "**********",
+      "redirectUris": [
+        "https://grafana-enterprise.work.lan/*"
+      ],
+      "webOrigins": [
+        ""
+      ],
+      "notBefore": 0,
+      "bearerOnly": false,
+      "consentRequired": false,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": false,
+      "publicClient": false,
+      "frontchannelLogout": false,
+      "protocol": "openid-connect",
+      "attributes": {
+        "saml.force.post.binding": "false",
+        "saml.multivalued.roles": "false",
+        "frontchannel.logout.session.required": "false",
+        "oauth2.device.authorization.grant.enabled": "false",
+        "backchannel.logout.revoke.offline.tokens": "false",
+        "saml.server.signature.keyinfo.ext": "false",
+        "use.refresh.tokens": "true",
+        "oidc.ciba.grant.enabled": "false",
+        "backchannel.logout.session.required": "true",
+        "client_credentials.use_refresh_token": "false",
+        "require.pushed.authorization.requests": "false",
+        "saml.client.signature": "false",
+        "saml.allow.ecp.flow": "false",
+        "id.token.as.detached.signature": "false",
+        "saml.assertion.signature": "false",
+        "client.secret.creation.time": "1656927826",
+        "saml.encrypt": "false",
+        "saml.server.signature": "false",
+        "exclude.session.state.from.auth.response": "false",
+        "saml.artifact.binding": "false",
+        "saml_force_name_id_format": "false",
+        "acr.loa.map": "{}",
+        "tls.client.certificate.bound.access.tokens": "false",
+        "saml.authnstatement": "false",
+        "display.on.consent.screen": "false",
+        "token.response.type.bearer.lower-case": "false",
+        "saml.onetimeuse.condition": "false"
+      },
+      "authenticationFlowBindingOverrides": {},
+      "fullScopeAllowed": false,
+      "nodeReRegistrationTimeout": -1,
+      "protocolMappers": [
+        {
+          "id": "4ac43f55-6a2d-4a79-91b1-f806514d327e",
+          "name": "ream_roles",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
+          "consentRequired": false,
+          "config": {
+            "multivalued": "true",
+            "userinfo.token.claim": "true",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "realm_access.roles",
+            "jsonType.label": "String"
+          }
+        }
+      ],
+      "defaultClientScopes": [
+        "web-origins",
+        "acr",
+        "profile",
+        "roles",
+        "email"
+      ],
+      "optionalClientScopes": [
+        "address",
+        "phone",
+        "offline_access",
+        "microprofile-jwt"
+      ]
+    },
+    {
       "id": "da024124-d4c9-4766-b92f-65da8c98bd8f",
       "clientId": "grafana.work.lan",
       "rootUrl": "https://grafana.work.lan",
@@ -716,19 +821,18 @@
       "nodeReRegistrationTimeout": -1,
       "protocolMappers": [
         {
-          "id": "1f426cd8-0a6d-433c-bec1-4113001ed0f3",
-          "name": "roles",
+          "id": "74c1ef81-414d-4e12-b796-c9a168a1f025",
+          "name": "realm_roles",
           "protocol": "openid-connect",
-          "protocolMapper": "oidc-usermodel-client-role-mapper",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
           "consentRequired": false,
           "config": {
             "multivalued": "true",
             "userinfo.token.claim": "true",
             "id.token.claim": "true",
             "access.token.claim": "true",
-            "claim.name": "roles",
-            "jsonType.label": "String",
-            "usermodel.clientRoleMapping.clientId": "grafana.work.lan"
+            "claim.name": "realm_access.roles",
+            "jsonType.label": "String"
           }
         }
       ],

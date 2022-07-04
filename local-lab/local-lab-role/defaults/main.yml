@@ -113,4 +113,10 @@ secretappconfig:
     url: to be overwrittend by group or host vars
   grafana-enterprise:
     license: to be overwrittend by group or host vars
-
+  grafana-agent:
+    metrics:
+      url: to be overwrittend by group or host vars
+      user: overwrite this
+      pwd: overwrite this
+    logs:
+      url: overwrite this
