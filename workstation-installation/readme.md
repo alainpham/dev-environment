@@ -103,7 +103,7 @@ Go to system settings
 
 
 ```
-ncdu git ansible docker.io docker-compose apparmor tmux vim openjdk-11-jdk openjdk-17-jdk openjdk-18-jdk prometheus-node-exporter htop curl lshw rsync mediainfo ffmpeg python3-mutagen iperf dnsmasq qemu-system qemu-utils virtinst libvirt-clients libvirt-daemon-system libguestfs-tools bridge-utils libosinfo-bin jackd2 qjackctl pulseaudio-module-jack lsp-plugins-lv2 calf-plugins ardour v4l-utils flatpak snapd virt-manager mediainfo-gui v4l2loopback-utils easytag gimp avldrums.lv2 libreoffice-plasma libreoffice openssh-server linux-tools-common linux-tools-generic freeplane ifuse libimobiledevice-utils imagemagick xournal
+ncdu git ansible docker.io docker-compose apparmor tmux vim openjdk-11-jdk openjdk-17-jdk openjdk-18-jdk prometheus-node-exporter htop curl lshw rsync mediainfo ffmpeg python3-mutagen iperf dnsmasq imagemagick qemu-system qemu-utils virtinst libvirt-clients libvirt-daemon-system libguestfs-tools bridge-utils libosinfo-bin jackd2 qjackctl pulseaudio-module-jack lsp-plugins-lv2 calf-plugins ardour v4l-utils flatpak snapd virt-manager mediainfo-gui v4l2loopback-utils easytag gimp avldrums.lv2 libreoffice-plasma libreoffice openssh-server linux-tools-common linux-tools-generic freeplane ifuse libimobiledevice-utils xournal inkscape
 ```
 
 ### Fonts
@@ -296,6 +296,7 @@ vmcreate master 4096 4 ubuntu-22.04-server-cloudimg-amd64 10 40G ubuntu22.04
 vmcreate node01 4096 4 ubuntu-22.04-server-cloudimg-amd64 11 40G ubuntu22.04
 vmcreate node02 4096 4 ubuntu-22.04-server-cloudimg-amd64 12 40G ubuntu22.04
 vmcreate node03 4096 4 ubuntu-22.04-server-cloudimg-amd64 13 40G ubuntu22.04
+vmcreate sandbox 4096 4 ubuntu-22.04-server-cloudimg-amd64 30 40G ubuntu22.04
 
 
 ```
@@ -308,6 +309,8 @@ dvm master
 dvm node01
 dvm node02
 dvm node03
+
+dvm sandbox
 
 ```
 
