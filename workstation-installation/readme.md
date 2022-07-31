@@ -103,7 +103,7 @@ Go to system settings
 
 
 ```
-ncdu git ansible docker.io docker-compose apparmor tmux vim openjdk-11-jdk openjdk-17-jdk openjdk-18-jdk prometheus-node-exporter htop curl lshw rsync mediainfo ffmpeg python3-mutagen iperf dnsmasq imagemagick qemu-system qemu-utils virtinst libvirt-clients libvirt-daemon-system libguestfs-tools bridge-utils libosinfo-bin jackd2 qjackctl pulseaudio-module-jack lsp-plugins-lv2 calf-plugins ardour v4l-utils flatpak snapd virt-manager mediainfo-gui v4l2loopback-utils easytag gimp avldrums.lv2 libreoffice-plasma libreoffice openssh-server linux-tools-common linux-tools-generic freeplane ifuse libimobiledevice-utils xournal inkscape
+ncdu git ansible docker.io docker-compose apparmor tmux vim openjdk-11-jdk openjdk-17-jdk openjdk-18-jdk prometheus-node-exporter htop curl lshw rsync mediainfo ffmpeg python3-mutagen iperf dnsmasq imagemagick qemu-system qemu-utils virtinst libvirt-clients libvirt-daemon-system libguestfs-tools bridge-utils libosinfo-bin jackd2 qjackctl pulseaudio-module-jack lsp-plugins-lv2 calf-plugins ardour v4l-utils flatpak snapd virt-manager mediainfo-gui v4l2loopback-utils easytag gimp avldrums.lv2 libreoffice-plasma libreoffice openssh-server linux-tools-common linux-tools-generic freeplane ifuse libimobiledevice-utils xournal inkscape npm rpi-imager
 ```
 
 ### Fonts
