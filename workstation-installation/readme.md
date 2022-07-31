@@ -177,8 +177,8 @@ Execute script after Shutdown : pacmd suspend false
 ```
 sudo bash -c 'cat > /etc/docker/daemon.json << _EOF_
 {
-    "insecure-registries" : ["registry.hpel.lan" ,"registry.work.lan"],
-    "dns": ["172.17.0.1", "8.8.8.8"]
+    "insecure-registries" : ["registry.cipi.lan", "registry.work.lan", "registry.hpel.lan"],
+    "dns": ["172.17.0.1", "172.18.0.1", "192.168.8.200", "8.8.8.8"]
 }
 _EOF_'
 
@@ -189,6 +189,8 @@ sudo systemctl restart docker
 ```
 docker network create --driver=bridge --subnet=172.18.0.0/16 --gateway=172.18.0.1 primenet
 ```
+
+Adding custom dns server on local machine and local area network
 
 ```
 sudo bash -c 'cat > /etc/NetworkManager/conf.d/00-use-dnsmasq.conf << _EOF_
@@ -202,9 +204,14 @@ _EOF_'
 
 sudo bash -c 'cat > /etc/NetworkManager/dnsmasq.d/dev.conf << _EOF_
 #/etc/NetworkManager/dnsmasq.d/dev.conf
-listen-address=127.0.0.1,172.17.0.1
+listen-address=127.0.0.1,172.17.0.1,172.18.0.1
+address=/${HOSTNAME}.lan/172.17.0.1
+address=/${HOSTNAME}.lan/172.18.0.1
 address=/${HOSTNAME}.lan/192.168.122.1
 address=/kube.loc/192.168.122.10
+address=/sandbox.lan/192.168.122.30
+
+server=/lan/192.168.8.200
 _EOF_'
 
 ```
