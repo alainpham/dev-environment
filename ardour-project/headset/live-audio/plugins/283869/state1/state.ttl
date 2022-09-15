@@ -1,0 +1,45 @@
+@prefix atom: <http://lv2plug.in/ns/ext/atom#> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix pset: <http://lv2plug.in/ns/ext/presets#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix state: <http://lv2plug.in/ns/ext/state#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<>
+	a pset:Preset ;
+	lv2:appliesTo <http://drumgizmo.org/lv2> ;
+	state:state [
+		<http://drumgizmo.org/lv2/atom#config> """PGNvbmZpZyB2ZXJzaW9uPSIxLjAiPgogIDx2YWx1ZSBuYW1lPSJkcnVta2l0ZmlsZSI+PC92YWx1
+ZT4KICA8dmFsdWUgbmFtZT0ibWlkaW1hcGZpbGUiPjwvdmFsdWU+CiAgPHZhbHVlIG5hbWU9ImVu
+YWJsZV92ZWxvY2l0eV9tb2RpZmllciI+dHJ1ZTwvdmFsdWU+CiAgPHZhbHVlIG5hbWU9InZlbG9j
+aXR5X21vZGlmaWVyX2ZhbGxvZmYiPjAuNTAwMDAwPC92YWx1ZT4KICA8dmFsdWUgbmFtZT0idmVs
+b2NpdHlfbW9kaWZpZXJfd2VpZ2h0Ij4wLjI1MDAwMDwvdmFsdWU+CiAgPHZhbHVlIG5hbWU9InZl
+bG9jaXR5X3N0ZGRldiI+MC40NTAwMDA8L3ZhbHVlPgogIDx2YWx1ZSBuYW1lPSJzYW1wbGVfc2Vs
+ZWN0aW9uX2ZfY2xvc2UiPjAuODUwMDAwPC92YWx1ZT4KICA8dmFsdWUgbmFtZT0ic2FtcGxlX3Nl
+bGVjdGlvbl9mX2RpdmVyc2UiPjAuMTYwMDAwPC92YWx1ZT4KICA8dmFsdWUgbmFtZT0ic2FtcGxl
+X3NlbGVjdGlvbl9mX3JhbmRvbSI+MC4wNzAwMDA8L3ZhbHVlPgogIDx2YWx1ZSBuYW1lPSJlbmFi
+bGVfdmVsb2NpdHlfcmFuZG9taXNlciI+ZmFsc2U8L3ZhbHVlPgogIDx2YWx1ZSBuYW1lPSJ2ZWxv
+Y2l0eV9yYW5kb21pc2VyX3dlaWdodCI+MC4xMDAwMDA8L3ZhbHVlPgogIDx2YWx1ZSBuYW1lPSJl
+bmFibGVfcmVzYW1wbGluZyI+dHJ1ZTwvdmFsdWU+CiAgPHZhbHVlIG5hbWU9InJlc2FtcGxpbmdf
+cXVhbGl0eSI+MC43MDAwMDA8L3ZhbHVlPgogIDx2YWx1ZSBuYW1lPSJkaXNrX2NhY2hlX3VwcGVy
+X2xpbWl0Ij4xMDczNzQxODI0PC92YWx1ZT4KICA8dmFsdWUgbmFtZT0iZGlza19jYWNoZV9jaHVu
+a19zaXplIj4xMDQ4NTc2PC92YWx1ZT4KICA8dmFsdWUgbmFtZT0iZGlza19jYWNoZV9lbmFibGUi
+PnRydWU8L3ZhbHVlPgogIDx2YWx1ZSBuYW1lPSJlbmFibGVfYmxlZWRfY29udHJvbCI+ZmFsc2U8
+L3ZhbHVlPgogIDx2YWx1ZSBuYW1lPSJtYXN0ZXJfYmxlZWQiPjEuMDAwMDAwPC92YWx1ZT4KICA8
+dmFsdWUgbmFtZT0iZW5hYmxlX2xhdGVuY3lfbW9kaWZpZXIiPmZhbHNlPC92YWx1ZT4KICA8dmFs
+dWUgbmFtZT0ibGF0ZW5jeV9sYWlkX2JhY2tfbXMiPjAuMDAwMDAwPC92YWx1ZT4KICA8dmFsdWUg
+bmFtZT0ibGF0ZW5jeV9zdGRkZXYiPjIuMDAwMDAwPC92YWx1ZT4KICA8dmFsdWUgbmFtZT0ibGF0
+ZW5jeV9yZWdhaW4iPjAuOTAwMDAwPC92YWx1ZT4KICA8dmFsdWUgbmFtZT0iZW5hYmxlX3Bvd2Vy
+bWFwIj5mYWxzZTwvdmFsdWU+CiAgPHZhbHVlIG5hbWU9InBvd2VybWFwX2ZpeGVkMF94Ij4wLjAw
+MDAwMDwvdmFsdWU+CiAgPHZhbHVlIG5hbWU9InBvd2VybWFwX2ZpeGVkMF95Ij4wLjAwMDAwMDwv
+dmFsdWU+CiAgPHZhbHVlIG5hbWU9InBvd2VybWFwX2ZpeGVkMV94Ij4wLjUwMDAwMDwvdmFsdWU+
+CiAgPHZhbHVlIG5hbWU9InBvd2VybWFwX2ZpeGVkMV95Ij4wLjUwMDAwMDwvdmFsdWU+CiAgPHZh
+bHVlIG5hbWU9InBvd2VybWFwX2ZpeGVkMl94Ij4xLjAwMDAwMDwvdmFsdWU+CiAgPHZhbHVlIG5h
+bWU9InBvd2VybWFwX2ZpeGVkMl95Ij4xLjAwMDAwMDwvdmFsdWU+CiAgPHZhbHVlIG5hbWU9InBv
+d2VybWFwX3NoZWxmIj50cnVlPC92YWx1ZT4KICA8dmFsdWUgbmFtZT0iZW5hYmxlX3ZvaWNlX2xp
+bWl0Ij5mYWxzZTwvdmFsdWU+CiAgPHZhbHVlIG5hbWU9InZvaWNlX2xpbWl0X21heCI+MTU8L3Zh
+bHVlPgogIDx2YWx1ZSBuYW1lPSJ2b2ljZV9saW1pdF9yYW1wZG93biI+MC41MDAwMDA8L3ZhbHVl
+Pgo8L2NvbmZpZz4="""^^xsd:base64Binary
+	] .
+

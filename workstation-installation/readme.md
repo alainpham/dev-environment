@@ -23,6 +23,9 @@
     - [Current env](#current-env)
     - [Delete vms example](#delete-vms-example)
     - [Simple approach with microk8s](#simple-approach-with-microk8s)
+    - [TLS Setyp](#tls-setyp)
+      - [Generate Certificates Root CA](#generate-certificates-root-ca)
+      - [Generate Key Pair and others](#generate-key-pair-and-others)
 
 # Workstation Installs
 
@@ -30,6 +33,7 @@
 
 * Install Kubuntu Ubuntu LTS 22.04
   * Minimal Install
+  * Install thirdparty
   * choose Graphics
   * KDE Plasma
   * SSH server
@@ -103,7 +107,7 @@ Go to system settings
 
 
 ```
-ncdu git ansible docker.io docker-compose apparmor tmux vim openjdk-11-jdk openjdk-17-jdk openjdk-18-jdk prometheus-node-exporter htop curl lshw rsync mediainfo ffmpeg python3-mutagen iperf dnsmasq imagemagick qemu-system qemu-utils virtinst libvirt-clients libvirt-daemon-system libguestfs-tools bridge-utils libosinfo-bin jackd2 qjackctl pulseaudio-module-jack lsp-plugins-lv2 calf-plugins ardour v4l-utils flatpak snapd virt-manager mediainfo-gui v4l2loopback-utils easytag gimp avldrums.lv2 libreoffice-plasma libreoffice openssh-server linux-tools-common linux-tools-generic freeplane ifuse libimobiledevice-utils xournal inkscape npm rpi-imager
+ncdu git ansible docker.io docker-compose apparmor tmux vim openjdk-11-jdk openjdk-17-jdk prometheus-node-exporter htop curl lshw rsync mediainfo ffmpeg python3-mutagen iperf dnsmasq imagemagick qemu-system qemu-utils virtinst libvirt-clients libvirt-daemon-system libguestfs-tools bridge-utils libosinfo-bin jackd2 qjackctl pulseaudio-module-jack lsp-plugins-lv2 calf-plugins ardour v4l-utils flatpak snapd virt-manager mediainfo-gui v4l2loopback-utils easytag gimp avldrums.lv2 libreoffice-plasma libreoffice openssh-server linux-tools-common linux-tools-generic freeplane ifuse libimobiledevice-utils xournal inkscape npm rpi-imager apt-cacher-ng skopeo golang-go
 ```
 
 ### Fonts
@@ -178,7 +182,7 @@ Execute script after Shutdown : pacmd suspend false
 sudo bash -c 'cat > /etc/docker/daemon.json << _EOF_
 {
     "insecure-registries" : ["registry.cipi.lan", "registry.work.lan", "registry.hpel.lan"],
-    "dns": ["172.17.0.1", "172.18.0.1", "192.168.8.200", "8.8.8.8"]
+    "dns": ["172.17.0.1", "172.18.0.1"]
 }
 _EOF_'
 
@@ -248,6 +252,15 @@ _EOF_'
 
 ```
 
+## Configure IPV6 disabled
+
+```
+sudo vi /etc/default/grub
+
+GRUB_CMDLINE_LINUX='ipv6.disable=1'
+
+sudo update-grub
+```
 
 ## Install raw packages
 
@@ -272,7 +285,10 @@ Think about customizing settings.xml if needed
 
 ```
 sudo snap install obs-studio
-sudo snap install dbeaver-ce postman sweethome3d-homedesign 
+sudo snap install dbeaver-ce postman sweethome3d-homedesign blender helm
+sudo snap install drawio
+sudo snap install teams zoom-client
+sudo snap install firefox
 ```
 
 ## Setup Kubernetes on vms
@@ -287,23 +303,21 @@ ssh-keygen -f ~/.ssh/vm
 
 ```
 
-vmcreate master 4096 4 debian-10-genericcloud-amd64 10 40G debian10
-vmcreate node01 4096 4 debian-10-genericcloud-amd64 11 40G debian10
-vmcreate node02 4096 4 debian-10-genericcloud-amd64 12 40G debian10
-vmcreate node03 4096 4 debian-10-genericcloud-amd64 13 40G debian10
+debianimage=debian-10-genericcloud-amd64-20220328-962
+
+vmcreate master 4096 4 $debianimage 10 40G 40G debian10
+vmcreate node01 4096 4 $debianimage 11 40G 40G debian10
+vmcreate node02 4096 4 $debianimage 12 40G 40G debian10
+vmcreate node03 4096 4 $debianimage 13 40G 40G debian10
 
 
-vmcreate master 4096 4 debian-11-genericcloud-amd64 10 40G debian11
-vmcreate node01 4096 4 debian-11-genericcloud-amd64 11 40G debian11
-vmcreate node02 4096 4 debian-11-genericcloud-amd64 12 40G debian11
-vmcreate node03 4096 4 debian-11-genericcloud-amd64 13 40G debian11
+vmcreate master 4096 4 ubuntu-22.04-server-cloudimg-amd64 10 40G 40G ubuntu22.04
+vmcreate node01 4096 4 ubuntu-22.04-server-cloudimg-amd64 11 40G 40G ubuntu22.04
+vmcreate node02 4096 4 ubuntu-22.04-server-cloudimg-amd64 12 40G 40G ubuntu22.04
+vmcreate node03 4096 4 ubuntu-22.04-server-cloudimg-amd64 13 40G 40G ubuntu22.04
 
 
-vmcreate master 4096 4 ubuntu-22.04-server-cloudimg-amd64 10 40G ubuntu22.04
-vmcreate node01 4096 4 ubuntu-22.04-server-cloudimg-amd64 11 40G ubuntu22.04
-vmcreate node02 4096 4 ubuntu-22.04-server-cloudimg-amd64 12 40G ubuntu22.04
-vmcreate node03 4096 4 ubuntu-22.04-server-cloudimg-amd64 13 40G ubuntu22.04
-vmcreate sandbox 4096 4 ubuntu-22.04-server-cloudimg-amd64 30 40G ubuntu22.04
+vmcreate sandbox 4096 4 ubuntu-22.04-server-cloudimg-amd64 30 40G 40G ubuntu22.04
 
 
 ```
@@ -327,5 +341,109 @@ dvm sandbox
 
 sudo snap install microk8s --channel=1.24/stable --classic
 sudo usermod -a -G microk8s apham
+
+```
+
+### TLS Setyp
+
+#### Generate Certificates Root CA
+
+```
+
+rootcakeyfile=/home/apham/apps/tls/work.lan-root-ca.key
+rootcacertfile=/home/apham/apps/tls/work.lan-root-ca.pem
+
+cahostname=work.lan
+
+tagethostname=cipi.lan
+keystorefile=/home/apham/apps/tls/${tagethostname}.p12
+keyfile=/home/apham/apps/tls/${tagethostname}.key
+certfile=/home/apham/apps/tls/${tagethostname}.pem
+signreqfile=/home/apham/apps/tls/${tagethostname}.csr
+signconffile=/home/apham/apps/tls/${tagethostname}.cnf
+truststorefile=/home/apham/apps/tls/${tagethostname}-truststore.p12
+
+openssl genrsa -out ${rootcakeyfile} 4096
+
+openssl req -x509 -new -nodes \
+  -key $rootcakeyfile \
+  -sha256 \
+  -days 365000 \
+  -subj "/CN=*.${targethostname}" \
+  -out $rootcacertfile
+
+```
+
+#### Generate Key Pair and others
+
+```
+
+keytool -genkey \
+  -alias $tagethostname  \
+  -storepass password \
+  -keyalg RSA \
+  -keysize 4096 \
+  -storetype PKCS12 \
+  -dname "cn=*.${tagethostname}" \
+  -ext "SAN=dns:${tagethostname},dns:*.${tagethostname}" \
+  -validity 365000 \
+  -keystore ${keystorefile}
+
+openssl pkcs12 \
+  -in ${keystorefile} \
+  -nodes \
+  -password pass:password -nocerts \
+  -out $keyfile
+
+keytool -certreq \
+  -alias $tagethostname \
+  -storepass password \
+  -storetype PKCS12 \
+  -noprompt \
+  -keystore ${keystorefile} \
+  > $signreqfile
+
+cat > ${signconffile} << _EOF_
+# Extensions to add to a certificate request
+basicConstraints       = CA:FALSE
+authorityKeyIdentifier = keyid:always, issuer:always
+keyUsage               = nonRepudiation, digitalSignature, keyEncipherment, dataEncipherment
+subjectAltName         = @alt_names
+[ alt_names ]
+DNS.1 = *.${tagethostname}
+_EOF_
+
+openssl x509 -req \
+  -in $signreqfile \
+  -CA $rootcacertfile \
+  -CAkey $rootcakeyfile  \
+  -CAcreateserial \
+  -days 365000 -sha256  \
+  -extfile $signconffile \
+  -out $certfile
+
+keytool -import \
+  -alias ${tagethostname}-root-ca \
+  -storepass password \
+  -storetype PKCS12 \
+  -noprompt \
+  -keystore $keystorefile \
+  -file $rootcacertfile
+
+  keytool -import \
+    -alias ${tagethostname} \
+    -storepass password \
+    -storetype PKCS12 \
+    -noprompt \
+    -keystore $keystorefile \
+    -file $certfile
+
+  keytool -import \
+    -alias ${tagethostname}-root-ca \
+    -storepass password \
+    -storetype PKCS12 \
+    -noprompt \
+    -keystore $truststorefile \
+    -file $rootcacertfile
 
 ```
