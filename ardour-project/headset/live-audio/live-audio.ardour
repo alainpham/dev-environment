@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Session version="6000" name="live-audio" sample-rate="48000" end-is-free="0" session-range-is-free="0" id-counter="319782" name-counter="13" event-counter="508720" vca-counter="1">
+<Session version="6000" name="live-audio" sample-rate="48000" end-is-free="0" session-range-is-free="0" id-counter="321060" name-counter="13" event-counter="508720" vca-counter="1">
   <ProgramVersion created-with="Ardour 5.12" modified-with="Ardour 6.9.0~ds0-1build1"/>
   <MIDIPorts>
     <Port name="MIDI Clock out" direction="output"/>
@@ -157,7 +157,7 @@
         <Automation>
           <AutomationList automation-id="gain" id="245591" interpolation-style="Linear" state="Off"/>
         </Automation>
-        <Controllable name="gaincontrol" id="58" flags="GainLike" value="0.25097346305847168"/>
+        <Controllable name="gaincontrol" id="58" flags="GainLike" value="0.767220139503479"/>
       </Processor>
       <Processor id="87" name="Master" active="1" user-latency="0" use-user-latency="0" own-input="1" own-output="0" output="Master" type="main-outs" role="Main">
         <PannerShell bypassed="0" user-panner="http://ardour.org/plugin/panner_balance" linked-to-route="1"/>
@@ -628,8 +628,8 @@
           <Connection other="pre-master/audio_in 2"/>
         </Port>
       </IO>
-      <MuteMaster mute-point="PostFader,Listen,Main" muted="1"/>
-      <Controllable name="mute" id="15843" flags="Toggle,RealTime" value="1"/>
+      <MuteMaster mute-point="PostFader,Listen,Main" muted="0"/>
+      <Controllable name="mute" id="15843" flags="Toggle,RealTime" value="0"/>
       <Controllable name="phase" id="15845" flags="Toggle" value="0" phase-invert="00"/>
       <Automation>
         <AutomationList automation-id="solo" id="245871" interpolation-style="Discrete" state="Off"/>
@@ -660,7 +660,7 @@
         </Automation>
         <Controllable name="trimcontrol" id="15839" flags="GainLike" value="1"/>
       </Processor>
-      <Processor id="181422" name="a-Amplifier" active="1" user-latency="0" use-user-latency="0" type="luaproc" unique-id="10845fe3e9430f11fe229b9d7a032f76f543b4a4" count="1" custom="0">
+      <Processor id="181422" name="a-Amplifier" active="0" user-latency="0" use-user-latency="0" type="luaproc" unique-id="10845fe3e9430f11fe229b9d7a032f76f543b4a4" count="1" custom="0">
         <Automation>
           <AutomationList automation-id="parameter-0" id="245906" interpolation-style="Linear" state="Off"/>
         </Automation>
@@ -817,7 +817,7 @@
         <Controllable name="Residual listen" id="91287" flags="Toggle" value="0" parameter="9" symbol="Residual_listen"/>
         <Controllable name="hidden" id="91288" flags="Toggle" value="1" parameter="10" symbol="enable"/>
       </Processor>
-      <Processor id="171227" name="a-Amplifier" active="0" user-latency="0" use-user-latency="0" type="luaproc" unique-id="10845fe3e9430f11fe229b9d7a032f76f543b4a4" count="1" custom="0">
+      <Processor id="171227" name="a-Amplifier" active="1" user-latency="0" use-user-latency="0" type="luaproc" unique-id="10845fe3e9430f11fe229b9d7a032f76f543b4a4" count="1" custom="0">
         <Automation>
           <AutomationList automation-id="parameter-0" id="246017" interpolation-style="Linear" state="Off"/>
         </Automation>
@@ -840,9 +840,9 @@
         <ThruMap/>
         <luaproc last-preset-uri="" last-preset-label="" parameter-changed-since-last-preset="1">
           <script lua="Lua 5.3" origin="">YXJkb3VyIHsKCVsidHlwZSJdICAgID0gImRzcCIsCgluYW1lICAgICAgICA9ICJhLUFtcGxpZmllciIsCgljYXRlZ29yeSAgICA9ICJBbXBsaWZpZXIiLAoJbGljZW5zZSAgICAgPSAiTUlUIiwKCWF1dGhvciAgICAgID0gIkFyZG91ciBUZWFtIiwKCWRlc2NyaXB0aW9uID0gW1tWZXJzYXRpbGUgKy8tIDIwZEIgbXVsdGljaGFubmVsIGFtcGxpZmllcl1dCn0KCmZ1bmN0aW9uIGRzcF9pb2NvbmZpZyAoKQoJcmV0dXJuCgl7CgkJLS0gLTEsIC0xID0gYW55IG51bWJlciBvZiBjaGFubmVscyBhcyBsb25nIGFzIGlucHV0IGFuZCBvdXRwdXQgY291bnQgbWF0Y2hlcwoJCXsgYXVkaW9faW4gPSAtMSwgYXVkaW9fb3V0ID0gLTF9LAoJfQplbmQKCgpmdW5jdGlvbiBkc3BfcGFyYW1zICgpCglyZXR1cm4KCXsKCQl7IFsidHlwZSJdID0gImlucHV0IiwgbmFtZSA9ICJHYWluIiwgbWluID0gLTIwLCBtYXggPSAyMCwgZGVmYXVsdCA9IDAsIHVuaXQ9ImRCIn0sCgl9CmVuZAoKbG9jYWwgbHBmID0gMC4wMiAtLSBwYXJhbWV0ZXIgbG93LXBhc3MgZmlsdGVyIHRpbWUtY29uc3RhbnQKbG9jYWwgY3VyX2dhaW4gPSAwIC0tIGN1cnJlbnQgc21vb3RoZWQgZ2FpbiAoZEIpCgotLSBjYWxsZWQgb25jZSB3aGVuIHBsdWdpbiBpcyBpbnN0YW50aWF0ZWQKZnVuY3Rpb24gZHNwX2luaXQgKHJhdGUpCglscGYgPSA3ODAgLyByYXRlIC0tIGludGVycG9sYXRpb24gdGltZSBjb25zdGFudAplbmQKCmZ1bmN0aW9uIGxvd19wYXNzX2ZpbHRlcl9wYXJhbSAob2xkLCBuZXcsIGxpbWl0KQoJaWYgbWF0aC5hYnMgKG9sZCAtIG5ldykgPCBsaW1pdCAgdGhlbgoJCXJldHVybiBuZXcKCWVsc2UKCQlyZXR1cm4gb2xkICsgbHBmICogKG5ldyAtIG9sZCkKCWVuZAplbmQKCi0tIHRoZSBEU1AgY2FsbGJhY2sgZnVuY3Rpb24KLS0gImlucyIgYW5kICJvdXRzIiBhcmUgaHR0cDovL21hbnVhbC5hcmRvdXIub3JnL2x1YS1zY3JpcHRpbmcvY2xhc3NfcmVmZXJlbmNlLyNDOkZsb2F0QXJyYXkKZnVuY3Rpb24gZHNwX3J1biAoaW5zLCBvdXRzLCBuX3NhbXBsZXMpCglsb2NhbCBjdHJsID0gQ3RybFBvcnRzOmFycmF5KCkgLS0gZ2V0IGNvbnRyb2wgcG9ydCBhcnJheSAocmVhZC93cml0ZSkKCWxvY2FsIHNpeiA9IG5fc2FtcGxlcyAtLSBzYW1wbGVzIHJlbWFpbmluZyB0byBwcm9jZXNzCglsb2NhbCBvZmYgPSAwIC0tIGFscmVhZHkgcHJvY2Vzc2VkIHNhbXBsZXMKCWxvY2FsIGNoYW5nZWQgPSBmYWxzZQoKCS0tIGlmIHRoZSBnYWluIHBhcmFtZXRlciB3YXMgY2hhbmdlZCwgcHJvY2VzcyBhdCBtb3N0IDMyIHNhbXBsZXMgYXQgYSB0aW1lCgktLSBhbmQgaW50ZXJwb2xhdGUgZ2FpbiB1bnRpbCB0aGUgY3VycmVudCBzZXR0aW5ncyBtYXRjaCB0aGUgdGFyZ2V0IHZhbHVlcwoJaWYgY3VyX2dhaW4gfj0gY3RybFsxXSB0aGVuCgkJY2hhbmdlZCA9IHRydWUKCQlzaXogPSAzMgoJZW5kCgoJd2hpbGUgbl9zYW1wbGVzID4gMCBkbwoJCWlmIHNpeiA+IG5fc2FtcGxlcyB0aGVuIHNpeiA9IG5fc2FtcGxlcyBlbmQgLS0gcHJvY2VzcyBhdCBtb3N0ICJyZW1haW5pbmcgc2FtcGxlcyIKCQlpZiBjaGFuZ2VkIHRoZW4KCQkJLS0gc21vb3RoIGdhaW4gY2hhbmdlcyBhYm92ZSAwLjAyIGRCIGRpZmZlcmVuY2UKCQkJY3VyX2dhaW4gPSBsb3dfcGFzc19maWx0ZXJfcGFyYW0gKGN1cl9nYWluLCBjdHJsWzFdLCAwLjAyKQoJCWVuZAoKCQlsb2NhbCBnYWluID0gQVJET1VSLkRTUC5kQl90b19jb2VmZmljaWVudCAoY3VyX2dhaW4pIC0tIDEwIF4gKDAuMDUgKiBjdXJfZ2FpbikKCgkJZm9yIGMgPSAxLCNpbnMgZG8gLS0gcHJvY2VzcyBhbGwgY2hhbm5lbHMKCQkJLS0gY2hlY2sgaWYgb3V0cHV0IGFuZCBpbnB1dCBidWZmZXJzIGZvciB0aGlzIGNoYW5uZWwgYXJlIGlkZW50aWNhbAoJCQktLSBodHRwOi8vbWFudWFsLmFyZG91ci5vcmcvbHVhLXNjcmlwdGluZy9jbGFzc19yZWZlcmVuY2UvI0M6RmxvYXRBcnJheQoJCQlpZiBpbnNbY10gfj0gb3V0c1tjXSB0aGVuCgkJCQktLSBodHRwOi8vbWFudWFsLmFyZG91ci5vcmcvbHVhLXNjcmlwdGluZy9jbGFzc19yZWZlcmVuY2UvI0FSRE9VUjpEU1AKCQkJCUFSRE9VUi5EU1AuY29weV92ZWN0b3IgKG91dHNbY106b2Zmc2V0IChvZmYpLCBpbnNbY106b2Zmc2V0IChvZmYpLCBzaXopCgkJCWVuZAoJCQlBUkRPVVIuRFNQLmFwcGx5X2dhaW5fdG9fYnVmZmVyIChvdXRzW2NdOm9mZnNldCAob2ZmKSwgc2l6LCBnYWluKTsgLS0gYXBwbHktZ2FpbiwgcHJvY2VzcyBpbi1wbGFjZQoJCWVuZAoJCW5fc2FtcGxlcyA9IG5fc2FtcGxlcyAtIHNpegoJCW9mZiA9IG9mZiArIHNpegoJZW5kCgotLVtbCglpZiBjaGFuZ2VkIHRoZW4KCQlzZWxmOnF1ZXVlX2RyYXcgKCkgLS0gbm90aWZ5IGRpc3BsYXkKCWVuZAotLV1dCmVuZAoKLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQotLS0gaW5saW5lIGRpc3BsYXkgKyB0ZXh0IGV4YW1wbGUKCi0tW1sKbG9jYWwgdHh0ID0gbmlsIC0tIGNhY2hlIHBhbmdvIGNvbnRleHQgZ2xvYmFsbHkKCmZ1bmN0aW9uIHJlbmRlcl9pbmxpbmUgKGN0eCwgdywgbWF4X2gpCglsb2NhbCBjdHJsID0gQ3RybFBvcnRzOmFycmF5ICgpIC0tIGdldCBjb250cm9sIHBvcnRzCgoJaWYgbm90IHR4dCB0aGVuCgkJLS0gYWxsb2NhdGUgUGFuZ29MYXlvdXQgYW5kIHNldCBmb250CgkJLS1odHRwOi8vbWFudWFsLmFyZG91ci5vcmcvbHVhLXNjcmlwdGluZy9jbGFzc19yZWZlcmVuY2UvI0NhaXJvOlBhbmdvTGF5b3V0CgkJdHh0ID0gQ2Fpcm8uUGFuZ29MYXlvdXQgKGN0eCwgIk1vbm8gOHB4IikKCWVuZAoKCXR4dDpzZXRfdGV4dCAoc3RyaW5nLmZvcm1hdCAoIiUrLjJmIGRCIiwgY3RybFsxXSkpOwoJdHcsIHRoID0gdHh0OmdldF9waXhlbF9zaXplICgpCgoJbG9jYWwgaCA9IHRoICsgNCAtLSB1c2UgdGV4dC1oZWlnaHQgd2l0aCA0cHggcGFkZGluZwoJaWYgKGggPiBtYXhfaCkgdGhlbiBoID0gbWF4X2ggZW5kIC0tIGJ1dCBhdCBtb3N0IG1heC1oZWlnaHQKCgktLSBjbGVhciBiYWNrZ3JvdW5kCgljdHg6cmVjdGFuZ2xlICgwLCAwLCB3LCBoKQoJY3R4OnNldF9zb3VyY2VfcmdiYSAoLjIsIC4yLCAuMiwgMS4wKQoJY3R4OmZpbGwgKCkKCgktLSBjZW50ZXIgdGV4dAoJY3R4OnNldF9zb3VyY2VfcmdiYSAoLjgsIC44LCAuOCwgMS4wKQoJY3R4Om1vdmVfdG8gKC41ICogKHcgLSB0dyksIC41ICogKGggLSB0aCkpCgl0eHQ6c2hvd19pbl9jYWlyb19jb250ZXh0IChjdHgpCgoJcmV0dXJuIHt3LCBofQplbmQKLS1dXQo=</script>
-          <Port id="0" value="6"/>
+          <Port id="0" value="8"/>
         </luaproc>
-        <Controllable name="Gain" id="171229" flags="" value="6" parameter="0"/>
+        <Controllable name="Gain" id="171229" flags="" value="8" parameter="0"/>
       </Processor>
       <Processor id="121028" name="LSP Gate Mono" active="1" user-latency="0" use-user-latency="0" type="lv2" unique-id="http://lsp-plug.in/plugins/lv2/gate_mono" count="1" custom="0">
         <Automation>
@@ -895,7 +895,7 @@
         </OutputMap-0>
         <ThruMap/>
         <lv2 last-preset-uri="" last-preset-label="" parameter-changed-since-last-preset="1" state-dir="state3">
-          <Port symbol="enabled" value="0"/>
+          <Port symbol="enabled" value="1"/>
           <Port symbol="g_in" value="1"/>
           <Port symbol="g_out" value="1"/>
           <Port symbol="pause" value="0"/>
@@ -926,7 +926,7 @@
           <Port symbol="ilv" value="1"/>
           <Port symbol="olv" value="1"/>
         </lv2>
-        <Controllable name="Enabled" id="121030" flags="Toggle" value="0" parameter="2" symbol="enabled"/>
+        <Controllable name="Enabled" id="121030" flags="Toggle" value="1" parameter="2" symbol="enabled"/>
         <Controllable name="Input gain" id="121032" flags="" value="1" parameter="3" symbol="g_in"/>
         <Controllable name="Output gain" id="121034" flags="" value="1" parameter="4" symbol="g_out"/>
         <Controllable name="Pause graph analysis" id="121036" flags="Toggle" value="0" parameter="5" symbol="pause"/>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Session version="6000" name="live-audio" sample-rate="48000" end-is-free="0" session-range-is-free="0" id-counter="321060" name-counter="13" event-counter="508720" vca-counter="1">
+<Session version="6000" name="live-audio" sample-rate="48000" end-is-free="0" session-range-is-free="0" id-counter="322338" name-counter="13" event-counter="508720" vca-counter="1">
   <ProgramVersion created-with="Ardour 5.12" modified-with="Ardour 6.9.0~ds0-1build1"/>
   <MIDIPorts>
     <Port name="MIDI Clock out" direction="output"/>
@@ -157,7 +157,7 @@
         <Automation>
           <AutomationList automation-id="gain" id="245591" interpolation-style="Linear" state="Off"/>
         </Automation>
-        <Controllable name="gaincontrol" id="58" flags="GainLike" value="0.30536431074142456"/>
+        <Controllable name="gaincontrol" id="58" flags="GainLike" value="0.77926671504974365"/>
       </Processor>
       <Processor id="87" name="Master" active="1" user-latency="0" use-user-latency="0" own-input="1" own-output="0" output="Master" type="main-outs" role="Main">
         <PannerShell bypassed="0" user-panner="http://ardour.org/plugin/panner_balance" linked-to-route="1"/>
@@ -190,8 +190,8 @@
           <Connection other="to-obs-desktop:front-right"/>
         </Port>
       </IO>
-      <MuteMaster mute-point="PostFader,Listen,Main" muted="0"/>
-      <Controllable name="mute" id="2352" flags="Toggle,RealTime" value="0"/>
+      <MuteMaster mute-point="PostFader,Listen,Main" muted="1"/>
+      <Controllable name="mute" id="2352" flags="Toggle,RealTime" value="1"/>
       <Controllable name="phase" id="2354" flags="Toggle" value="0" phase-invert="00"/>
       <Automation>
         <AutomationList automation-id="solo" id="245631" interpolation-style="Discrete" state="Off"/>
@@ -660,7 +660,7 @@
         </Automation>
         <Controllable name="trimcontrol" id="15839" flags="GainLike" value="1"/>
       </Processor>
-      <Processor id="181422" name="a-Amplifier" active="1" user-latency="0" use-user-latency="0" type="luaproc" unique-id="10845fe3e9430f11fe229b9d7a032f76f543b4a4" count="1" custom="0">
+      <Processor id="181422" name="a-Amplifier" active="0" user-latency="0" use-user-latency="0" type="luaproc" unique-id="10845fe3e9430f11fe229b9d7a032f76f543b4a4" count="1" custom="0">
         <Automation>
           <AutomationList automation-id="parameter-0" id="245906" interpolation-style="Linear" state="Off"/>
         </Automation>
@@ -817,7 +817,7 @@
         <Controllable name="Residual listen" id="91287" flags="Toggle" value="0" parameter="9" symbol="Residual_listen"/>
         <Controllable name="hidden" id="91288" flags="Toggle" value="1" parameter="10" symbol="enable"/>
       </Processor>
-      <Processor id="171227" name="a-Amplifier" active="0" user-latency="0" use-user-latency="0" type="luaproc" unique-id="10845fe3e9430f11fe229b9d7a032f76f543b4a4" count="1" custom="0">
+      <Processor id="171227" name="a-Amplifier" active="1" user-latency="0" use-user-latency="0" type="luaproc" unique-id="10845fe3e9430f11fe229b9d7a032f76f543b4a4" count="1" custom="0">
         <Automation>
           <AutomationList automation-id="parameter-0" id="246017" interpolation-style="Linear" state="Off"/>
         </Automation>
@@ -895,7 +895,7 @@
         </OutputMap-0>
         <ThruMap/>
         <lv2 last-preset-uri="" last-preset-label="" parameter-changed-since-last-preset="1" state-dir="state3">
-          <Port symbol="enabled" value="0"/>
+          <Port symbol="enabled" value="1"/>
           <Port symbol="g_in" value="1"/>
           <Port symbol="g_out" value="1"/>
           <Port symbol="pause" value="0"/>
@@ -926,7 +926,7 @@
           <Port symbol="ilv" value="1"/>
           <Port symbol="olv" value="1"/>
         </lv2>
-        <Controllable name="Enabled" id="121030" flags="Toggle" value="0" parameter="2" symbol="enabled"/>
+        <Controllable name="Enabled" id="121030" flags="Toggle" value="1" parameter="2" symbol="enabled"/>
         <Controllable name="Input gain" id="121032" flags="" value="1" parameter="3" symbol="g_in"/>
         <Controllable name="Output gain" id="121034" flags="" value="1" parameter="4" symbol="g_out"/>
         <Controllable name="Pause graph analysis" id="121036" flags="Toggle" value="0" parameter="5" symbol="pause"/>
