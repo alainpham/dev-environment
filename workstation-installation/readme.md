@@ -28,14 +28,16 @@
   - [Install raw packages](#install-raw-packages)
     - [VSCode](#vscode)
     - [Maven](#maven)
-  - [Install snaps](#install-snaps)
+  - [Some optional packages](#some-optional-packages)
+  - [Install snaps (snaps don't work great...)](#install-snaps-snaps-dont-work-great)
   - [Setup Kubernetes on vms](#setup-kubernetes-on-vms)
     - [Current env](#current-env)
     - [Delete vms example](#delete-vms-example)
     - [Simple approach with microk8s](#simple-approach-with-microk8s)
-    - [TLS Setyp](#tls-setyp)
-      - [Generate Certificates Root CA](#generate-certificates-root-ca)
-      - [Generate Key Pair and others](#generate-key-pair-and-others)
+  - [TLS Setyp](#tls-setyp)
+    - [Generate Certificates Root CA](#generate-certificates-root-ca)
+    - [Generate Key Pair and others](#generate-key-pair-and-others)
+  - [Predownload docker images](#predownload-docker-images)
   - [Archived steps](#archived-steps)
     - [dnsmasq with Network Manager](#dnsmasq-with-network-manager)
 
@@ -139,7 +141,7 @@ sudo bash -c 'cat > /etc/apt/apt.conf.d/proxy << _EOF_
 Acquire::http::Proxy "http://192.168.8.100:3142";
 _EOF_'
 
-or
+or for virtual machines on kvm
 
 sudo bash -c 'cat > /etc/apt/apt.conf.d/proxy << _EOF_
 Acquire::http::Proxy "http://work.lan:3142";
@@ -168,26 +170,28 @@ sudo apt install ncdu git ansible docker.io python3-docker docker-compose apparm
 ubuntu 22.10
 
 ```
-sudo apt install ncdu git ansible docker.io python3-docker docker-compose apparmor tmux vim openjdk-17-jdk prometheus-node-exporter htop curl lshw rsync mediainfo ffmpeg python3-mutagen iperf dnsmasq imagemagick qemu-system qemu-utils virtinst libvirt-clients libvirt-daemon-system libguestfs-tools bridge-utils libosinfo-bin lsp-plugins-lv2 calf-plugins ardour v4l-utils flatpak virt-manager mediainfo-gui v4l2loopback-utils easytag gimp avldrums.lv2 openssh-server linux-tools-common linux-tools-generic freeplane ifuse libimobiledevice-utils xournal inkscape npm rpi-imager apt-cacher-ng skopeo golang-go dnsutils bmon lm-sensors psensor qpwgraph
+sudo apt install ncdu git ansible docker.io python3-docker docker-compose apparmor tmux vim openjdk-17-jdk prometheus-node-exporter htop curl lshw rsync mediainfo ffmpeg python3-mutagen iperf dnsmasq imagemagick qemu-system qemu-utils virtinst libvirt-clients libvirt-daemon-system libguestfs-tools bridge-utils libosinfo-bin lsp-plugins-lv2 calf-plugins ardour v4l-utils flatpak virt-manager mediainfo-gui v4l2loopback-utils easytag gimp avldrums.lv2 openssh-server linux-tools-common linux-tools-generic freeplane ifuse libimobiledevice-utils xournal inkscape npm rpi-imager apt-cacher-ng skopeo golang-go dnsutils bmon lm-sensors psensor qpwgraph apt-transport-https genisoimage
 ```
 
-minimalistic micro server
+minimalistic micro server on ubuntu or debian physical machines
 ```
-sudo apt install git ansible docker.io python3-docker apparmor tmux vim openjdk-17-jdk-headless prometheus-node-exporter curl rsync dnsmasq ncdu  dnsutils bmon lm-sensors
+sudo apt install git ansible docker.io python3-docker docker-compose apparmor tmux vim openjdk-17-jdk-headless prometheus-node-exporter curl rsync dnsmasq ncdu  dnsutils bmon lm-sensors
 ```
 
-minimalistic micro server on kvm
+minimalistic micro server on kvm ubuntu or debian
 ```
-sudo apt install git ansible docker.io python3-docker apparmor tmux vim openjdk-17-jdk-headless prometheus-node-exporter curl rsync ncdu  dnsutils bmon lm-sensors
+sudo apt install git ansible docker.io python3-docker docker-compose apparmor tmux vim openjdk-17-jdk-headless prometheus-node-exporter curl rsync ncdu  dnsutils bmon lm-sensors dnsmasq
 
+
+sudo apt install git ansible docker.io python3-docker docker-compose apparmor tmux vim openjdk-11-jdk-headless prometheus-node-exporter curl rsync ncdu  dnsutils bmon lm-sensors dnsmasq
 ```
 
 ## Add main user to groups
 
 ```
-sudo adduser apham libvirt
-sudo adduser apham docker
-sudo adduser apham audio
+sudo adduser $USER libvirt
+sudo adduser $USER docker
+sudo adduser $USER audio
 ```
 
 
@@ -197,7 +201,7 @@ sudo adduser apham audio
 sudo bash -c 'cat > /etc/docker/daemon.json << _EOF_
 {
     "insecure-registries" : ["registry.work.lan", "registry.awon.lan"],
-    "dns": ["172.17.0.1"]
+    "dns": ["172.17.0.1","8.8.8.8"]
 }
 _EOF_'
 
@@ -207,6 +211,9 @@ sudo systemctl restart docker
 
 ```
 docker network create --driver=bridge --subnet=172.18.0.0/16 --gateway=172.18.0.1 primenet
+
+docker plugin install grafana/loki-docker-driver:2.7.0 --alias loki --grant-all-permissions && sudo systemctl restart docker
+
 ```
 
 on raspberry pu
@@ -239,6 +246,9 @@ _EOF_'
 make dnsmasq start after docker
 
 ```
+
+sudo vi /lib/systemd/system/dnsmasq.service
+
 [Unit]
 Description=dnsmasq - A lightweight DHCP and caching DNS server
 Requires=network.target
@@ -274,7 +284,7 @@ WantedBy=multi-user.target
 ```
 
 ```
-sudo systemctl reload  dnsmasq.service 
+sudo systemctl daemon-reload
 sudo systemctl restart dnsmasq.service
 ```
 
@@ -447,14 +457,37 @@ sudo ln -s /opt/appimages/apache-maven-3.8.6/bin/mvn /usr/local/bin/mvn
 Think about customizing settings.xml if needed
 
 
-## Install snaps
+## Some optional packages
+
+viber, slack, teams, zoom, dbeaver, helm , k9s
+https://github.com/derailed/k9s/releases
+```
+sudo apt install obs-studio blender
+
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
+```
+
+google cloud
+
+```
+echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+
+curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+
+sudo apt-get update && sudo apt-get install google-cloud-cli
+sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin
+```
+
+## Install snaps (snaps don't work great...)
 
 ```
 sudo snap install obs-studio
 sudo snap install dbeaver-ce postman sweethome3d-homedesign blender helm
 sudo snap install drawio
-sudo snap install teams zoom-client
 sudo snap install firefox
+sudo snap install plex-htpc
+
 ```
 
 ## Setup Kubernetes on vms
@@ -476,6 +509,7 @@ vmcreate node01 4096 4 $debianimage 11 40G 40G debian10
 vmcreate node02 4096 4 $debianimage 12 40G 40G debian10
 vmcreate node03 4096 4 $debianimage 13 40G 40G debian10
 
+vmcreate sandbox 6144 4  $debianimage 30 40G 40G debian10
 
 
 
@@ -486,7 +520,7 @@ vmcreate node02 4096 4 ubuntu-22.04-server-cloudimg-amd64 12 40G 40G ubuntu22.04
 vmcreate node03 4096 4 ubuntu-22.04-server-cloudimg-amd64 13 40G 40G ubuntu22.04
 
 
-vmcreate sandbox 4096 4 ubuntu-22.04-server-cloudimg-amd64-20221018 30 40G 10G ubuntu22.04
+vmcreate sandbox 4096 4 ubuntu-22.04-server-cloudimg-amd64-20221201 30 40G 10G ubuntu22.04
 
 
 ```
@@ -513,9 +547,9 @@ sudo usermod -a -G microk8s apham
 
 ```
 
-### TLS Setyp
+## TLS Setyp
 
-#### Generate Certificates Root CA
+### Generate Certificates Root CA
 
 ```
 
@@ -543,7 +577,7 @@ openssl req -x509 -new -nodes \
 
 ```
 
-#### Generate Key Pair and others
+### Generate Key Pair and others
 
 ```
 
@@ -617,6 +651,145 @@ keytool -import \
 
 ```
 
+## Predownload docker images
+
+```
+images=(
+    # Kube
+    "registry.k8s.io/kube-apiserver:v1.25.3"
+    "registry.k8s.io/kube-controller-manager:v1.25.3"
+    "registry.k8s.io/kube-scheduler:v1.25.3"
+    "registry.k8s.io/kube-proxy:v1.25.3"
+    "registry.k8s.io/pause:3.8"
+    "registry.k8s.io/etcd:3.5.4-0"
+    "registry.k8s.io/coredns/coredns:v1.9.3"
+
+    # Flannel
+    "flannelcni/flannel-cni-plugin:v1.1.0"
+    "flannelcni/flannel:v0.20.0"
+
+    # ingress nginx
+    "registry.k8s.io/ingress-nginx/controller:v1.4.0"
+    "registry.k8s.io/ingress-nginx/kube-webhook-certgen:v20220916-gd32f8c343"
+
+    # kube ui
+    "kubernetesui/metrics-scraper:v1.0.8"
+    "kubernetesui/dashboard:v2.6.1"
+
+    # Open EBS
+    "openebs/node-disk-manager:2.0.0"
+    "openebs/node-disk-exporter:2.0.0"
+    "openebs/provisioner-localpv:3.3.0"
+    "openebs/node-disk-operator:2.0.0"
+    "openebs/linux-utils:3.3.0"
+
+    # Minio
+    "minio/minio:RELEASE.2022-12-12T19-27-27Z"
+    "docker.io/busybox:1.35.0"
+    "curlimages/curl:7.85.0"
+
+    # Grafana stack observability
+    "grafana/enterprise-metrics:v2.3.1"
+    "grafana/mimir:2.4.0"
+    "docker.io/memcached:1.6.17-alpine"
+    "prom/memcached-exporter:v0.10.0"
+
+    "grafana/enterprise-logs:v1.6.0"
+    "grafana/loki:2.7.0"
+    "grafana/promtail:2.7.0"
+    
+    "grafana/enterprise-traces:v1.3.0"
+    "grafana/tempo:1.5.0"
+
+    "grafana/grafana:9.3.1"
+    "grafana/grafana-enterprise:9.3.1"
+      
+    "grafana/grafana-oss-dev:9.4.0-93284pre"
+
+    "grafana/agent:v0.29.0"
+
+    "prom/prometheus:v2.40.5"
+    "gcr.io/cadvisor/cadvisor:v0.46.0"
+
+    # Databases
+    "docker.io/mariadb:10.9.4"
+    "docker.io/mysql:8.0.31"
+    "docker.io/postgres:15.1"
+    "docker.io/elasticsearch:8.5.2"
+    "docker.io/adminer:4.8.1"
+
+    # messaging
+    "confluentinc/cp-kafka:7.3.0"
+    "confluentinc/cp-zookeeper:7.3.0"
+    "confluentinc/cp-server:7.3.0"
+    
+    "quay.io/strimzi/kafka:0.32.0-kafka-3.2.1"
+    "obsidiandynamics/kafdrop:3.30.0"
+
+    #prometheus
+    "prom/node-exporter:v1.5.0"
+
+    # platform essentials
+    "portainer/portainer-ce:2.16.2"
+    "sonatype/nexus3:3.43.0"
+    "docker.io/registry:2.8.1"
+    "joxit/docker-registry-ui:2.3.3"
+    "traefik:2.9.5"
+    "quay.io/keycloak/keycloak:20.0.2"
+    "dzikoysk/reposilite:3.2.0"
+
+    # Demo Applications
+    "condla/web-shop:1.5"
+    "condla/shopping-cart:1.2"
+    "condla/products:otel-1.2"
+    "ubuntu/squid:5.2-22.04_beta"
+    
+    "alainpham/smoke-test-app:latest"
+    "philippgille/serve:0.3.0"
+)
+
+
+images=(
+    "philippgille/serve:0.3.0"
+)
+
+localrepo=registry.work.lan
+
+for item in "${images[@]}"
+do
+   echo  $item
+done
+
+
+for item in "${images[@]}"
+do
+   localname=`echo "$item"| grep -o '[^/]*$' `
+   echo ${localrepo}/${localname}
+   skopeo copy docker://"$item" docker://${localrepo}/${localname}
+done
+
+
+for item in "${images[@]}"
+do
+   docker pull $item
+done
+
+for item in "${images[@]}"
+do
+   localname=`echo "$item"| grep -o '[^/]*$' `
+   echo ${localrepo}/${localname}
+   docker tag $item ${localrepo}/${localname}
+done
+
+for item in "${images[@]}"
+do
+   localname=`echo "$item"| grep -o '[^/]*$' `
+   echo ${localrepo}/${localname}
+   docker push ${localrepo}/${localname}
+done
+
+
+```
 
 
 ## Archived steps
