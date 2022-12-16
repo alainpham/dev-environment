@@ -20,6 +20,7 @@
     - [Restart services](#restart-services)
     - [Configure IPV6 disabled](#configure-ipv6-disabled)
   - [DNS/DHCP server for local homellab on RPI](#dnsdhcp-server-for-local-homellab-on-rpi)
+    - [KVM scripts](#kvm-scripts)
   - [Additional packages](#additional-packages)
     - [Fonts](#fonts)
     - [Downloaded packages](#downloaded-packages)
@@ -369,8 +370,15 @@ dhcp-host=9c:8e:99:e6:f3:3b,awon.lan,192.168.8.100,infinite
 
 ```
 
+### KVM scripts
+
+```
+ls ../local-lab/cloud-native-appdev-lab-role/templates/kvm-scripts/
+sudo cp ../local-lab/cloud-native-appdev-lab-role/templates/kvm-scripts/* /usr/local/bin/
+```
 
 ## Additional packages
+
 
 ### Fonts
 
