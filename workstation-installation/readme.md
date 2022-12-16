@@ -20,7 +20,7 @@
     - [Restart services](#restart-services)
     - [Configure IPV6 disabled](#configure-ipv6-disabled)
   - [DNS/DHCP server for local homellab on RPI](#dnsdhcp-server-for-local-homellab-on-rpi)
-    - [KVM scripts](#kvm-scripts)
+  - [KVM scripts](#kvm-scripts)
   - [Additional packages](#additional-packages)
     - [Fonts](#fonts)
     - [Downloaded packages](#downloaded-packages)
@@ -370,11 +370,24 @@ dhcp-host=9c:8e:99:e6:f3:3b,awon.lan,192.168.8.100,infinite
 
 ```
 
-### KVM scripts
+## KVM scripts
 
 ```
 ls ../local-lab/cloud-native-appdev-lab-role/templates/kvm-scripts/
 sudo cp ../local-lab/cloud-native-appdev-lab-role/templates/kvm-scripts/* /usr/local/bin/
+
+
+sudo curl -o /usr/local/bin/vmcreate https://github.com/alainpham/cloud-native-appdev-lab-role/raw/master/templates/kvm-scripts/vmcreate
+sudo curl -o /usr/local/bin/lsvm https://github.com/alainpham/cloud-native-appdev-lab-role/raw/master/templates/kvm-scripts/lsvm
+sudo curl -o /usr/local/bin/kvsh https://github.com/alainpham/cloud-native-appdev-lab-role/raw/master/templates/kvm-scripts/kvsh
+sudo curl -o /usr/local/bin/dvm https://github.com/alainpham/cloud-native-appdev-lab-role/raw/master/templates/kvm-scripts/dvm
+
+sudo chmod 755 /usr/local/bin/vmcreate
+sudo chmod 755 /usr/local/bin/lsvm
+sudo chmod 755 /usr/local/bin/kvsh
+sudo chmod 755 /usr/local/bin/dvm
+
+
 ```
 
 ## Additional packages
