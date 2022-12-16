@@ -377,10 +377,10 @@ ls ../local-lab/cloud-native-appdev-lab-role/templates/kvm-scripts/
 sudo cp ../local-lab/cloud-native-appdev-lab-role/templates/kvm-scripts/* /usr/local/bin/
 
 
-sudo curl -o /usr/local/bin/vmcreate https://github.com/alainpham/cloud-native-appdev-lab-role/raw/master/templates/kvm-scripts/vmcreate
-sudo curl -o /usr/local/bin/lsvm https://github.com/alainpham/cloud-native-appdev-lab-role/raw/master/templates/kvm-scripts/lsvm
-sudo curl -o /usr/local/bin/kvsh https://github.com/alainpham/cloud-native-appdev-lab-role/raw/master/templates/kvm-scripts/kvsh
-sudo curl -o /usr/local/bin/dvm https://github.com/alainpham/cloud-native-appdev-lab-role/raw/master/templates/kvm-scripts/dvm
+sudo curl -L -o /usr/local/bin/vmcreate https://github.com/alainpham/cloud-native-appdev-lab-role/raw/master/templates/kvm-scripts/vmcreate
+sudo curl -L -o /usr/local/bin/lsvm https://github.com/alainpham/cloud-native-appdev-lab-role/raw/master/templates/kvm-scripts/lsvm
+sudo curl -L -o /usr/local/bin/kvsh https://github.com/alainpham/cloud-native-appdev-lab-role/raw/master/templates/kvm-scripts/kvsh
+sudo curl -L -o /usr/local/bin/dvm https://github.com/alainpham/cloud-native-appdev-lab-role/raw/master/templates/kvm-scripts/dvm
 
 sudo chmod 755 /usr/local/bin/vmcreate
 sudo chmod 755 /usr/local/bin/lsvm
