@@ -25,12 +25,12 @@
     - [Fonts](#fonts)
     - [Downloaded packages](#downloaded-packages)
   - [Configure sound](#configure-sound)
-  - [Configure JAVA_HOME](#configure-java_home)
+  - [Configure JAVA\_HOME](#configure-java_home)
   - [Install raw packages](#install-raw-packages)
     - [VSCode](#vscode)
     - [Maven](#maven)
   - [Some optional packages](#some-optional-packages)
-  - [Install snaps (snaps don't work great...)](#install-snaps-snaps-dont-work-great)
+  - [Install snaps (snaps don't work great ignore this...)](#install-snaps-snaps-dont-work-great-ignore-this)
   - [Setup Kubernetes on vms](#setup-kubernetes-on-vms)
     - [Current env](#current-env)
     - [Delete vms example](#delete-vms-example)
@@ -464,15 +464,27 @@ _EOF_'
 ### VSCode
 
 version 1.57.1
-
+version 1.74.3
 install settings sync and sync with gist
+
+List of plugins to install
+
+
+* eclipse keymap
+* extension pack for java
+* markdown all in one
+* language support for Apache Camel
+* XML language support
+* Yaml language support
+* c/c++ extension pack
+* golang
 
 ### Maven
 
 ```
-curl -L -o /tmp/maven.tar.gz https://dlcdn.apache.org/maven/maven-3/3.8.6/binaries/apache-maven-3.8.6-bin.tar.gz
+curl -L -o /tmp/maven.tar.gz https://dlcdn.apache.org/maven/maven-3/3.8.7/binaries/apache-maven-3.8.7-bin.tar.gz
 sudo tar xzvf /tmp/maven.tar.gz  -C /opt/appimages/
-sudo ln -s /opt/appimages/apache-maven-3.8.6/bin/mvn /usr/local/bin/mvn
+sudo ln -s /opt/appimages/apache-maven-3.8.7/bin/mvn /usr/local/bin/mvn
 ```
 
 Think about customizing settings.xml if needed
@@ -485,7 +497,7 @@ https://github.com/derailed/k9s/releases
 ```
 sudo apt install obs-studio blender
 
-curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+curl -LO "https://dl.k8s.io/release/v1.25.6/bin/linux/amd64/kubectl"
 kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
 ```
 
@@ -500,7 +512,14 @@ sudo apt-get update && sudo apt-get install google-cloud-cli
 sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin
 ```
 
-## Install snaps (snaps don't work great...)
+helm
+
+```
+helm completion bash | sudo tee /etc/bash_completion.d/helm > /dev/null
+```
+
+
+## Install snaps (snaps don't work great ignore this...)
 
 ```
 sudo snap install obs-studio
@@ -522,6 +541,14 @@ ssh-keygen -f ~/.ssh/vm
 ```
 
 ```
+
+debianimage=debian-11-genericcloud-amd64-20221219-1234
+
+vmcreate master 4096 4 $debianimage 10 40G 40G debian11
+vmcreate node01 4096 4 $debianimage 11 40G 40G debian11
+vmcreate node02 4096 4 $debianimage 12 40G 40G debian11
+vmcreate node03 4096 4 $debianimage 13 40G 40G debian11
+
 
 debianimage=debian-10-genericcloud-amd64-20220911-1135
 
@@ -677,25 +704,26 @@ keytool -import \
 ```
 images=(
     # Kube
-    "registry.k8s.io/kube-apiserver:v1.25.3"
-    "registry.k8s.io/kube-controller-manager:v1.25.3"
-    "registry.k8s.io/kube-scheduler:v1.25.3"
-    "registry.k8s.io/kube-proxy:v1.25.3"
-    "registry.k8s.io/pause:3.8"
-    "registry.k8s.io/etcd:3.5.4-0"
-    "registry.k8s.io/coredns/coredns:v1.9.3"
+    registry.k8s.io/kube-apiserver:v1.25.6
+    registry.k8s.io/kube-controller-manager:v1.25.6
+    registry.k8s.io/kube-scheduler:v1.25.6
+    registry.k8s.io/kube-proxy:v1.25.6
+    registry.k8s.io/pause:3.8
+    registry.k8s.io/etcd:3.5.6-0
+    registry.k8s.io/coredns/coredns:v1.9.3
+
 
     # Flannel
     "flannelcni/flannel-cni-plugin:v1.1.0"
-    "flannelcni/flannel:v0.20.0"
+    "flannelcni/flannel:v0.20.2"
 
     # ingress nginx
-    "registry.k8s.io/ingress-nginx/controller:v1.4.0"
+    "registry.k8s.io/ingress-nginx/controller:v1.5.1"
     "registry.k8s.io/ingress-nginx/kube-webhook-certgen:v20220916-gd32f8c343"
 
     # kube ui
     "kubernetesui/metrics-scraper:v1.0.8"
-    "kubernetesui/dashboard:v2.6.1"
+    "kubernetesui/dashboard:v2.7.0"
 
     # Open EBS
     "openebs/node-disk-manager:2.0.0"
@@ -705,38 +733,38 @@ images=(
     "openebs/linux-utils:3.3.0"
 
     # Minio
-    "minio/minio:RELEASE.2022-12-12T19-27-27Z"
-    "docker.io/busybox:1.35.0"
-    "curlimages/curl:7.85.0"
+    "minio/minio:RELEASE.2023-01-20T02-05-44Z"
+    "docker.io/busybox:1.36.0"
+    "curlimages/curl:7.87.0"
 
     # Grafana stack observability
-    "grafana/enterprise-metrics:v2.3.1"
-    "grafana/mimir:2.4.0"
-    "docker.io/memcached:1.6.17-alpine"
+    "grafana/enterprise-metrics:v2.5.1"
+    "grafana/mimir:2.5.0"
+    "docker.io/memcached:1.6.18-alpine"
     "prom/memcached-exporter:v0.10.0"
 
     "grafana/enterprise-logs:v1.6.0"
-    "grafana/loki:2.7.0"
-    "grafana/promtail:2.7.0"
+    "grafana/loki:2.7.1"
+    "grafana/promtail:2.7.1"
     
     "grafana/enterprise-traces:v1.3.0"
     "grafana/tempo:1.5.0"
 
-    "grafana/grafana:9.3.1"
-    "grafana/grafana-enterprise:9.3.1"
+    "grafana/grafana:9.3.2"
+    "grafana/grafana-enterprise:9.3.2"
       
-    "grafana/grafana-oss-dev:9.4.0-93284pre"
+    "grafana/grafana-oss-dev:9.4.0-97680pre"
 
-    "grafana/agent:v0.29.0"
+    "grafana/agent:v0.30.2"
 
-    "prom/prometheus:v2.40.5"
-    "gcr.io/cadvisor/cadvisor:v0.46.0"
+    "prom/prometheus:v2.41.0"
+    "gcr.io/cadvisor/cadvisor:v0.47.1"
 
     # Databases
     "docker.io/mariadb:10.9.4"
-    "docker.io/mysql:8.0.31"
+    "docker.io/mysql:8.0.32"
     "docker.io/postgres:15.1"
-    "docker.io/elasticsearch:8.5.2"
+    "docker.io/elasticsearch:8.6.0"
     "docker.io/adminer:4.8.1"
 
     # messaging
@@ -755,22 +783,111 @@ images=(
     "sonatype/nexus3:3.43.0"
     "docker.io/registry:2.8.1"
     "joxit/docker-registry-ui:2.3.3"
-    "traefik:2.9.5"
-    "quay.io/keycloak/keycloak:20.0.2"
-    "dzikoysk/reposilite:3.2.0"
+    "docker.io/traefik:2.9.6"
+    "quay.io/keycloak/keycloak:20.0.3-0"
+    "dzikoysk/reposilite:3.2.6"
 
     # Demo Applications
-    "condla/web-shop:1.5"
-    "condla/shopping-cart:1.2"
-    "condla/products:otel-1.2"
-    "ubuntu/squid:5.2-22.04_beta"
-    
-    "alainpham/smoke-test-app:latest"
+    "alainpham/web-shop:1.8"
+    "alainpham/shopping-cart:1.3"
+    "alainpham/products:otel-1.3"
+
+    "alainpham/smoke-test-app:1.2"
     "philippgille/serve:0.3.0"
 )
 
 
 images=(
+   # Kube
+    registry.k8s.io/kube-apiserver:v1.25.6
+    registry.k8s.io/kube-controller-manager:v1.25.6
+    registry.k8s.io/kube-scheduler:v1.25.6
+    registry.k8s.io/kube-proxy:v1.25.6
+    registry.k8s.io/pause:3.8
+    registry.k8s.io/etcd:3.5.6-0
+    registry.k8s.io/coredns/coredns:v1.9.3
+
+
+    # Flannel
+    "flannelcni/flannel-cni-plugin:v1.1.0"
+    "flannelcni/flannel:v0.20.2"
+
+    # ingress nginx
+    "registry.k8s.io/ingress-nginx/controller:v1.5.1"
+    "registry.k8s.io/ingress-nginx/kube-webhook-certgen:v20220916-gd32f8c343"
+
+    # kube ui
+    "kubernetesui/metrics-scraper:v1.0.8"
+    "kubernetesui/dashboard:v2.7.0"
+
+    # Open EBS
+    "openebs/node-disk-manager:2.0.0"
+    "openebs/node-disk-exporter:2.0.0"
+    "openebs/provisioner-localpv:3.3.0"
+    "openebs/node-disk-operator:2.0.0"
+    "openebs/linux-utils:3.3.0"
+
+    # Minio
+    "minio/minio:RELEASE.2023-01-20T02-05-44Z"
+    "docker.io/busybox:1.36.0"
+    "curlimages/curl:7.87.0"
+
+    # Grafana stack observability
+    "grafana/enterprise-metrics:v2.5.1"
+    "grafana/mimir:2.5.0"
+    "docker.io/memcached:1.6.18-alpine"
+    "prom/memcached-exporter:v0.10.0"
+
+    "grafana/enterprise-logs:v1.6.0"
+    "grafana/loki:2.7.1"
+    "grafana/promtail:2.7.1"
+    
+    "grafana/enterprise-traces:v1.3.0"
+    "grafana/tempo:1.5.0"
+
+    "grafana/grafana:9.3.2"
+    "grafana/grafana-enterprise:9.3.2"
+      
+    "grafana/grafana-oss-dev:9.4.0-97680pre"
+
+    "grafana/agent:v0.30.2"
+
+    "prom/prometheus:v2.41.0"
+    "gcr.io/cadvisor/cadvisor:v0.47.1"
+
+    # Databases
+    "docker.io/mariadb:10.9.4"
+    "docker.io/mysql:8.0.32"
+    "docker.io/postgres:15.1"
+    "docker.io/elasticsearch:8.6.0"
+    "docker.io/adminer:4.8.1"
+
+    # messaging
+    "confluentinc/cp-kafka:7.3.0"
+    "confluentinc/cp-zookeeper:7.3.0"
+    "confluentinc/cp-server:7.3.0"
+    
+    "quay.io/strimzi/kafka:0.32.0-kafka-3.2.1"
+    "obsidiandynamics/kafdrop:3.30.0"
+
+    #prometheus
+    "prom/node-exporter:v1.5.0"
+
+    # platform essentials
+    "portainer/portainer-ce:2.16.2"
+    "sonatype/nexus3:3.43.0"
+    "docker.io/registry:2.8.1"
+    "joxit/docker-registry-ui:2.3.3"
+    "docker.io/traefik:2.9.6"
+    "quay.io/keycloak/keycloak:20.0.3-0"
+    "dzikoysk/reposilite:3.2.6"
+
+    # Demo Applications
+    "alainpham/web-shop:1.8"
+    "alainpham/shopping-cart:1.3"
+    "alainpham/products:otel-1.3"
+
+    "alainpham/smoke-test-app:1.2"
     "philippgille/serve:0.3.0"
 )
 
