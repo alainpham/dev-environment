@@ -1,6 +1,7 @@
  
 - [Workstation Installs](#workstation-installs)
   - [Intitial install](#intitial-install)
+  - [Sound](#sound)
   - [Graphical Desktop Preferences](#graphical-desktop-preferences)
     - [General](#general)
     - [with Trackpad](#with-trackpad)
@@ -17,8 +18,8 @@
   - [DNS resolution](#dns-resolution)
     - [Ubuntu](#ubuntu)
     - [Debian/Raspbian](#debianraspbian)
-    - [Restart services](#restart-services)
-    - [Configure IPV6 disabled](#configure-ipv6-disabled)
+    - [Restart services if on ubuntu with systemd](#restart-services-if-on-ubuntu-with-systemd)
+    - [Configure IPV6 disabled (deprecated)](#configure-ipv6-disabled-deprecated)
   - [DNS/DHCP server for local homellab on RPI](#dnsdhcp-server-for-local-homellab-on-rpi)
   - [KVM scripts](#kvm-scripts)
   - [Additional packages](#additional-packages)
@@ -54,6 +55,15 @@
   * SSH server
   * Standard utils
 
+## Sound
+
+disable powersave on sound chich procuces  crackling
+
+```
+sudo bash -c 'cat > /etc/modprobe.d/audio_disable_powersave.conf << _EOF_
+options snd_hda_intel power_save=0
+_EOF_'
+```
 
 ## Graphical Desktop Preferences
 
@@ -65,8 +75,6 @@ Go to system settings
   * Choose Breeze Dark
 * Workspace Behavior -> Virtual Desktop
   * 2 rows, 4 Desktops
-* Workspace Behavior -> General Behavior
-  *  Double-click to open files and folders
 *  Start up and shutdown -> Login Screen
    *  Choose Chilli for Plasma
 *  Start up and shutdown -> Desktop Session
@@ -82,7 +90,7 @@ Go to system settings
 ### with Trackpad
 
 * Input Devices -> Touchpad
-  * Mouse Click Emulation
+  * Tap to click
 
 ## Konsole setup
 
@@ -112,7 +120,7 @@ Go to system settings
 ## Configure Panel
 
 * Switch to task manger rather than icon only
-* height 60
+* height 80
 * always 2 rows
 
 
@@ -168,23 +176,27 @@ _EOF_'
 sudo apt install ncdu git ansible docker.io python3-docker docker-compose apparmor tmux vim openjdk-17-jdk prometheus-node-exporter htop curl lshw rsync mediainfo ffmpeg python3-mutagen iperf dnsmasq imagemagick qemu-system qemu-utils virtinst libvirt-clients libvirt-daemon-system libguestfs-tools bridge-utils libosinfo-bin jackd2 qjackctl pulseaudio-module-jack lsp-plugins-lv2 calf-plugins ardour v4l-utils flatpak snapd virt-manager mediainfo-gui v4l2loopback-utils easytag gimp avldrums.lv2 libreoffice-plasma libreoffice openssh-server linux-tools-common linux-tools-generic freeplane ifuse libimobiledevice-utils xournal inkscape npm rpi-imager apt-cacher-ng skopeo golang-go dnsutils bmon lm-sensors psensor
 ```
 
-ubuntu 22.10
+ubuntu 22.10 dekstop
 
 ```
-sudo apt install ncdu git ansible docker.io python3-docker docker-compose apparmor tmux vim openjdk-17-jdk prometheus-node-exporter htop curl lshw rsync mediainfo ffmpeg python3-mutagen iperf dnsmasq imagemagick qemu-system qemu-utils virtinst libvirt-clients libvirt-daemon-system libguestfs-tools bridge-utils libosinfo-bin lsp-plugins-lv2 calf-plugins ardour v4l-utils flatpak virt-manager mediainfo-gui v4l2loopback-utils easytag gimp avldrums.lv2 openssh-server linux-tools-common linux-tools-generic freeplane ifuse libimobiledevice-utils xournal inkscape npm rpi-imager apt-cacher-ng skopeo golang-go dnsutils bmon lm-sensors psensor qpwgraph apt-transport-https genisoimage
+sudo apt install ncdu git ansible docker.io python3-docker docker-compose apparmor tmux vim openjdk-17-jdk prometheus-node-exporter htop curl lshw rsync mediainfo ffmpeg python3-mutagen iperf dnsmasq imagemagick qemu-system qemu-utils virtinst libvirt-clients libvirt-daemon-system libguestfs-tools bridge-utils libosinfo-bin lsp-plugins-lv2 calf-plugins ardour v4l-utils flatpak virt-manager mediainfo-gui v4l2loopback-utils easytag gimp avldrums.lv2 openssh-server linux-tools-common linux-tools-generic freeplane ifuse libimobiledevice-utils xournal inkscape npm rpi-imager apt-cacher-ng skopeo golang-go dnsutils bmon lm-sensors psensor qpwgraph apt-transport-https genisoimage obs-studio
 ```
 
 minimalistic micro server on ubuntu or debian physical machines
 ```
-sudo apt install git ansible docker.io python3-docker docker-compose apparmor tmux vim openjdk-17-jdk-headless prometheus-node-exporter curl rsync dnsmasq ncdu  dnsutils bmon lm-sensors
+sudo apt install git ansible docker.io python3-docker docker-compose skopeo apparmor tmux vim openjdk-17-jdk-headless prometheus-node-exporter curl rsync dnsmasq ncdu  dnsutils bmon lm-sensors
 ```
 
 minimalistic micro server on kvm ubuntu or debian
+
 ```
-sudo apt install git ansible docker.io python3-docker docker-compose apparmor tmux vim openjdk-17-jdk-headless prometheus-node-exporter curl rsync ncdu  dnsutils bmon lm-sensors dnsmasq
+sudo apt install git ansible docker.io python3-docker docker-compose skopeo apparmor tmux vim openjdk-17-jdk-headless prometheus-node-exporter curl rsync ncdu  dnsutils bmon lm-sensors dnsmasq
+```
 
+minimal debian 11 kubernetes host
 
-sudo apt install git ansible docker.io python3-docker docker-compose apparmor tmux vim openjdk-11-jdk-headless prometheus-node-exporter curl rsync ncdu  dnsutils bmon lm-sensors dnsmasq
+```console
+apt install sudo dnsmasq 
 ```
 
 ## Add main user to groups
@@ -193,6 +205,7 @@ sudo apt install git ansible docker.io python3-docker docker-compose apparmor tm
 sudo adduser $USER libvirt
 sudo adduser $USER docker
 sudo adduser $USER audio
+sudo adduser $USER pipewire
 ```
 
 
@@ -202,7 +215,7 @@ sudo adduser $USER audio
 sudo bash -c 'cat > /etc/docker/daemon.json << _EOF_
 {
     "insecure-registries" : ["registry.work.lan", "registry.awon.lan"],
-    "dns": ["172.17.0.1","8.8.8.8"]
+    "dns": ["172.17.0.1"]
 }
 _EOF_'
 
@@ -213,11 +226,10 @@ sudo systemctl restart docker
 ```
 docker network create --driver=bridge --subnet=172.18.0.0/16 --gateway=172.18.0.1 primenet
 
-docker plugin install grafana/loki-docker-driver:2.7.0 --alias loki --grant-all-permissions && sudo systemctl restart docker
-
+docker plugin install grafana/loki-docker-driver:2.7.1 --alias loki --grant-all-permissions && sudo systemctl restart docker
 ```
 
-on raspberry pu
+on raspberry pi for getting cpu metrics in docker
 
 ```
 sudo vi /boot/cmdline.txt
@@ -229,6 +241,7 @@ cgroup_enable=cpuset cgroup_enable=memory cgroup_memory=1
 
 Configure dnsmasq
 
+with docker host
 ```
 sudo bash -c 'cat > /etc/dnsmasq.d/dev.conf << _EOF_
 # /etc/dnsmasq.d/dev.conf
@@ -238,13 +251,49 @@ address=/${HOSTNAME}.lan/172.17.0.1
 address=/${HOSTNAME}.lan/172.18.0.1
 address=/${HOSTNAME}.lan/192.168.122.1
 address=/kube.loc/192.168.122.10
-address=/sandbox.lan/192.168.122.30
+address=/sandbox.loc/192.168.122.30
 
-#server=/lan/192.168.8.254
+_EOF_'
+
+
+
+for ubuntu and network manager
+
+sudo bash -c 'cat > /etc/dnsmasq.d/res.conf << _EOF_
+# /etc/dnsmasq.d/res.conf
+resolv-file=/run/NetworkManager/no-stub-resolv.conf
+_EOF_'
+
+
+
+sudo bash -c 'cat > /etc/systemd/resolved.conf << _EOF_
+# /etc/systemd/resolved.conf
+[Resolve]
+DNS=127.0.0.1
+DNSStubListener=no
 _EOF_'
 ```
 
-make dnsmasq start after docker
+
+with networkmanager & systemd-resolved on ubuntu for example
+
+```
+sudo bash -c 'cat > /etc/dnsmasq.d/res.conf << _EOF_
+# /etc/dnsmasq.d/res.conf
+resolv-file=/run/NetworkManager/no-stub-resolv.conf
+_EOF_'
+```
+
+for minimal kube host
+
+```
+sudo bash -c 'cat > /etc/dnsmasq.d/dev.conf << _EOF_
+# /etc/dnsmasq.d/dev.conf
+listen-address=127.0.0.1
+_EOF_'
+```
+
+make dnsmasq start after docker and disable systemd command
 
 ```
 
@@ -273,8 +322,8 @@ ExecStart=/etc/init.d/dnsmasq systemd-exec
 # resolvconf to work with the dnsmasq DNS server. They're called like
 # this to get correct error handling (ie don't start-resolvconf if the
 # dnsmasq daemon fails to start).
-ExecStartPost=/etc/init.d/dnsmasq systemd-start-resolvconf
-ExecStop=/etc/init.d/dnsmasq systemd-stop-resolvconf
+# ExecStartPost=/etc/init.d/dnsmasq systemd-start-resolvconf
+# ExecStop=/etc/init.d/dnsmasq systemd-stop-resolvconf
 
 
 ExecReload=/bin/kill -HUP $MAINPID
@@ -306,14 +355,14 @@ _EOF_'
 ### Debian/Raspbian
 
 On Raspbian or Debian : configure dhcpd/dhclient to prepend 127.0.0.1 & use dnsmasq
-
+append to dhclient file
 ```
 #/etc/dhcp/dhclient.conf
 
 prepend domain-name-servers 127.0.0.1;
 ```
 
-### Restart services
+### Restart services if on ubuntu with systemd
 
 ```
 sudo ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
@@ -325,7 +374,7 @@ sudo systemctl enable dnsmasq
 sudo systemctl restart dnsmasq
 ```
 
-### Configure IPV6 disabled
+### Configure IPV6 disabled (deprecated)
 
 ```
 sudo bash -c 'cat > /etc/sysctl.d/10-noipv6.conf << _EOF_
@@ -482,9 +531,9 @@ List of plugins to install
 ### Maven
 
 ```
-curl -L -o /tmp/maven.tar.gz https://dlcdn.apache.org/maven/maven-3/3.8.7/binaries/apache-maven-3.8.7-bin.tar.gz
+curl -L -o /tmp/maven.tar.gz https://dlcdn.apache.org/maven/maven-3/3.9.1/binaries/apache-maven-3.9.1-bin.tar.gz
 sudo tar xzvf /tmp/maven.tar.gz  -C /opt/appimages/
-sudo ln -s /opt/appimages/apache-maven-3.8.7/bin/mvn /usr/local/bin/mvn
+sudo ln -s /opt/appimages/apache-maven-3.9.1/bin/mvn /usr/local/bin/mvn
 ```
 
 Think about customizing settings.xml if needed
@@ -494,10 +543,17 @@ Think about customizing settings.xml if needed
 
 viber, slack, teams, zoom, dbeaver, helm , k9s
 https://github.com/derailed/k9s/releases
+
+```console
+curl -LO https://github.com/derailed/k9s/releases/download/v0.27.3/k9s_Linux_amd64.tar.gz
+sudo tar -xzvf k9s_Linux_amd64.tar.gz  -C /usr/local/bin/ k9s
+```
+
 ```
 sudo apt install obs-studio blender
 
-curl -LO "https://dl.k8s.io/release/v1.25.6/bin/linux/amd64/kubectl"
+curl -LO "https://dl.k8s.io/release/v1.25.8/bin/linux/amd64/kubectl"
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
 ```
 
@@ -506,7 +562,7 @@ google cloud
 ```
 echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
 
-curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo tee /usr/share/keyrings/cloud.google.gpg
 
 sudo apt-get update && sudo apt-get install google-cloud-cli
 sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin
@@ -518,6 +574,49 @@ helm
 helm completion bash | sudo tee /etc/bash_completion.d/helm > /dev/null
 ```
 
+
+
+
+kind kubernetes 
+
+```console
+
+curl -Lo ./kind "https://kind.sigs.k8s.io/dl/v0.17.0/kind-$(uname)-amd64"
+chmod +x ./kind
+sudo mv ./kind /usr/local/bin/kind
+
+kind completion bash | sudo tee /etc/bash_completion.d/kind > /dev/null
+
+
+cat <<EOF | kind create cluster --config=-
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: localcloud
+
+nodes:
+- role: control-plane
+  image: kindest/node:v1.25.3
+  kubeadmConfigPatches:
+  - |
+    kind: InitConfiguration
+    nodeRegistration:
+      kubeletExtraArgs:
+        node-labels: "ingress-ready=true"
+  extraPortMappings:
+  - containerPort: 80
+    hostPort: 80
+    protocol: TCP
+  - containerPort: 443
+    hostPort: 443
+    protocol: TCP
+EOF
+
+
+kui
+sudo ln -s 
+
+
+```
 
 ## Install snaps (snaps don't work great ignore this...)
 
@@ -535,41 +634,18 @@ sudo snap install plex-htpc
 ### Current env
 
 ```
-
 ssh-keygen -f ~/.ssh/vm
-
 ```
 
 ```
+debianimage=debian-11-genericcloud-amd64-20230124-1270
 
-debianimage=debian-11-genericcloud-amd64-20221219-1234
-
-vmcreate master 4096 4 $debianimage 10 40G 40G debian11
-vmcreate node01 4096 4 $debianimage 11 40G 40G debian11
-vmcreate node02 4096 4 $debianimage 12 40G 40G debian11
-vmcreate node03 4096 4 $debianimage 13 40G 40G debian11
-
-
-debianimage=debian-10-genericcloud-amd64-20220911-1135
-
-vmcreate master 4096 4 $debianimage 10 40G 40G debian10
-vmcreate node01 4096 4 $debianimage 11 40G 40G debian10
-vmcreate node02 4096 4 $debianimage 12 40G 40G debian10
-vmcreate node03 4096 4 $debianimage 13 40G 40G debian10
+vmcreate master 3072 4 $debianimage 10 40G 1G debian11
+vmcreate node01 2048 4 $debianimage 11 40G 1G debian11
+vmcreate node02 2048 4 $debianimage 12 40G 1G debian11
+vmcreate node03 2048 4 $debianimage 13 40G 1G debian11
 
 vmcreate sandbox 6144 4  $debianimage 30 40G 40G debian10
-
-
-
-
-vmcreate master 4096 4 ubuntu-22.04-server-cloudimg-amd64 10 40G 40G ubuntu22.04
-vmcreate node01 4096 4 ubuntu-22.04-server-cloudimg-amd64 11 40G 40G ubuntu22.04
-vmcreate node02 4096 4 ubuntu-22.04-server-cloudimg-amd64 12 40G 40G ubuntu22.04
-vmcreate node03 4096 4 ubuntu-22.04-server-cloudimg-amd64 13 40G 40G ubuntu22.04
-
-
-vmcreate sandbox 4096 4 ubuntu-22.04-server-cloudimg-amd64-20221201 30 40G 10G ubuntu22.04
-
 
 ```
 
@@ -610,6 +686,7 @@ tagethostname=cipi.lan
 keystorefile=/home/apham/apps/tls/${tagethostname}.p12
 keyfile=/home/apham/apps/tls/${tagethostname}.key
 certfile=/home/apham/apps/tls/${tagethostname}.pem
+certfilecrt=/home/apham/apps/tls/${tagethostname}.crt
 signreqfile=/home/apham/apps/tls/${tagethostname}.csr
 signconffile=/home/apham/apps/tls/${tagethostname}.cnf
 truststorefile=/home/apham/apps/tls/${tagethostname}-truststore.p12
@@ -697,6 +774,7 @@ keytool -import \
     -keystore $truststorefile \
     -file $rootcacertfile
 
+cp $certfile $certfilecrt
 ```
 
 ## Predownload docker images
@@ -712,6 +790,8 @@ images=(
     registry.k8s.io/etcd:3.5.6-0
     registry.k8s.io/coredns/coredns:v1.9.3
 
+    # metrics server
+    "k8s.gcr.io/metrics-server/metrics-server:v0.6.2"
 
     # Flannel
     "flannelcni/flannel-cni-plugin:v1.1.0"
@@ -725,15 +805,11 @@ images=(
     "kubernetesui/metrics-scraper:v1.0.8"
     "kubernetesui/dashboard:v2.7.0"
 
-    # Open EBS
-    "openebs/node-disk-manager:2.0.0"
-    "openebs/node-disk-exporter:2.0.0"
-    "openebs/provisioner-localpv:3.3.0"
-    "openebs/node-disk-operator:2.0.0"
-    "openebs/linux-utils:3.3.0"
+    # storage
+    "rancher/local-path-provisioner:v0.0.23"
 
     # Minio
-    "minio/minio:RELEASE.2023-01-20T02-05-44Z"
+    "minio/minio:RELEASE.2023-02-09T05-16-53Z"
     "docker.io/busybox:1.36.0"
     "curlimages/curl:7.87.0"
 
@@ -750,15 +826,18 @@ images=(
     "grafana/enterprise-traces:v1.3.0"
     "grafana/tempo:1.5.0"
 
-    "grafana/grafana:9.3.2"
-    "grafana/grafana-enterprise:9.3.2"
+    "grafana/grafana:9.3.4"
+    "grafana/grafana-enterprise:9.3.4"
       
     "grafana/grafana-oss-dev:9.4.0-97680pre"
 
     "grafana/agent:v0.30.2"
-
+    "grafana/agent:v0.28.1"
+    
     "prom/prometheus:v2.41.0"
+    "prom/node-exporter:v1.5.0"
     "gcr.io/cadvisor/cadvisor:v0.47.1"
+    "registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.7.0"
 
     # Databases
     "docker.io/mariadb:10.9.4"
@@ -775,8 +854,6 @@ images=(
     "quay.io/strimzi/kafka:0.32.0-kafka-3.2.1"
     "obsidiandynamics/kafdrop:3.30.0"
 
-    #prometheus
-    "prom/node-exporter:v1.5.0"
 
     # platform essentials
     "portainer/portainer-ce:2.16.2"
@@ -798,105 +875,26 @@ images=(
 
 
 images=(
-   # Kube
-    registry.k8s.io/kube-apiserver:v1.25.6
-    registry.k8s.io/kube-controller-manager:v1.25.6
-    registry.k8s.io/kube-scheduler:v1.25.6
-    registry.k8s.io/kube-proxy:v1.25.6
-    registry.k8s.io/pause:3.8
-    registry.k8s.io/etcd:3.5.6-0
-    registry.k8s.io/coredns/coredns:v1.9.3
+  "minio/minio:RELEASE.2023-02-09T05-16-53Z"
 
-
-    # Flannel
-    "flannelcni/flannel-cni-plugin:v1.1.0"
-    "flannelcni/flannel:v0.20.2"
-
-    # ingress nginx
-    "registry.k8s.io/ingress-nginx/controller:v1.5.1"
-    "registry.k8s.io/ingress-nginx/kube-webhook-certgen:v20220916-gd32f8c343"
-
-    # kube ui
-    "kubernetesui/metrics-scraper:v1.0.8"
-    "kubernetesui/dashboard:v2.7.0"
-
-    # Open EBS
-    "openebs/node-disk-manager:2.0.0"
-    "openebs/node-disk-exporter:2.0.0"
-    "openebs/provisioner-localpv:3.3.0"
-    "openebs/node-disk-operator:2.0.0"
-    "openebs/linux-utils:3.3.0"
-
-    # Minio
-    "minio/minio:RELEASE.2023-01-20T02-05-44Z"
-    "docker.io/busybox:1.36.0"
-    "curlimages/curl:7.87.0"
-
-    # Grafana stack observability
-    "grafana/enterprise-metrics:v2.5.1"
-    "grafana/mimir:2.5.0"
-    "docker.io/memcached:1.6.18-alpine"
-    "prom/memcached-exporter:v0.10.0"
-
-    "grafana/enterprise-logs:v1.6.0"
-    "grafana/loki:2.7.1"
-    "grafana/promtail:2.7.1"
-    
-    "grafana/enterprise-traces:v1.3.0"
-    "grafana/tempo:1.5.0"
-
-    "grafana/grafana:9.3.2"
-    "grafana/grafana-enterprise:9.3.2"
-      
-    "grafana/grafana-oss-dev:9.4.0-97680pre"
-
-    "grafana/agent:v0.30.2"
-
-    "prom/prometheus:v2.41.0"
-    "gcr.io/cadvisor/cadvisor:v0.47.1"
-
-    # Databases
-    "docker.io/mariadb:10.9.4"
-    "docker.io/mysql:8.0.32"
-    "docker.io/postgres:15.1"
-    "docker.io/elasticsearch:8.6.0"
-    "docker.io/adminer:4.8.1"
-
-    # messaging
-    "confluentinc/cp-kafka:7.3.0"
-    "confluentinc/cp-zookeeper:7.3.0"
-    "confluentinc/cp-server:7.3.0"
-    
-    "quay.io/strimzi/kafka:0.32.0-kafka-3.2.1"
-    "obsidiandynamics/kafdrop:3.30.0"
-
-    #prometheus
-    "prom/node-exporter:v1.5.0"
-
-    # platform essentials
-    "portainer/portainer-ce:2.16.2"
-    "sonatype/nexus3:3.43.0"
-    "docker.io/registry:2.8.1"
-    "joxit/docker-registry-ui:2.3.3"
-    "docker.io/traefik:2.9.6"
-    "quay.io/keycloak/keycloak:20.0.3-0"
-    "dzikoysk/reposilite:3.2.6"
-
-    # Demo Applications
-    "alainpham/web-shop:1.8"
-    "alainpham/shopping-cart:1.3"
-    "alainpham/products:otel-1.3"
-
-    "alainpham/smoke-test-app:1.2"
-    "philippgille/serve:0.3.0"
 )
 
-localrepo=registry.work.lan
+test="minio:RELEASE.2023-02-09T05-16-53Z"
+echo $test |  awk  -F  ':' '{ print $1 }'
+echo "$test"| grep -o '.*[^:]'
+
+localrepo=registry.awon.lan
 
 for item in "${images[@]}"
 do
-   echo  $item
+   localnameversion=`echo "$item"| grep -o '[^/]*$' `
+   localname=`echo $localnameversion |  awk  -F  ':' '{ print $1 }'`
+   version=`echo "$item"| grep -o '[^:]*$' `
+   
+   echo "- $localname"
 done
+
+cat /tmp/txt
 
 
 for item in "${images[@]}"
@@ -927,9 +925,33 @@ do
 done
 
 
+
 ```
 
 
+
+## Pipewire virtual sinks
+
+```
+
+
+sudo apt install pipewire-audio-client-libraries libspa-0.2-bluetooth libspa-0.2-jack
+sudo cp /usr/share/doc/pipewire/examples/alsa.conf.d/99-pipewire-default.conf /etc/alsa/conf.d/
+sudo cp /usr/share/doc/pipewire/examples/ld.so.conf.d/pipewire-jack-*.conf /etc/ld.so.conf.d/
+
+
+
+mkdir -d /etc/pipewire/pipewire.conf.d/
+sudo cp 10-virtual-sinks.conf /etc/pipewire/pipewire.conf.d/
+
+sudo vi /etc/security/limits.d/95-pipewire.conf
+
+# Default limits for users of pipewire
+@pipewire - rtprio 95
+@pipewire - nice -19
+@pipewire - memlock unlimited
+
+```
 ## Archived steps
 
 ### dnsmasq with Network Manager

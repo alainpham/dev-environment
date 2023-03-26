@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Session version="6000" name="live-audio" sample-rate="48000" end-is-free="0" session-range-is-free="0" id-counter="347048" name-counter="13" event-counter="508770" vca-counter="1">
+<Session version="6000" name="live-audio" sample-rate="48000" end-is-free="0" session-range-is-free="0" id-counter="360256" name-counter="13" event-counter="508770" vca-counter="1">
   <ProgramVersion created-with="Ardour 5.12" modified-with="Ardour 6.9.0~ds0-2build1"/>
   <MIDIPorts>
     <Port name="MIDI Clock out" direction="output"/>
@@ -131,7 +131,7 @@
         <Automation>
           <AutomationList automation-id="gain" id="245591" interpolation-style="Linear" state="Off"/>
         </Automation>
-        <Controllable name="gaincontrol" id="58" flags="GainLike" value="0.5482105016708374"/>
+        <Controllable name="gaincontrol" id="58" flags="GainLike" value="0.059459887444972992"/>
       </Processor>
       <Processor id="87" name="Master" active="1" user-latency="0" use-user-latency="0" own-input="1" own-output="0" output="Master" type="main-outs" role="Main">
         <PannerShell bypassed="0" user-panner="http://ardour.org/plugin/panner_balance" linked-to-route="1"/>
@@ -449,24 +449,24 @@
       <Controllable name="rec-safe" id="2924" flags="Toggle,RealTime" value="0"/>
       <Controllable name="rec-enable" id="2922" flags="Toggle,RealTime" value="1"/>
     </Route>
-    <Route version="6000" id="13927" name="dock-master" default-type="audio" strict-io="1" active="1" denormal-protection="0" meter-point="MeterOutput" disk-io-point="DiskIOPreFader" meter-type="MeterPeak0dB">
+    <Route version="6000" id="13927" name="builtin" default-type="audio" strict-io="1" active="1" denormal-protection="0" meter-point="MeterOutput" disk-io-point="DiskIOPreFader" meter-type="MeterPeak0dB">
       <PresentationInfo order="7" flags="AudioBus,OrderSet" color="255"/>
       <Controllable name="solo" id="13935" flags="Toggle,RealTime" value="0" self-solo="0" soloed-by-upstream="0" soloed-by-downstream="0"/>
       <Controllable name="solo-iso" id="13941" flags="Toggle,RealTime" value="0" solo-isolated="0"/>
       <Controllable name="solo-safe" id="13943" flags="Toggle" value="0" solo-safe="0"/>
-      <IO name="dock-master" id="13955" direction="Input" default-type="audio">
-        <Port type="audio" name="dock-master/audio_in 1">
+      <IO name="builtin" id="13955" direction="Input" default-type="audio">
+        <Port type="audio" name="builtin/audio_in 1">
           <Connection other="pre-master/audio_out 1"/>
         </Port>
-        <Port type="audio" name="dock-master/audio_in 2">
+        <Port type="audio" name="builtin/audio_in 2">
           <Connection other="pre-master/audio_out 2"/>
         </Port>
       </IO>
-      <IO name="dock-master" id="13956" direction="Output" default-type="audio">
-        <Port type="audio" name="dock-master/audio_out 1">
+      <IO name="builtin" id="13956" direction="Output" default-type="audio">
+        <Port type="audio" name="builtin/audio_out 1">
           <Connection other="Alder Lake PCH-P High Definition Audio Controller Speaker + Headphones:playback_FL"/>
         </Port>
-        <Port type="audio" name="dock-master/audio_out 2">
+        <Port type="audio" name="builtin/audio_out 2">
           <Connection other="Alder Lake PCH-P High Definition Audio Controller Speaker + Headphones:playback_FR"/>
         </Port>
       </IO>
@@ -506,9 +506,9 @@
         <Automation>
           <AutomationList automation-id="gain" id="245785" interpolation-style="Linear" state="Off"/>
         </Automation>
-        <Controllable name="gaincontrol" id="13931" flags="GainLike" value="0.022440588101744652"/>
+        <Controllable name="gaincontrol" id="13931" flags="GainLike" value="0.14428748190402985"/>
       </Processor>
-      <Processor id="13960" name="dock-master" active="1" user-latency="0" use-user-latency="0" own-input="1" own-output="0" output="dock-master" type="main-outs" role="Main">
+      <Processor id="13960" name="builtin" active="1" user-latency="0" use-user-latency="0" own-input="1" own-output="0" output="builtin" type="main-outs" role="Main">
         <PannerShell bypassed="0" user-panner="http://ardour.org/plugin/panner_2in2out" linked-to-route="1"/>
       </Processor>
       <Processor id="13959" name="meter-dock-speakers-master" active="1" user-latency="0" use-user-latency="0" type="meter"/>
@@ -1777,10 +1777,12 @@
       <IO name="pre-master" id="210347" direction="Output" default-type="audio">
         <Port type="audio" name="pre-master/audio_out 1">
           <Connection other="Master/audio_in 1"/>
+          <Connection other="builtin/audio_in 1"/>
           <Connection other="dock-master/audio_in 1"/>
         </Port>
         <Port type="audio" name="pre-master/audio_out 2">
           <Connection other="Master/audio_in 2"/>
+          <Connection other="builtin/audio_in 2"/>
           <Connection other="dock-master/audio_in 2"/>
         </Port>
       </IO>
@@ -1826,6 +1828,71 @@
         <PannerShell bypassed="0" user-panner="http://ardour.org/plugin/panner_2in2out" linked-to-route="1"/>
       </Processor>
       <Processor id="210350" name="meter-visual" active="1" user-latency="0" use-user-latency="0" type="meter"/>
+      <Slavable/>
+    </Route>
+    <Route version="6000" id="348222" name="dock-master" default-type="audio" strict-io="1" active="1" denormal-protection="0" meter-point="MeterOutput" disk-io-point="DiskIOPreFader" meter-type="MeterPeak0dB">
+      <PresentationInfo order="8" flags="AudioBus,OrderSet" color="255"/>
+      <Controllable name="solo" id="348193" flags="Toggle,RealTime" value="0" self-solo="0" soloed-by-upstream="0" soloed-by-downstream="0"/>
+      <Controllable name="solo-iso" id="348248" flags="Toggle,RealTime" value="0" solo-isolated="0"/>
+      <Controllable name="solo-safe" id="348249" flags="Toggle" value="0" solo-safe="0"/>
+      <IO name="dock-master" id="348223" direction="Input" default-type="audio">
+        <Port type="audio" name="dock-master/audio_in 1">
+          <Connection other="pre-master/audio_out 1"/>
+        </Port>
+        <Port type="audio" name="dock-master/audio_in 2">
+          <Connection other="pre-master/audio_out 2"/>
+        </Port>
+      </IO>
+      <IO name="dock-master" id="348224" direction="Output" default-type="audio">
+        <Port type="audio" name="dock-master/audio_out 1">
+          <Connection other="Alder Lake PCH-P High Definition Audio Controller Speaker + Headphones:playback_FL"/>
+        </Port>
+        <Port type="audio" name="dock-master/audio_out 2">
+          <Connection other="Alder Lake PCH-P High Definition Audio Controller Speaker + Headphones:playback_FR"/>
+        </Port>
+      </IO>
+      <MuteMaster mute-point="PostFader,Listen,Main" muted="1"/>
+      <Controllable name="mute" id="348250" flags="Toggle,RealTime" value="1"/>
+      <Controllable name="phase" id="348251" flags="Toggle" value="0" phase-invert="00"/>
+      <Automation>
+        <AutomationList automation-id="solo" id="348252" interpolation-style="Discrete" state="Off"/>
+        <AutomationList automation-id="solo-iso" id="348253" interpolation-style="Discrete" state="Off"/>
+        <AutomationList automation-id="solo-safe" id="348254" interpolation-style="Discrete" state="Off"/>
+        <AutomationList automation-id="mute" id="348255" interpolation-style="Discrete" state="Off"/>
+        <AutomationList automation-id="phase" id="348256" interpolation-style="Discrete" state="Off"/>
+      </Automation>
+      <Pannable>
+        <Controllable name="pan-azimuth" id="348226" flags="" value="0.5"/>
+        <Controllable name="pan-width" id="348227" flags="" value="1"/>
+        <Controllable name="pan-elevation" id="348228" flags="" value="0"/>
+        <Controllable name="pan-frontback" id="348229" flags="" value="0"/>
+        <Controllable name="pan-lfe" id="348230" flags="" value="0"/>
+        <Automation>
+          <AutomationList automation-id="pan-azimuth" id="348231" interpolation-style="Linear" state="Off"/>
+          <AutomationList automation-id="pan-elevation" id="348232" interpolation-style="Linear" state="Off"/>
+          <AutomationList automation-id="pan-width" id="348233" interpolation-style="Linear" state="Off"/>
+          <AutomationList automation-id="pan-frontback" id="348234" interpolation-style="Linear" state="Off"/>
+          <AutomationList automation-id="pan-lfe" id="348235" interpolation-style="Linear" state="Off"/>
+        </Automation>
+      </Pannable>
+      <Processor id="348237" name="return 3" active="1" user-latency="0" use-user-latency="0" type="intreturn"/>
+      <Processor id="348238" name="Polarity" active="1" user-latency="0" use-user-latency="0" type="polarity"/>
+      <Processor id="348239" name="Amp" active="1" user-latency="0" use-user-latency="0" type="trim">
+        <Automation>
+          <AutomationList automation-id="trim" id="348240" interpolation-style="Linear" state="Off"/>
+        </Automation>
+        <Controllable name="trimcontrol" id="348241" flags="GainLike" value="1"/>
+      </Processor>
+      <Processor id="348242" name="Amp" active="1" user-latency="0" use-user-latency="0" type="amp">
+        <Automation>
+          <AutomationList automation-id="gain" id="348243" interpolation-style="Linear" state="Off"/>
+        </Automation>
+        <Controllable name="gaincontrol" id="348244" flags="GainLike" value="0.14428757131099701"/>
+      </Processor>
+      <Processor id="348245" name="dock-master" active="1" user-latency="0" use-user-latency="0" own-input="1" own-output="0" output="dock-master" type="main-outs" role="Main">
+        <PannerShell bypassed="0" user-panner="http://ardour.org/plugin/panner_2in2out" linked-to-route="1"/>
+      </Processor>
+      <Processor id="348247" name="meter-dock-speakers-master" active="1" user-latency="0" use-user-latency="0" type="meter"/>
       <Slavable/>
     </Route>
   </Routes>
@@ -1877,28 +1944,28 @@
   <Extra>
     <RulerVisibility timecode="1" bbt="1" samples="0" minsec="0" tempo="1" meter="1" marker="1" rangemarker="1" transportmarker="1" cdmarker="0" videotl="0"/>
     <UI>
-      <Window name="key-editor" visible="0" x-off="108" y-off="358" x-size="595" y-size="476"/>
+      <Window name="key-editor" visible="0" x-off="-1" y-off="-1" x-size="-1" y-size="-1"/>
       <Window name="session-options-editor" visible="0" x-off="-1" y-off="-1" x-size="-1" y-size="-1"/>
       <Window name="speaker-config" visible="0" x-off="-1" y-off="-1" x-size="-1" y-size="-1"/>
       <Window name="about" visible="0" x-off="-1" y-off="-1" x-size="-1" y-size="-1"/>
-      <Window name="add-routes" visible="0" x-off="-1" y-off="-1" x-size="662" y-size="499"/>
+      <Window name="add-routes" visible="0" x-off="-1" y-off="-1" x-size="-1" y-size="-1"/>
       <Window name="add-video" visible="0" x-off="-1" y-off="-1" x-size="-1" y-size="-1"/>
-      <Window name="inspector" visible="0" x-off="63" y-off="239" x-size="1314" y-size="774"/>
+      <Window name="inspector" visible="0" x-off="-1" y-off="-1" x-size="-1" y-size="-1"/>
       <Window name="audio-midi-setup" visible="0" x-off="-1" y-off="-1" x-size="-1" y-size="-1"/>
       <Window name="video-export" visible="0" x-off="-1" y-off="-1" x-size="-1" y-size="-1"/>
       <Window name="script-manager" visible="0" x-off="-1" y-off="-1" x-size="-1" y-size="-1"/>
-      <Window name="bundle-manager" visible="0" x-off="192" y-off="334" x-size="480" y-size="240"/>
-      <Window name="locations" visible="0" x-off="306" y-off="0" x-size="828" y-size="475"/>
-      <Window name="big-clock" visible="0" x-off="128" y-off="203" x-size="520" y-size="78"/>
-      <Window name="big-transport" visible="0" x-off="312" y-off="253" x-size="231" y-size="41"/>
-      <Window name="virtual-keyboard" visible="0" x-off="23" y-off="197" x-size="750" y-size="188"/>
+      <Window name="bundle-manager" visible="0" x-off="-1" y-off="-1" x-size="-1" y-size="-1"/>
+      <Window name="locations" visible="0" x-off="-1" y-off="-1" x-size="-1" y-size="-1"/>
+      <Window name="big-clock" visible="0" x-off="-1" y-off="-1" x-size="-1" y-size="-1"/>
+      <Window name="big-transport" visible="0" x-off="-1" y-off="-1" x-size="-1" y-size="-1"/>
+      <Window name="virtual-keyboard" visible="0" x-off="-1" y-off="-1" x-size="-1" y-size="-1"/>
       <Window name="audio-connection-manager" visible="0" x-off="-1" y-off="-1" x-size="-1" y-size="-1"/>
       <Window name="midi-connection-manager" visible="0" x-off="-1" y-off="-1" x-size="-1" y-size="-1"/>
       <Window name="idle-o-meter" visible="0" x-off="-1" y-off="-1" x-size="-1" y-size="-1"/>
       <Window name="plugin-manager" visible="0" x-off="-1" y-off="-1" x-size="-1" y-size="-1"/>
       <Window name="plugin-dsp-load" visible="0" x-off="-1" y-off="-1" x-size="-1" y-size="-1"/>
       <Window name="dsp-statistics" visible="0" x-off="-1" y-off="-1" x-size="-1" y-size="-1"/>
-      <Window name="transport-masters" visible="0" x-off="7" y-off="441" x-size="1246" y-size="271"/>
+      <Window name="transport-masters" visible="0" x-off="-1" y-off="-1" x-size="-1" y-size="-1"/>
       <Window name="RPM-210318" visible="0" x-off="-1" y-off="-1" x-size="-1" y-size="-1"/>
       <Window name="RPM-54" visible="0" x-off="-1" y-off="-1" x-size="-1" y-size="-1"/>
       <Window name="RPM-91236" visible="0" x-off="-1" y-off="-1" x-size="-1" y-size="-1"/>
@@ -1907,9 +1974,10 @@
       <Window name="RPM-2886" visible="0" x-off="-1" y-off="-1" x-size="-1" y-size="-1"/>
       <Window name="RPM-15700" visible="0" x-off="-1" y-off="-1" x-size="-1" y-size="-1"/>
       <Window name="RPM-13927" visible="0" x-off="-1" y-off="-1" x-size="-1" y-size="-1"/>
-      <Window name="P-91236-91289" visible="0" x-off="1179" y-off="865" x-size="782" y-size="341" custom-ui="1"/>
+      <Window name="RPM-348222" visible="0" x-off="-1" y-off="-1" x-size="-1" y-size="-1"/>
+      <Window name="P-91236-91289" visible="0" x-off="-1" y-off="-1" x-size="-1" y-size="-1" custom-ui="1"/>
       <Window name="P-91236-121028" visible="0" x-off="2992" y-off="169" x-size="1245" y-size="710" custom-ui="1"/>
-      <Window name="P-91236-171227" visible="0" x-off="1704" y-off="868" x-size="771" y-size="238" custom-ui="1"/>
+      <Window name="P-91236-171227" visible="0" x-off="1704" y-off="868" x-size="771" y-size="575" custom-ui="1"/>
       <Window name="P-91236-111277" visible="0" x-off="2021" y-off="616" x-size="1205" y-size="388" custom-ui="1"/>
       <Window name="P-91236-111307" visible="0" x-off="3000" y-off="984" x-size="1106" y-size="835" custom-ui="1"/>
       <Window name="P-91236-176451" visible="0" x-off="2040" y-off="420" x-size="960" y-size="575" custom-ui="1"/>
@@ -2974,6 +3042,8 @@
           <Object id="processor 339930">
             <Object id="control 339944" visible="1"/>
           </Object>
+          <Object id="processor 355939"/>
+          <Object id="processor 357095"/>
         </Object>
         <Object id="strip 96828" visible="1" strip-width="Wide">
           <Object id="processor 96882"/>
@@ -3805,6 +3875,51 @@
         <Object id="strip 339886" strip-width="Wide" visible="1">
           <Object id="processor 339916">
             <Object id="control 339890" visible="0"/>
+          </Object>
+        </Object>
+        <Object id="strip 348222" visible="1" strip-width="Wide">
+          <Object id="processor 348242">
+            <Object id="control 348244" visible="0"/>
+          </Object>
+        </Object>
+        <Object id="rtav 348222" height="66" visible="1"/>
+        <Object id="automation 348244" height="66" visible="0"/>
+        <Object id="automation 348241" height="66" visible="0"/>
+        <Object id="automation 348222 12/0/0" height="66" visible="0"/>
+        <Object id="automation 348226" height="66" visible="0"/>
+        <Object id="automation 348227" height="66" visible="0"/>
+        <Object id="strip 348265" visible="1" strip-width="Wide">
+          <Object id="processor 348295">
+            <Object id="control 348269" visible="0"/>
+          </Object>
+          <Object id="processor 348370">
+            <Object id="control 348347" visible="0"/>
+            <Object id="control 348348" visible="0"/>
+            <Object id="control 348349" visible="0"/>
+            <Object id="control 348350" visible="0"/>
+            <Object id="control 348351" visible="0"/>
+            <Object id="control 348352" visible="0"/>
+            <Object id="control 348353" visible="0"/>
+            <Object id="control 348354" visible="0"/>
+            <Object id="control 348355" visible="0"/>
+            <Object id="control 348356" visible="0"/>
+          </Object>
+          <Object id="processor 348374"/>
+          <Object id="processor 348389"/>
+          <Object id="processor 348404">
+            <Object id="control 348406" visible="0"/>
+          </Object>
+          <Object id="processor 348415">
+            <Object id="control 348417" visible="0"/>
+            <Object id="control 348419" visible="0"/>
+            <Object id="control 348421" visible="0"/>
+            <Object id="control 348423" visible="0"/>
+            <Object id="control 348425" visible="0"/>
+            <Object id="control 348427" visible="0"/>
+            <Object id="control 348429" visible="0"/>
+            <Object id="control 348431" visible="0"/>
+            <Object id="control 348433" visible="0"/>
+            <Object id="control 348435" visible="0"/>
           </Object>
         </Object>
       </GUIObjectState>
