@@ -18,6 +18,7 @@
   - [DNS resolution](#dns-resolution)
     - [Debian/Raspbian](#debianraspbian)
     - [Restart services if on ubuntu with systemd](#restart-services-if-on-ubuntu-with-systemd)
+  - [Git config](#git-config)
   - [KVM scripts](#kvm-scripts)
   - [Additional packages](#additional-packages)
     - [Fonts](#fonts)
@@ -177,18 +178,18 @@ sudo apt install ncdu git ansible docker.io python3-docker docker-compose apparm
 
 minimalistic micro server on ubuntu or debian physical machines
 ```
-sudo apt install git ansible docker.io python3-docker docker-compose skopeo apparmor tmux vim openjdk-17-jdk-headless prometheus-node-exporter curl rsync dnsmasq ncdu  dnsutils bmon lm-sensors
+sudo apt install git ansible docker.io python3-docker docker-compose skopeo apparmor tmux vim openjdk-17-jdk-headless prometheus-node-exporter curl rsync dnsmasq ncdu dnsutils bmon lm-sensors
 ```
 
 minimalistic micro server on kvm ubuntu or debian
 
 ```
-sudo apt install git ansible docker.io python3-docker docker-compose skopeo apparmor tmux vim openjdk-17-jdk-headless prometheus-node-exporter curl rsync ncdu  dnsutils bmon lm-sensors dnsmasq
+sudo apt install git ansible docker.io python3-docker docker-compose skopeo apparmor tmux vim openjdk-17-jdk-headless prometheus-node-exporter curl rsync ncdu  dnsutils bmon lm-sensors
 ```
 
 minimal debian 11 kubernetes host
 ```console
-apt install sudo dnsmasq 
+apt install sudo
 ```
 
 ## Add main user to groups
@@ -202,6 +203,19 @@ sudo adduser $USER pipewire
 
 
 ## Docker configuration
+
+```
+sudo bash -c 'cat > /etc/docker/daemon.json << _EOF_
+{
+  "log-opts": {
+    "max-size": "50m",
+    "max-file": "2" 
+  }
+}
+_EOF_'
+
+sudo systemctl restart docker
+```
 
 ```
 docker network create --driver=bridge --subnet=172.18.0.0/16 --gateway=172.18.0.1 primenet
@@ -322,6 +336,12 @@ sudo systemctl enable dnsmasq
 sudo systemctl restart dnsmasq
 ```
 
+## Git config
+```
+git config --global user.email
+git config --global core.editor "vim"
+```
+
 ## KVM scripts
 
 ```
@@ -397,6 +417,7 @@ List of plugins to install
 curl -L -o /tmp/maven.tar.gz https://dlcdn.apache.org/maven/maven-3/3.9.1/binaries/apache-maven-3.9.1-bin.tar.gz
 sudo tar xzvf /tmp/maven.tar.gz  -C /opt/appimages/
 sudo ln -s /opt/appimages/apache-maven-3.9.1/bin/mvn /usr/local/bin/mvn
+
 ```
 
 Think about customizing settings.xml if needed
