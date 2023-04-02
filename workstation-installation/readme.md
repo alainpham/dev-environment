@@ -16,16 +16,12 @@
   - [Add main user to groups](#add-main-user-to-groups)
   - [Docker configuration](#docker-configuration)
   - [DNS resolution](#dns-resolution)
-    - [Ubuntu](#ubuntu)
     - [Debian/Raspbian](#debianraspbian)
     - [Restart services if on ubuntu with systemd](#restart-services-if-on-ubuntu-with-systemd)
-    - [Configure IPV6 disabled (deprecated)](#configure-ipv6-disabled-deprecated)
-  - [DNS/DHCP server for local homellab on RPI](#dnsdhcp-server-for-local-homellab-on-rpi)
   - [KVM scripts](#kvm-scripts)
   - [Additional packages](#additional-packages)
     - [Fonts](#fonts)
     - [Downloaded packages](#downloaded-packages)
-  - [Configure sound](#configure-sound)
   - [Configure JAVA\_HOME](#configure-java_home)
   - [Install raw packages](#install-raw-packages)
     - [VSCode](#vscode)
@@ -40,8 +36,11 @@
     - [Generate Certificates Root CA](#generate-certificates-root-ca)
     - [Generate Key Pair and others](#generate-key-pair-and-others)
   - [Predownload docker images](#predownload-docker-images)
+  - [Pipewire virtual sinks](#pipewire-virtual-sinks)
   - [Archived steps](#archived-steps)
     - [dnsmasq with Network Manager](#dnsmasq-with-network-manager)
+  - [Configure sound](#configure-sound)
+  - [DNS/DHCP server for local homellab on RPI](#dnsdhcp-server-for-local-homellab-on-rpi)
 
 # Workstation Installs
 
@@ -160,7 +159,6 @@ _EOF_'
 
 optional
 /etc/apt/apt.conf.d/no-cache
-
 ```
 sudo bash -c 'cat > /etc/apt/apt.conf.d/no-cache << _EOF_
 Acquire::http {No-Cache=True;};
@@ -170,11 +168,6 @@ _EOF_'
 ## Packages installed
 
 ### From official repo
-
-
-```
-sudo apt install ncdu git ansible docker.io python3-docker docker-compose apparmor tmux vim openjdk-17-jdk prometheus-node-exporter htop curl lshw rsync mediainfo ffmpeg python3-mutagen iperf dnsmasq imagemagick qemu-system qemu-utils virtinst libvirt-clients libvirt-daemon-system libguestfs-tools bridge-utils libosinfo-bin jackd2 qjackctl pulseaudio-module-jack lsp-plugins-lv2 calf-plugins ardour v4l-utils flatpak snapd virt-manager mediainfo-gui v4l2loopback-utils easytag gimp avldrums.lv2 libreoffice-plasma libreoffice openssh-server linux-tools-common linux-tools-generic freeplane ifuse libimobiledevice-utils xournal inkscape npm rpi-imager apt-cacher-ng skopeo golang-go dnsutils bmon lm-sensors psensor
-```
 
 ubuntu 22.10 dekstop
 
@@ -194,7 +187,6 @@ sudo apt install git ansible docker.io python3-docker docker-compose skopeo appa
 ```
 
 minimal debian 11 kubernetes host
-
 ```console
 apt install sudo dnsmasq 
 ```
@@ -212,25 +204,12 @@ sudo adduser $USER pipewire
 ## Docker configuration
 
 ```
-sudo bash -c 'cat > /etc/docker/daemon.json << _EOF_
-{
-    "insecure-registries" : ["registry.work.lan", "registry.awon.lan"],
-    "dns": ["172.17.0.1"]
-}
-_EOF_'
-
-sudo systemctl restart docker
-
-```
-
-```
 docker network create --driver=bridge --subnet=172.18.0.0/16 --gateway=172.18.0.1 primenet
 
 docker plugin install grafana/loki-docker-driver:2.7.1 --alias loki --grant-all-permissions && sudo systemctl restart docker
 ```
 
 on raspberry pi for getting cpu metrics in docker
-
 ```
 sudo vi /boot/cmdline.txt
 // add at the end of the line:
@@ -241,7 +220,7 @@ cgroup_enable=cpuset cgroup_enable=memory cgroup_memory=1
 
 Configure dnsmasq
 
-with docker host
+with docker host on ubuntu with resolved
 ```
 sudo bash -c 'cat > /etc/dnsmasq.d/dev.conf << _EOF_
 # /etc/dnsmasq.d/dev.conf
@@ -255,16 +234,10 @@ address=/sandbox.loc/192.168.122.30
 
 _EOF_'
 
-
-
-for ubuntu and network manager
-
 sudo bash -c 'cat > /etc/dnsmasq.d/res.conf << _EOF_
 # /etc/dnsmasq.d/res.conf
 resolv-file=/run/NetworkManager/no-stub-resolv.conf
 _EOF_'
-
-
 
 sudo bash -c 'cat > /etc/systemd/resolved.conf << _EOF_
 # /etc/systemd/resolved.conf
@@ -274,18 +247,7 @@ DNSStubListener=no
 _EOF_'
 ```
 
-
-with networkmanager & systemd-resolved on ubuntu for example
-
-```
-sudo bash -c 'cat > /etc/dnsmasq.d/res.conf << _EOF_
-# /etc/dnsmasq.d/res.conf
-resolv-file=/run/NetworkManager/no-stub-resolv.conf
-_EOF_'
-```
-
 for minimal kube host
-
 ```
 sudo bash -c 'cat > /etc/dnsmasq.d/dev.conf << _EOF_
 # /etc/dnsmasq.d/dev.conf
@@ -338,20 +300,6 @@ sudo systemctl daemon-reload
 sudo systemctl restart dnsmasq.service
 ```
 
-### Ubuntu
-
-On Ubuntu : configure systemd-resolved, set dns as  to point to 127.0.0.1 as dns server & use dnsmasq
-
-```
-sudo bash -c 'cat > /etc/systemd/resolved.conf << _EOF_
-# /etc/systemd/resolved.conf
-[Resolve]
-DNS=127.0.0.1
-DNSStubListener=no
-_EOF_'
-
-```
-
 ### Debian/Raspbian
 
 On Raspbian or Debian : configure dhcpd/dhclient to prepend 127.0.0.1 & use dnsmasq
@@ -372,51 +320,6 @@ sudo systemctl restart systemd-resolved
 
 sudo systemctl enable dnsmasq
 sudo systemctl restart dnsmasq
-```
-
-### Configure IPV6 disabled (deprecated)
-
-```
-sudo bash -c 'cat > /etc/sysctl.d/10-noipv6.conf << _EOF_
-net.ipv6.conf.all.disable_ipv6 = 1
-net.ipv6.conf.default.disable_ipv6 = 1
-_EOF_'
-
-```
-
-alternative with grub
-
-```
-sudo vi /etc/default/grub
-
-GRUB_CMDLINE_LINUX='ipv6.disable=1'
-
-sudo update-grub
-```
-
-## DNS/DHCP server for local homellab on RPI
-
-```
-sudo vi /etc/dhcpcd.conf
-
-# Example static IP configuration:
-interface eth0
-static ip_address=192.168.8.254/24
-#static ip6_address=fd51:42f8:caae:d92e::ff/64
-static routers=192.168.8.1
-static domain_name_servers=192.168.8.1
-
-sudo vi /etc/dnsmasq.conf
-
-#range for dhcp
-dhcp-range=192.168.8.8,192.168.8.253,255.255.255.0,12h
-
-#dns server to publish we use the internet boxes by default for better relability
-dhcp-option=option:dns-server,192.168.8.1
-
-#fixed dhcp reservation
-dhcp-host=9c:8e:99:e6:f3:3b,awon.lan,192.168.8.100,infinite
-
 ```
 
 ## KVM scripts
@@ -456,50 +359,6 @@ Copy fonts to `/usr/local/share/fonts/`
 google-chrome-stable_current_amd64.deb slack-desktop-4.25.0-amd64.deb noise-repellent_0.1.5-1kxstudio2_amd64.deb
 ```
 
-## Configure sound
-
-List usb sound card devices and fix their names
-
-```
-udevadm info -ap /sys/class/sound/card<number>
-
-ls /devices/pci0000:00/0000:00:14.0/usb3/3-6/3-6.2/3-6.2.4/3-6.2.4:1.0/sound/
-```
-
-Create file with following content
-
-```
-ACTION=="add", SUBSYSTEM=="sound", DEVPATH=="/devices/pci0000:00/0000:00:14.0/usb3/3-6/3-6.2/3-6.2.3/3-6.2.3:1.0/sound/card?", ATTR{id}="dock"
-
-ACTION=="add", SUBSYSTEM=="sound", DEVPATH=="/devices/pci0000:00/0000:00:14.0/usb?/?-1/?-1:1.0/sound/card?", ATTR{id}="s2i2"
-```
-
-Copy to rules folders and reload reboot
-
-```
-sudo cp 70-my-sound-cards.rules /etc/udev/rules.d/
-sudo udevadm control --reload-rules && sudo udevadm trigger
-sudo reboot now
-```
-
-Configure qjackctl
-
-```
-SETTINGS
-
-Interface : hw:s2i2
-Sample Rate : 48000
-Frames/Period : 2048
-Periods/Buffer : 4
-
-
-OPTIONS
-
-Execute script on Startup : pacmd suspend true
-Execute script after Startup : /home/workdrive/tazone/dev-environment/qjackctl-scripts/qjacktctl-after-startup.sh
-Execute script after Shutdown : pacmd suspend false
-```
-
 ## Configure JAVA_HOME
 
 ```
@@ -512,12 +371,16 @@ _EOF_'
 
 ### VSCode
 
+sudo cp code-stable-x64-1678818101.tar.gz /opt/appimages/
+cd /opt/appimages/
+sudo tar xzvf code-stable-x64-1678818101.tar.gz
+sudo ln -sf /opt/appimages/VSCode-linux-x64/code /usr/local/bin/code
+
 version 1.57.1
 version 1.74.3
 install settings sync and sync with gist
 
 List of plugins to install
-
 
 * eclipse keymap
 * extension pack for java
@@ -541,7 +404,17 @@ Think about customizing settings.xml if needed
 
 ## Some optional packages
 
-viber, slack, teams, zoom, dbeaver, helm , k9s
+dbeaver and helm
+
+```console
+sudo snap install dbeaver-ce
+sudo snap install helm --classic
+
+helm completion bash | sudo tee /etc/bash_completion.d/helm > /dev/null
+
+```
+
+k9s
 https://github.com/derailed/k9s/releases
 
 ```console
@@ -549,9 +422,9 @@ curl -LO https://github.com/derailed/k9s/releases/download/v0.27.3/k9s_Linux_amd
 sudo tar -xzvf k9s_Linux_amd64.tar.gz  -C /usr/local/bin/ k9s
 ```
 
-```
-sudo apt install obs-studio blender
+kubectl
 
+```
 curl -LO "https://dl.k8s.io/release/v1.25.8/bin/linux/amd64/kubectl"
 sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
@@ -568,22 +441,13 @@ sudo apt-get update && sudo apt-get install google-cloud-cli
 sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin
 ```
 
-helm
-
-```
-helm completion bash | sudo tee /etc/bash_completion.d/helm > /dev/null
-```
-
-
-
-
 kind kubernetes 
 
 ```console
-
-curl -Lo ./kind "https://kind.sigs.k8s.io/dl/v0.17.0/kind-$(uname)-amd64"
+curl -Lo ./kind "https://kind.sigs.k8s.io/dl/v0.18.0/kind-$(uname)-amd64"
 chmod +x ./kind
 sudo mv ./kind /usr/local/bin/kind
+rm kind
 
 kind completion bash | sudo tee /etc/bash_completion.d/kind > /dev/null
 
@@ -595,7 +459,7 @@ name: localcloud
 
 nodes:
 - role: control-plane
-  image: kindest/node:v1.25.3
+  image: kindest/node:v1.25.8
   kubeadmConfigPatches:
   - |
     kind: InitConfiguration
@@ -610,12 +474,6 @@ nodes:
     hostPort: 443
     protocol: TCP
 EOF
-
-
-kui
-sudo ln -s 
-
-
 ```
 
 ## Install snaps (snaps don't work great ignore this...)
@@ -640,12 +498,13 @@ ssh-keygen -f ~/.ssh/vm
 ```
 debianimage=debian-11-genericcloud-amd64-20230124-1270
 
-vmcreate master 3072 4 $debianimage 10 40G 1G debian11
+vmcreate master 2048 4 $debianimage 10 40G 1G debian11
 vmcreate node01 2048 4 $debianimage 11 40G 1G debian11
 vmcreate node02 2048 4 $debianimage 12 40G 1G debian11
 vmcreate node03 2048 4 $debianimage 13 40G 1G debian11
 
-vmcreate sandbox 6144 4  $debianimage 30 40G 40G debian10
+vmcreate sandbox 6144 4  $debianimage 30 40G 40G debian11
+vmcreate splunk 6144 4  $debianimage 40 40G 1G debian11
 
 ```
 
@@ -1001,5 +860,91 @@ restart network manager
 
 ```
 sudo systemctl restart NetworkManager
+```
+
+
+
+## Configure sound
+
+List usb sound card devices and fix their names
+
+```
+udevadm info -ap /sys/class/sound/card<number>
+
+ls /devices/pci0000:00/0000:00:14.0/usb3/3-6/3-6.2/3-6.2.4/3-6.2.4:1.0/sound/
+```
+
+Create file with following content
+
+```
+ACTION=="add", SUBSYSTEM=="sound", DEVPATH=="/devices/pci0000:00/0000:00:14.0/usb3/3-6/3-6.2/3-6.2.3/3-6.2.3:1.0/sound/card?", ATTR{id}="dock"
+
+ACTION=="add", SUBSYSTEM=="sound", DEVPATH=="/devices/pci0000:00/0000:00:14.0/usb?/?-1/?-1:1.0/sound/card?", ATTR{id}="s2i2"
+```
+
+Copy to rules folders and reload reboot
+
+```
+sudo cp 70-my-sound-cards.rules /etc/udev/rules.d/
+sudo udevadm control --reload-rules && sudo udevadm trigger
+sudo reboot now
+```
+
+Configure qjackctl
+
+```
+SETTINGS
+
+Interface : hw:s2i2
+Sample Rate : 48000
+Frames/Period : 2048
+Periods/Buffer : 4
+
+
+OPTIONS
+
+Execute script on Startup : pacmd suspend true
+Execute script after Startup : /home/workdrive/tazone/dev-environment/qjackctl-scripts/qjacktctl-after-startup.sh
+Execute script after Shutdown : pacmd suspend false
+```
+
+
+Docker file
+
+optional if dns is well configured
+```
+sudo bash -c 'cat > /etc/docker/daemon.json << _EOF_
+{
+    "insecure-registries" : ["registry.work.lan", "registry.awon.lan"],
+    "dns": ["172.17.0.1"]
+}
+_EOF_'
+
+sudo systemctl restart docker
+```
+
+## DNS/DHCP server for local homellab on RPI
+
+```
+sudo vi /etc/dhcpcd.conf
+
+# Example static IP configuration:
+interface eth0
+static ip_address=192.168.8.254/24
+#static ip6_address=fd51:42f8:caae:d92e::ff/64
+static routers=192.168.8.1
+static domain_name_servers=192.168.8.1
+
+sudo vi /etc/dnsmasq.conf
+
+#range for dhcp
+dhcp-range=192.168.8.8,192.168.8.253,255.255.255.0,12h
+
+#dns server to publish we use the internet boxes by default for better relability
+dhcp-option=option:dns-server,192.168.8.1
+
+#fixed dhcp reservation
+dhcp-host=9c:8e:99:e6:f3:3b,awon.lan,192.168.8.100,infinite
+
 ```
 /!\ END Archived steps

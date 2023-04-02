@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Session version="6000" name="live-audio" sample-rate="48000" end-is-free="0" session-range-is-free="0" id-counter="360256" name-counter="13" event-counter="508770" vca-counter="1">
+<Session version="6000" name="live-audio" sample-rate="48000" end-is-free="0" session-range-is-free="0" id-counter="364972" name-counter="13" event-counter="508770" vca-counter="1">
   <ProgramVersion created-with="Ardour 5.12" modified-with="Ardour 6.9.0~ds0-2build1"/>
   <MIDIPorts>
     <Port name="MIDI Clock out" direction="output"/>
@@ -131,7 +131,7 @@
         <Automation>
           <AutomationList automation-id="gain" id="245591" interpolation-style="Linear" state="Off"/>
         </Automation>
-        <Controllable name="gaincontrol" id="58" flags="GainLike" value="0.059459887444972992"/>
+        <Controllable name="gaincontrol" id="58" flags="GainLike" value="0.092903062701225281"/>
       </Processor>
       <Processor id="87" name="Master" active="1" user-latency="0" use-user-latency="0" own-input="1" own-output="0" output="Master" type="main-outs" role="Main">
         <PannerShell bypassed="0" user-panner="http://ardour.org/plugin/panner_balance" linked-to-route="1"/>
@@ -162,8 +162,8 @@
           <Connection other="to-caller-master/audio_in 2"/>
         </Port>
       </IO>
-      <MuteMaster mute-point="PostFader,Listen,Main" muted="0"/>
-      <Controllable name="mute" id="2352" flags="Toggle,RealTime" value="0"/>
+      <MuteMaster mute-point="PostFader,Listen,Main" muted="1"/>
+      <Controllable name="mute" id="2352" flags="Toggle,RealTime" value="1"/>
       <Controllable name="phase" id="2354" flags="Toggle" value="0" phase-invert="00"/>
       <Automation>
         <AutomationList automation-id="solo" id="245631" interpolation-style="Discrete" state="Off"/>
@@ -506,7 +506,7 @@
         <Automation>
           <AutomationList automation-id="gain" id="245785" interpolation-style="Linear" state="Off"/>
         </Automation>
-        <Controllable name="gaincontrol" id="13931" flags="GainLike" value="0.14428748190402985"/>
+        <Controllable name="gaincontrol" id="13931" flags="GainLike" value="0.39395463466644287"/>
       </Processor>
       <Processor id="13960" name="builtin" active="1" user-latency="0" use-user-latency="0" own-input="1" own-output="0" output="builtin" type="main-outs" role="Main">
         <PannerShell bypassed="0" user-panner="http://ardour.org/plugin/panner_2in2out" linked-to-route="1"/>
@@ -856,13 +856,13 @@
           <Port symbol="slpm" value="0"/>
           <Port symbol="slpf" value="20000"/>
           <Port symbol="gh" value="0"/>
-          <Port symbol="gt" value="0.0050118728540837765"/>
+          <Port symbol="gt" value="0.0079432819038629532"/>
           <Port symbol="gz" value="0.099999994039535522"/>
           <Port symbol="ht" value="0.25119000673294067"/>
           <Port symbol="hz" value="0.50117999315261841"/>
           <Port symbol="at" value="20"/>
           <Port symbol="rt" value="100.00000762939453"/>
-          <Port symbol="gr" value="0.017782794311642647"/>
+          <Port symbol="gr" value="0.015848929062485695"/>
           <Port symbol="mk" value="1"/>
           <Port symbol="cdr" value="0"/>
           <Port symbol="cwt" value="1"/>
@@ -887,13 +887,13 @@
         <Controllable name="Low-pass filter mode" id="207027" flags="" value="0" parameter="14" symbol="slpm"/>
         <Controllable name="Low-pass filter frequency" id="207029" flags="" value="20000" parameter="15" symbol="slpf"/>
         <Controllable name="Hysteresis" id="121050" flags="Toggle" value="0" parameter="16" symbol="gh"/>
-        <Controllable name="Curve threshold" id="121052" flags="" value="0.0050118728540837765" parameter="17" symbol="gt"/>
+        <Controllable name="Curve threshold" id="121052" flags="" value="0.0079432819038629532" parameter="17" symbol="gt"/>
         <Controllable name="Curve zone size" id="121054" flags="" value="0.099999994039535522" parameter="18" symbol="gz"/>
         <Controllable name="Hysteresis threshold" id="121056" flags="" value="0.25119000673294067" parameter="19" symbol="ht"/>
         <Controllable name="Hysteresis zone size" id="121058" flags="" value="0.50117999315261841" parameter="20" symbol="hz"/>
         <Controllable name="Attack" id="121060" flags="" value="20" parameter="21" symbol="at"/>
         <Controllable name="Release" id="121062" flags="" value="100.00000762939453" parameter="22" symbol="rt"/>
-        <Controllable name="Reduction" id="121064" flags="" value="0.017782794311642647" parameter="23" symbol="gr"/>
+        <Controllable name="Reduction" id="121064" flags="" value="0.015848929062485695" parameter="23" symbol="gr"/>
         <Controllable name="Makeup gain" id="121066" flags="" value="1" parameter="24" symbol="mk"/>
         <Controllable name="Dry gain" id="121068" flags="" value="0" parameter="25" symbol="cdr"/>
         <Controllable name="Wet gain" id="121070" flags="" value="1" parameter="26" symbol="cwt"/>
@@ -1976,7 +1976,7 @@
       <Window name="RPM-13927" visible="0" x-off="-1" y-off="-1" x-size="-1" y-size="-1"/>
       <Window name="RPM-348222" visible="0" x-off="-1" y-off="-1" x-size="-1" y-size="-1"/>
       <Window name="P-91236-91289" visible="0" x-off="-1" y-off="-1" x-size="-1" y-size="-1" custom-ui="1"/>
-      <Window name="P-91236-121028" visible="0" x-off="2992" y-off="169" x-size="1245" y-size="710" custom-ui="1"/>
+      <Window name="P-91236-121028" visible="0" x-off="2210" y-off="196" x-size="1245" y-size="710" custom-ui="1"/>
       <Window name="P-91236-171227" visible="0" x-off="1704" y-off="868" x-size="771" y-size="575" custom-ui="1"/>
       <Window name="P-91236-111277" visible="0" x-off="2021" y-off="616" x-size="1205" y-size="388" custom-ui="1"/>
       <Window name="P-91236-111307" visible="0" x-off="3000" y-off="984" x-size="1106" y-size="835" custom-ui="1"/>
