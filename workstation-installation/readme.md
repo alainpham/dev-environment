@@ -340,13 +340,14 @@ sudo systemctl restart dnsmasq
 ```
 git config --global user.email
 git config --global core.editor "vim"
+git config --global core.sshCommand "ssh -i ~/.sshvm/id_rsa"
 ```
 
 ## KVM scripts
 
 ```
 ls ../local-lab/cloud-native-appdev-lab-role/templates/kvm-scripts/
-sudo cp ../local-lab/cloud-native-appdev-lab-role/templates/kvm-scripts/* /usr/local/bin/
+sudo cp kvm-scripts/* /usr/local/bin/
 
 
 sudo curl -L -o /usr/local/bin/vmcreate https://github.com/alainpham/cloud-native-appdev-lab-role/raw/master/templates/kvm-scripts/vmcreate
@@ -355,10 +356,9 @@ sudo curl -L -o /usr/local/bin/kvsh https://github.com/alainpham/cloud-native-ap
 sudo curl -L -o /usr/local/bin/dvm https://github.com/alainpham/cloud-native-appdev-lab-role/raw/master/templates/kvm-scripts/dvm
 
 sudo chmod 755 /usr/local/bin/vmcreate
-sudo chmod 755 /usr/local/bin/lsvm
-sudo chmod 755 /usr/local/bin/kvsh
-sudo chmod 755 /usr/local/bin/dvm
-
+sudo chmod 755 /usr/local/bin/vmdl
+sudo chmod 755 /usr/local/bin/vmls
+sudo chmod 755 /usr/local/bin/vmsh
 
 ```
 
@@ -519,12 +519,12 @@ ssh-keygen -f ~/.ssh/vm
 ```
 debianimage=debian-11-genericcloud-amd64-20230124-1270
 
-vmcreate master 2048 4 $debianimage 10 40G 1G debian11
+vmcreate master 3072 4 $debianimage 10 40G 1G debian11
 vmcreate node01 2048 4 $debianimage 11 40G 1G debian11
 vmcreate node02 2048 4 $debianimage 12 40G 1G debian11
 vmcreate node03 2048 4 $debianimage 13 40G 1G debian11
 
-vmcreate sandbox 6144 4  $debianimage 30 40G 40G debian11
+vmcreate sandbox 6144 4  $debianimage 30 40G 1G debian11
 vmcreate splunk 6144 4  $debianimage 40 40G 1G debian11
 
 ```
@@ -533,12 +533,12 @@ vmcreate splunk 6144 4  $debianimage 40 40G 1G debian11
 ### Delete vms example
 
 ```
-dvm master
-dvm node01
-dvm node02
-dvm node03
+vmdl master
+vmdl node01
+vmdl node02
+vmdl node03
 
-dvm sandbox
+vmdl sandbox
 
 ```
 

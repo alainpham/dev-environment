@@ -162,8 +162,8 @@
           <Connection other="to-caller-master/audio_in 2"/>
         </Port>
       </IO>
-      <MuteMaster mute-point="PostFader,Listen,Main" muted="0"/>
-      <Controllable name="mute" id="2352" flags="Toggle,RealTime" value="0"/>
+      <MuteMaster mute-point="PostFader,Listen,Main" muted="1"/>
+      <Controllable name="mute" id="2352" flags="Toggle,RealTime" value="1"/>
       <Controllable name="phase" id="2354" flags="Toggle" value="0" phase-invert="00"/>
       <Automation>
         <AutomationList automation-id="solo" id="245631" interpolation-style="Discrete" state="Off"/>
