@@ -10,6 +10,7 @@
   - [Configure Panel](#configure-panel)
   - [Configure apt-cacher-ng server](#configure-apt-cacher-ng-server)
   - [Passwordless sudo](#passwordless-sudo)
+  - [Redirect ssh keys to non default folder](#redirect-ssh-keys-to-non-default-folder)
   - [apt cacher ng client config](#apt-cacher-ng-client-config)
   - [Packages installed](#packages-installed)
     - [From official repo](#from-official-repo)
@@ -139,7 +140,21 @@ PassThroughPattern: ^(.*):443$
 
 ```
 echo 'apham ALL=(ALL) NOPASSWD:ALL' | sudo EDITOR='tee -a' visudo -f /etc/sudoers.d/nopwd
+
+echo 'apham ALL=(ALL) NOPASSWD:ALL' | sudo EDITOR='tee -a' visudo -f /etc/customsudo/nopwd
+
+
 ```
+
+## Redirect ssh keys to non default folder
+
+```
+bash -c 'cat > ~/.ssh/config << _EOF_
+Host *
+IdentityFile ~/.sshvm/id_rsa
+_EOF_'
+```
+
 
 ## apt cacher ng client config
 
