@@ -371,9 +371,9 @@ sudo curl -L -o /usr/local/bin/kvsh https://github.com/alainpham/cloud-native-ap
 sudo curl -L -o /usr/local/bin/dvm https://github.com/alainpham/cloud-native-appdev-lab-role/raw/master/templates/kvm-scripts/dvm
 
 sudo chmod 755 /usr/local/bin/vmcreate
-sudo chmod 755 /usr/local/bin/vmdl
-sudo chmod 755 /usr/local/bin/vmls
-sudo chmod 755 /usr/local/bin/vmsh
+sudo chmod 755 /usr/local/bin/lsvm
+sudo chmod 755 /usr/local/bin/kvsh
+sudo chmod 755 /usr/local/bin/dvm
 
 ```
 
@@ -454,14 +454,14 @@ k9s
 https://github.com/derailed/k9s/releases
 
 ```console
-curl -LO https://github.com/derailed/k9s/releases/download/v0.27.3/k9s_Linux_amd64.tar.gz
+curl -LO https://github.com/derailed/k9s/releases/download/v0.27.4/k9s_Linux_amd64.tar.gz
 sudo tar -xzvf k9s_Linux_amd64.tar.gz  -C /usr/local/bin/ k9s
 ```
 
 kubectl
 
 ```
-curl -LO "https://dl.k8s.io/release/v1.25.8/bin/linux/amd64/kubectl"
+curl -LO "https://dl.k8s.io/release/v1.25.9/bin/linux/amd64/kubectl"
 sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
 ```
@@ -532,7 +532,7 @@ ssh-keygen -f ~/.ssh/vm
 ```
 
 ```
-debianimage=debian-11-genericcloud-amd64-20230124-1270
+debianimage=debian-11-genericcloud-amd64-20230501-1367
 
 vmcreate master 3072 4 $debianimage 10 40G 1G debian11
 vmcreate node01 2048 4 $debianimage 11 40G 1G debian11
@@ -548,12 +548,15 @@ vmcreate splunk 6144 4  $debianimage 40 40G 1G debian11
 ### Delete vms example
 
 ```
-vmdl master
-vmdl node01
-vmdl node02
-vmdl node03
+dvm master
+dvm node01
+dvm node02
+dvm node03
 
-vmdl sandbox
+dvm splunk
+
+
+dvm sandbox
 
 ```
 

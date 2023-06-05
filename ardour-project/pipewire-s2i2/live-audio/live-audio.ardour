@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Session version="6000" name="live-audio" sample-rate="48000" end-is-free="0" session-range-is-free="0" id-counter="364972" name-counter="13" event-counter="508770" vca-counter="1">
+<Session version="6000" name="live-audio" sample-rate="48000" end-is-free="0" session-range-is-free="0" id-counter="370099" name-counter="13" event-counter="508770" vca-counter="1">
   <ProgramVersion created-with="Ardour 5.12" modified-with="Ardour 6.9.0~ds0-2build1"/>
   <MIDIPorts>
     <Port name="MIDI Clock out" direction="output"/>
@@ -65,7 +65,10 @@
   </Config>
   <Metadata/>
   <Sources/>
-  <Regions/>
+  <Regions>
+    <Region name="mic-01-mono-1" muted="0" opaque="1" locked="0" video-locked="0" automatic="1" whole-file="1" import="0" external="0" sync-marked="0" left-of-split="0" right-of-split="0" hidden="0" position-locked="0" valid-transients="0" start="0" length="357821013" position="12288" beat="0" sync-position="0" ancestral-start="0" ancestral-length="0" stretch="1" shift="1" positional-lock-style="AudioTime" layering-index="0" tags="" contents="0" envelope-active="0" default-fade-in="0" default-fade-out="0" fade-in-active="1" fade-out-active="1" scale-amplitude="1" id="366174" type="audio" first-edit="nothing" source-0="366009" master-source-0="366009" channels="1"/>
+    <Region name="mic-01-mono-1.1" muted="0" opaque="1" locked="0" video-locked="0" automatic="0" whole-file="0" import="0" external="0" sync-marked="0" left-of-split="0" right-of-split="0" hidden="0" position-locked="0" valid-transients="0" start="0" length="357821013" position="12288" beat="0.51200000000000001" sync-position="0" ancestral-start="0" ancestral-length="0" stretch="1" shift="1" positional-lock-style="AudioTime" layering-index="0" tags="" contents="0" envelope-active="0" default-fade-in="0" default-fade-out="0" fade-in-active="1" fade-out-active="1" scale-amplitude="1" id="366182" type="audio" first-edit="nothing" source-0="366009" master-source-0="366009" channels="1"/>
+  </Regions>
   <Selection/>
   <Locations>
     <Location id="245579" name="session" start="0" end="240000" flags="IsSessionRange" locked="0" position-lock-style="AudioTime" timestamp="1642524683"/>
@@ -80,20 +83,12 @@
       <Controllable name="solo-iso" id="68" flags="Toggle,RealTime" value="0" solo-isolated="0"/>
       <Controllable name="solo-safe" id="70" flags="Toggle" value="0" solo-safe="0"/>
       <IO name="Master" id="82" direction="Input" default-type="audio">
-        <Port type="audio" name="Master/audio_in 1">
-          <Connection other="pre-master/audio_out 1"/>
-        </Port>
-        <Port type="audio" name="Master/audio_in 2">
-          <Connection other="pre-master/audio_out 2"/>
-        </Port>
+        <Port type="audio" name="Master/audio_in 1"/>
+        <Port type="audio" name="Master/audio_in 2"/>
       </IO>
       <IO name="Master" id="83" direction="Output" default-type="audio">
-        <Port type="audio" name="Master/audio_out 1">
-          <Connection other="Scarlett 2i2 Camera Analog Stereo:playback_FL"/>
-        </Port>
-        <Port type="audio" name="Master/audio_out 2">
-          <Connection other="Scarlett 2i2 Camera Analog Stereo:playback_FR"/>
-        </Port>
+        <Port type="audio" name="Master/audio_out 1"/>
+        <Port type="audio" name="Master/audio_out 2"/>
       </IO>
       <MuteMaster mute-point="PostFader,Listen,Main" muted="0"/>
       <Controllable name="mute" id="64" flags="Toggle,RealTime" value="0"/>
@@ -131,7 +126,7 @@
         <Automation>
           <AutomationList automation-id="gain" id="245591" interpolation-style="Linear" state="Off"/>
         </Automation>
-        <Controllable name="gaincontrol" id="58" flags="GainLike" value="0.092903062701225281"/>
+        <Controllable name="gaincontrol" id="58" flags="GainLike" value="0.19184586405754089"/>
       </Processor>
       <Processor id="87" name="Master" active="1" user-latency="0" use-user-latency="0" own-input="1" own-output="0" output="Master" type="main-outs" role="Main">
         <PannerShell bypassed="0" user-panner="http://ardour.org/plugin/panner_balance" linked-to-route="1"/>
@@ -145,22 +140,12 @@
       <Controllable name="solo-iso" id="2356" flags="Toggle,RealTime" value="0" solo-isolated="0"/>
       <Controllable name="solo-safe" id="2358" flags="Toggle" value="0" solo-safe="0"/>
       <IO name="desktop" id="2370" direction="Input" default-type="audio">
-        <Port type="audio" name="desktop/audio_in 1">
-          <Connection other="desktop Monitor:monitor_FL"/>
-        </Port>
-        <Port type="audio" name="desktop/audio_in 2">
-          <Connection other="desktop Monitor:monitor_FR"/>
-        </Port>
+        <Port type="audio" name="desktop/audio_in 1"/>
+        <Port type="audio" name="desktop/audio_in 2"/>
       </IO>
       <IO name="desktop" id="2371" direction="Output" default-type="audio">
-        <Port type="audio" name="desktop/audio_out 1">
-          <Connection other="pre-master/audio_in 1"/>
-          <Connection other="to-caller-master/audio_in 1"/>
-        </Port>
-        <Port type="audio" name="desktop/audio_out 2">
-          <Connection other="pre-master/audio_in 2"/>
-          <Connection other="to-caller-master/audio_in 2"/>
-        </Port>
+        <Port type="audio" name="desktop/audio_out 1"/>
+        <Port type="audio" name="desktop/audio_out 2"/>
       </IO>
       <MuteMaster mute-point="PostFader,Listen,Main" muted="1"/>
       <Controllable name="mute" id="2352" flags="Toggle,RealTime" value="1"/>
@@ -261,9 +246,7 @@
         <ThruMap/>
         <Processor id="8879" name="Sidechain 9" active="1" user-latency="0" use-user-latency="0" own-input="1" own-output="1" type="sidechain">
           <IO name="Sidechain 9" id="8880" direction="Input" default-type="audio" pretty-name="SC a-Compressor stereo">
-            <Port type="audio" name="Sidechain 9/audio_in 1">
-              <Connection other="send 1/audio_send 1"/>
-            </Port>
+            <Port type="audio" name="Sidechain 9/audio_in 1"/>
           </IO>
         </Processor>
         <lv2 last-preset-uri="" last-preset-label="" parameter-changed-since-last-preset="1">
@@ -305,20 +288,12 @@
       <Controllable name="solo-iso" id="2900" flags="Toggle,RealTime" value="0" solo-isolated="0"/>
       <Controllable name="solo-safe" id="2902" flags="Toggle" value="0" solo-safe="0"/>
       <IO name="from-caller" id="2914" direction="Input" default-type="audio">
-        <Port type="audio" name="from-caller/audio_in 1">
-          <Connection other="from-caller Monitor:monitor_FL"/>
-        </Port>
-        <Port type="audio" name="from-caller/audio_in 2">
-          <Connection other="from-caller Monitor:monitor_FR"/>
-        </Port>
+        <Port type="audio" name="from-caller/audio_in 1"/>
+        <Port type="audio" name="from-caller/audio_in 2"/>
       </IO>
       <IO name="from-caller" id="2915" direction="Output" default-type="audio">
-        <Port type="audio" name="from-caller/audio_out 1">
-          <Connection other="pre-master/audio_in 1"/>
-        </Port>
-        <Port type="audio" name="from-caller/audio_out 2">
-          <Connection other="pre-master/audio_in 2"/>
-        </Port>
+        <Port type="audio" name="from-caller/audio_out 1"/>
+        <Port type="audio" name="from-caller/audio_out 2"/>
       </IO>
       <MuteMaster mute-point="PostFader,Listen,Main" muted="0"/>
       <Controllable name="mute" id="2896" flags="Toggle,RealTime" value="0"/>
@@ -455,20 +430,12 @@
       <Controllable name="solo-iso" id="13941" flags="Toggle,RealTime" value="0" solo-isolated="0"/>
       <Controllable name="solo-safe" id="13943" flags="Toggle" value="0" solo-safe="0"/>
       <IO name="builtin" id="13955" direction="Input" default-type="audio">
-        <Port type="audio" name="builtin/audio_in 1">
-          <Connection other="pre-master/audio_out 1"/>
-        </Port>
-        <Port type="audio" name="builtin/audio_in 2">
-          <Connection other="pre-master/audio_out 2"/>
-        </Port>
+        <Port type="audio" name="builtin/audio_in 1"/>
+        <Port type="audio" name="builtin/audio_in 2"/>
       </IO>
       <IO name="builtin" id="13956" direction="Output" default-type="audio">
-        <Port type="audio" name="builtin/audio_out 1">
-          <Connection other="Alder Lake PCH-P High Definition Audio Controller Speaker + Headphones:playback_FL"/>
-        </Port>
-        <Port type="audio" name="builtin/audio_out 2">
-          <Connection other="Alder Lake PCH-P High Definition Audio Controller Speaker + Headphones:playback_FR"/>
-        </Port>
+        <Port type="audio" name="builtin/audio_out 1"/>
+        <Port type="audio" name="builtin/audio_out 2"/>
       </IO>
       <MuteMaster mute-point="PostFader,Listen,Main" muted="1"/>
       <Controllable name="mute" id="13937" flags="Toggle,RealTime" value="1"/>
@@ -520,22 +487,12 @@
       <Controllable name="solo-iso" id="15714" flags="Toggle,RealTime" value="0" solo-isolated="0"/>
       <Controllable name="solo-safe" id="15716" flags="Toggle" value="0" solo-safe="0"/>
       <IO name="to-caller-master" id="15728" direction="Input" default-type="audio">
-        <Port type="audio" name="to-caller-master/audio_in 1">
-          <Connection other="desktop/audio_out 1"/>
-          <Connection other="mic-01-mono/audio_out 1"/>
-        </Port>
-        <Port type="audio" name="to-caller-master/audio_in 2">
-          <Connection other="desktop/audio_out 2"/>
-          <Connection other="mic-01-mono/audio_out 2"/>
-        </Port>
+        <Port type="audio" name="to-caller-master/audio_in 1"/>
+        <Port type="audio" name="to-caller-master/audio_in 2"/>
       </IO>
       <IO name="to-caller-master" id="15729" direction="Output" default-type="audio">
-        <Port type="audio" name="to-caller-master/audio_out 1">
-          <Connection other="to-caller:input_FL"/>
-        </Port>
-        <Port type="audio" name="to-caller-master/audio_out 2">
-          <Connection other="to-caller:input_FR"/>
-        </Port>
+        <Port type="audio" name="to-caller-master/audio_out 1"/>
+        <Port type="audio" name="to-caller-master/audio_out 2"/>
       </IO>
       <MuteMaster mute-point="PostFader,Listen,Main" muted="0"/>
       <Controllable name="mute" id="15710" flags="Toggle,RealTime" value="0"/>
@@ -587,20 +544,12 @@
       <Controllable name="solo-iso" id="15847" flags="Toggle,RealTime" value="0" solo-isolated="0"/>
       <Controllable name="solo-safe" id="15849" flags="Toggle" value="0" solo-safe="0"/>
       <IO name="mic-monitor" id="15861" direction="Input" default-type="audio">
-        <Port type="audio" name="mic-monitor/audio_in 1">
-          <Connection other="mic-01-mono/audio_out 1"/>
-        </Port>
-        <Port type="audio" name="mic-monitor/audio_in 2">
-          <Connection other="mic-01-mono/audio_out 2"/>
-        </Port>
+        <Port type="audio" name="mic-monitor/audio_in 1"/>
+        <Port type="audio" name="mic-monitor/audio_in 2"/>
       </IO>
       <IO name="mic-monitor" id="15862" direction="Output" default-type="audio">
-        <Port type="audio" name="mic-monitor/audio_out 1">
-          <Connection other="pre-master/audio_in 1"/>
-        </Port>
-        <Port type="audio" name="mic-monitor/audio_out 2">
-          <Connection other="pre-master/audio_in 2"/>
-        </Port>
+        <Port type="audio" name="mic-monitor/audio_out 1"/>
+        <Port type="audio" name="mic-monitor/audio_out 2"/>
       </IO>
       <MuteMaster mute-point="PostFader,Listen,Main" muted="1"/>
       <Controllable name="mute" id="15843" flags="Toggle,RealTime" value="1"/>
@@ -681,16 +630,10 @@
       <Controllable name="solo-iso" id="91592" flags="Toggle,RealTime" value="0" solo-isolated="0"/>
       <Controllable name="solo-safe" id="91593" flags="Toggle" value="0" solo-safe="0"/>
       <IO name="mic-01-mono" id="91237" direction="Input" default-type="audio">
-        <Port type="audio" name="mic-01-mono/audio_in 1">
-          <Connection other="Scarlett 2i2 Camera Analog Stereo:capture_FL"/>
-        </Port>
+        <Port type="audio" name="mic-01-mono/audio_in 1"/>
       </IO>
       <IO name="mic-01-mono" id="91238" direction="Output" default-type="audio">
-        <Port type="audio" name="mic-01-mono/audio_out 1">
-          <Connection other="mic-monitor/audio_in 1"/>
-          <Connection other="to-caller-master/audio_in 1"/>
-          <Connection other="mic01-processed:input_FL"/>
-        </Port>
+        <Port type="audio" name="mic-01-mono/audio_out 1"/>
         <Port type="audio" name="mic-01-mono/audio_out 2">
           <Connection other="mic-monitor/audio_in 2"/>
           <Connection other="to-caller-master/audio_in 2"/>
@@ -1717,32 +1660,6 @@
         <Controllable name="Sidechain graph visibility" id="176487" flags="Toggle" value="1" parameter="22" symbol="scgv"/>
         <Controllable name="Gain graph visibility" id="176489" flags="Toggle" value="0" parameter="23" symbol="grgv"/>
       </Processor>
-      <Processor id="278564" name="send 1" active="1" user-latency="0" use-user-latency="0" own-input="1" own-output="1" type="send" role="Send" bitslot="1" selfdestruct="1">
-        <Automation>
-          <AutomationList automation-id="send" id="278578" interpolation-style="Exponential" state="Off"/>
-        </Automation>
-        <IO name="send 1" id="278565" direction="Output" default-type="audio" pretty-name="SC mic-01-mono (1)">
-          <Port type="audio" name="send 1/audio_send 1">
-            <Connection other="Sidechain 9/audio_in 1"/>
-          </Port>
-        </IO>
-        <PannerShell bypassed="0" user-panner="" linked-to-route="1"/>
-        <Pannable>
-          <Controllable name="pan-azimuth" id="91582" flags="" value="0.5"/>
-          <Controllable name="pan-width" id="91583" flags="" value="0"/>
-          <Controllable name="pan-elevation" id="91584" flags="" value="0"/>
-          <Controllable name="pan-frontback" id="91585" flags="" value="0"/>
-          <Controllable name="pan-lfe" id="91586" flags="" value="0"/>
-          <Automation>
-            <AutomationList automation-id="pan-azimuth" id="91587" interpolation-style="Linear" state="Off"/>
-            <AutomationList automation-id="pan-elevation" id="91588" interpolation-style="Linear" state="Off"/>
-            <AutomationList automation-id="pan-width" id="91589" interpolation-style="Linear" state="Off"/>
-            <AutomationList automation-id="pan-frontback" id="91590" interpolation-style="Linear" state="Off"/>
-            <AutomationList automation-id="pan-lfe" id="91591" interpolation-style="Linear" state="Off"/>
-          </Automation>
-        </Pannable>
-        <Controllable name="gaincontrol" id="278579" flags="GainLike,InlineControl" value="1.0001121759414673"/>
-      </Processor>
       <Processor id="91556" name="Amp" active="1" user-latency="0" use-user-latency="0" type="amp">
         <Automation>
           <AutomationList automation-id="gain" id="245953" interpolation-style="Linear" state="Off"/>
@@ -1763,28 +1680,12 @@
       <Controllable name="solo-iso" id="210332" flags="Toggle,RealTime" value="0" solo-isolated="0"/>
       <Controllable name="solo-safe" id="210334" flags="Toggle" value="0" solo-safe="0"/>
       <IO name="pre-master" id="210346" direction="Input" default-type="audio">
-        <Port type="audio" name="pre-master/audio_in 1">
-          <Connection other="desktop/audio_out 1"/>
-          <Connection other="from-caller/audio_out 1"/>
-          <Connection other="mic-monitor/audio_out 1"/>
-        </Port>
-        <Port type="audio" name="pre-master/audio_in 2">
-          <Connection other="desktop/audio_out 2"/>
-          <Connection other="from-caller/audio_out 2"/>
-          <Connection other="mic-monitor/audio_out 2"/>
-        </Port>
+        <Port type="audio" name="pre-master/audio_in 1"/>
+        <Port type="audio" name="pre-master/audio_in 2"/>
       </IO>
       <IO name="pre-master" id="210347" direction="Output" default-type="audio">
-        <Port type="audio" name="pre-master/audio_out 1">
-          <Connection other="Master/audio_in 1"/>
-          <Connection other="builtin/audio_in 1"/>
-          <Connection other="dock-master/audio_in 1"/>
-        </Port>
-        <Port type="audio" name="pre-master/audio_out 2">
-          <Connection other="Master/audio_in 2"/>
-          <Connection other="builtin/audio_in 2"/>
-          <Connection other="dock-master/audio_in 2"/>
-        </Port>
+        <Port type="audio" name="pre-master/audio_out 1"/>
+        <Port type="audio" name="pre-master/audio_out 2"/>
       </IO>
       <MuteMaster mute-point="PostFader,Listen,Main" muted="0"/>
       <Controllable name="mute" id="210328" flags="Toggle,RealTime" value="0"/>
@@ -1836,20 +1737,12 @@
       <Controllable name="solo-iso" id="348248" flags="Toggle,RealTime" value="0" solo-isolated="0"/>
       <Controllable name="solo-safe" id="348249" flags="Toggle" value="0" solo-safe="0"/>
       <IO name="dock-master" id="348223" direction="Input" default-type="audio">
-        <Port type="audio" name="dock-master/audio_in 1">
-          <Connection other="pre-master/audio_out 1"/>
-        </Port>
-        <Port type="audio" name="dock-master/audio_in 2">
-          <Connection other="pre-master/audio_out 2"/>
-        </Port>
+        <Port type="audio" name="dock-master/audio_in 1"/>
+        <Port type="audio" name="dock-master/audio_in 2"/>
       </IO>
       <IO name="dock-master" id="348224" direction="Output" default-type="audio">
-        <Port type="audio" name="dock-master/audio_out 1">
-          <Connection other="Alder Lake PCH-P High Definition Audio Controller Speaker + Headphones:playback_FL"/>
-        </Port>
-        <Port type="audio" name="dock-master/audio_out 2">
-          <Connection other="Alder Lake PCH-P High Definition Audio Controller Speaker + Headphones:playback_FR"/>
-        </Port>
+        <Port type="audio" name="dock-master/audio_out 1"/>
+        <Port type="audio" name="dock-master/audio_out 2"/>
       </IO>
       <MuteMaster mute-point="PostFader,Listen,Main" muted="1"/>
       <Controllable name="mute" id="348250" flags="Toggle,RealTime" value="1"/>
@@ -1887,7 +1780,7 @@
         <Automation>
           <AutomationList automation-id="gain" id="348243" interpolation-style="Linear" state="Off"/>
         </Automation>
-        <Controllable name="gaincontrol" id="348244" flags="GainLike" value="0.14428757131099701"/>
+        <Controllable name="gaincontrol" id="348244" flags="GainLike" value="1.0129598379135132"/>
       </Processor>
       <Processor id="348245" name="dock-master" active="1" user-latency="0" use-user-latency="0" own-input="1" own-output="0" output="dock-master" type="main-outs" role="Main">
         <PannerShell bypassed="0" user-panner="http://ardour.org/plugin/panner_2in2out" linked-to-route="1"/>
@@ -1906,9 +1799,7 @@
   <Click>
     <IO name="Click" id="51" direction="Output" default-type="audio">
       <Port type="audio" name="Click/audio_out 1"/>
-      <Port type="audio" name="Click/audio_out 2">
-        <Connection other="desktop:playback_FR"/>
-      </Port>
+      <Port type="audio" name="Click/audio_out 2"/>
     </IO>
     <Processor id="52" name="Amp" active="1" user-latency="0" use-user-latency="0" type="amp">
       <Automation>
