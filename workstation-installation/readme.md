@@ -15,6 +15,8 @@
   - [Packages installed](#packages-installed)
     - [From official repo](#from-official-repo)
   - [Add main user to groups](#add-main-user-to-groups)
+  - [Start virsh network](#start-virsh-network)
+  - [Revert back to pulse + jack](#revert-back-to-pulse--jack)
   - [Docker configuration](#docker-configuration)
   - [DNS resolution](#dns-resolution)
     - [Debian/Raspbian](#debianraspbian)
@@ -39,6 +41,7 @@
     - [Generate Key Pair and others](#generate-key-pair-and-others)
   - [Predownload docker images](#predownload-docker-images)
   - [Pipewire virtual sinks](#pipewire-virtual-sinks)
+  - [Pure jack](#pure-jack)
   - [Archived steps](#archived-steps)
     - [dnsmasq with Network Manager](#dnsmasq-with-network-manager)
   - [Configure sound](#configure-sound)
@@ -58,9 +61,12 @@
 
 ## Sound
 
-disable powersave on sound chich procuces  crackling
+disable powersave on sound chich procuces  crackling does not apply to ubuntu studio 23.04
 
 ```
+
+cat /sys/module/snd_hda_intel/parameters/power_save
+
 sudo bash -c 'cat > /etc/modprobe.d/audio_disable_powersave.conf << _EOF_
 options snd_hda_intel power_save=0
 _EOF_'
@@ -76,6 +82,8 @@ Go to system settings
   * Choose Breeze Dark
 * Workspace Behavior -> Virtual Desktop
   * 2 rows, 4 Desktops
+* Workspace Behavior -> General Behavior
+  * Clicking files selects them
 *  Start up and shutdown -> Login Screen
    *  Choose Chilli for Plasma
 *  Start up and shutdown -> Desktop Session
@@ -185,11 +193,30 @@ _EOF_'
 
 ### From official repo
 
-ubuntu 22.10 dekstop
+
+sound
+
+
+debian 12
 
 ```
-sudo apt install ncdu git ansible docker.io python3-docker docker-compose apparmor tmux vim openjdk-17-jdk prometheus-node-exporter htop curl lshw rsync mediainfo ffmpeg python3-mutagen iperf dnsmasq imagemagick qemu-system qemu-utils virtinst libvirt-clients libvirt-daemon-system libguestfs-tools bridge-utils libosinfo-bin lsp-plugins-lv2 calf-plugins ardour v4l-utils flatpak virt-manager mediainfo-gui v4l2loopback-utils easytag gimp avldrums.lv2 openssh-server linux-tools-common linux-tools-generic freeplane ifuse libimobiledevice-utils xournal inkscape npm rpi-imager apt-cacher-ng skopeo golang-go dnsutils bmon lm-sensors psensor qpwgraph apt-transport-https genisoimage obs-studio
+sudo apt install ncdu git ansible docker.io python3-docker docker-compose apparmor tmux vim openjdk-17-jdk prometheus-node-exporter htop curl lshw rsync mediainfo ffmpeg python3-mutagen iperf3 dnsmasq imagemagick qemu-system qemu-utils virtinst libvirt-clients libvirt-daemon-system libguestfs-tools bridge-utils libosinfo-bin lsp-plugins-lv2 calf-plugins ardour v4l-utils flatpak virt-manager mediainfo-gui v4l2loopback-utils easytag gimp avldrums.lv2 openssh-server freeplane ifuse libimobiledevice-utils xournal inkscape npm apt-cacher-ng skopeo golang-go dnsutils bmon lm-sensors psensor apt-transport-https genisoimage obs-studio haruna snapd
+
+sudo apt install pulseaudio-module-jack jackd qjackctl kdenlive
 ```
+
+ubuntu 22.04 dekstop
+
+```
+sudo apt install ncdu git ansible docker.io python3-docker docker-compose apparmor tmux vim openjdk-17-jdk prometheus-node-exporter htop curl lshw rsync mediainfo ffmpeg python3-mutagen iperf3 dnsmasq imagemagick qemu-system qemu-utils virtinst libvirt-clients libvirt-daemon-system libguestfs-tools bridge-utils libosinfo-bin lsp-plugins-lv2 calf-plugins ardour v4l-utils flatpak virt-manager mediainfo-gui v4l2loopback-utils easytag gimp avldrums.lv2 openssh-server linux-tools-common linux-tools-generic freeplane ifuse libimobiledevice-utils xournal inkscape npm rpi-imager apt-cacher-ng skopeo golang-go dnsutils bmon lm-sensors psensor apt-transport-https genisoimage obs-studio
+```
+
+kubuntu  23.04 dekstop + ubnuntu studio jack pulse
+
+```
+sudo apt install ncdu git ansible docker.io python3-docker docker-compose apparmor tmux vim openjdk-17-jdk prometheus-node-exporter htop curl lshw rsync mediainfo ffmpeg python3-mutagen iperf3 dnsmasq imagemagick qemu-system qemu-utils virtinst libvirt-clients libvirt-daemon-system libguestfs-tools bridge-utils libosinfo-bin lsp-plugins-lv2 calf-plugins ardour v4l-utils flatpak virt-manager mediainfo-gui v4l2loopback-utils easytag gimp avldrums.lv2 openssh-server linux-tools-common linux-tools-generic freeplane ifuse libimobiledevice-utils xournal inkscape npm rpi-imager apt-cacher-ng skopeo golang-go dnsutils bmon lm-sensors psensor qpwgraph apt-transport-https genisoimage obs-studio
+```
+
 
 minimalistic micro server on ubuntu or debian physical machines
 ```
@@ -216,6 +243,20 @@ sudo adduser $USER audio
 sudo adduser $USER pipewire
 ```
 
+## Start virsh network
+
+```
+sudo virsh net-autostart default
+sudo virsh net-start default
+```
+
+## Revert back to pulse + jack
+
+```
+sudo apt install pulseaudio pulseaudio-module-jack jackd qjackctl
+
+sudo systemctl --global --now disable pipewire-pulse.service pipewire-pulse.socket wireplumber.service pipewire.service pipewire.socket
+```
 
 ## Docker configuration
 
@@ -247,7 +288,93 @@ cgroup_enable=cpuset cgroup_enable=memory cgroup_memory=1
 
 ## DNS resolution
 
+
+
+
 Configure dnsmasq
+
+
+network manager
+
+```
+
+sudo bash -c 'cat > /etc/NetworkManager/conf.d/00-use-dnsmasq.conf << _EOF_
+# /etc/NetworkManager/conf.d/00-use-dnsmasq.conf
+#
+# This enabled the dnsmasq plugin.
+[main]
+dns=dnsmasq
+_EOF_'
+
+
+sudo bash -c 'cat > /etc/NetworkManager/dnsmasq.d/dev.conf << _EOF_
+#/etc/NetworkManager/dnsmasq.d/dev.conf
+local=/aphm.duckdns.org/
+local=/kebx.duckdns.org/
+local=/vrbx.duckdns.org/
+
+address=/aphm.duckdns.org/172.17.0.1
+address=/aphm.duckdns.org/172.18.0.1
+address=/aphm.duckdns.org/192.168.122.1
+address=/kebx.duckdns.org/192.168.122.10
+address=/vrbx.duckdns.org/192.168.122.30
+_EOF_'
+
+sudo systemctl disable systemd-resolved.service # not needed on debian12
+sudo systemctl disable dnsmasq.service
+
+sudo rm /etc/resolv.conf
+sudo ln -s /run/NetworkManager/resolv.conf /etc/resolv.conf
+
+sudo systemctl restart NetworkManager
+
+```
+
+certbot
+
+```
+
+sudo snap install --classic certbot
+
+sudo cp ./../duckdns-scripts/duckdns.sh /usr/local/bin
+
+mkdir -p /home/${USER}/apps
+
+rm -rf /home/workdrive/apps/tls
+mkdir -p /home/workdrive/apps/tls
+ln -s /home/workdrive/apps/tls /home/${USER}/apps/tls
+
+
+
+
+export duckdomain=vrbx.duckdns.org
+
+export duckdomain=aphm.duckdns.org
+
+export duckdomain=kebx.duckdns.org
+
+
+certbot certonly \
+  --non-interactive \
+  --agree-tos \
+  --manual \
+  --manual-auth-hook duckdns.sh \
+  --email "$email" \
+  --preferred-challenges dns \
+  --config-dir /home/workdrive/apps/tls/cfg \
+  --work-dir /home/workdrive/apps/tls/ \
+  --logs-dir /home/workdrive/apps/tls/logs \
+  -d "*.${duckdomain}"  -v
+
+
+
+openssl pkcs12 -export -out /home/workdrive/apps/tls/cfg/live/${duckdomain}/privkey.p12  -in /home/workdrive/apps/tls/cfg/live/${duckdomain}/fullchain.pem -inkey /home/workdrive/apps/tls/cfg/live/${duckdomain}/privkey.pem -passin pass:password -passout pass:password
+
+
+```
+
+
+
 
 with docker host on ubuntu with resolved
 ```
@@ -361,19 +488,7 @@ git config --global core.sshCommand "ssh -i ~/.sshvm/id_rsa"
 ## KVM scripts
 
 ```
-ls ../local-lab/cloud-native-appdev-lab-role/templates/kvm-scripts/
 sudo cp kvm-scripts/* /usr/local/bin/
-
-
-sudo curl -L -o /usr/local/bin/vmcreate https://github.com/alainpham/cloud-native-appdev-lab-role/raw/master/templates/kvm-scripts/vmcreate
-sudo curl -L -o /usr/local/bin/lsvm https://github.com/alainpham/cloud-native-appdev-lab-role/raw/master/templates/kvm-scripts/lsvm
-sudo curl -L -o /usr/local/bin/kvsh https://github.com/alainpham/cloud-native-appdev-lab-role/raw/master/templates/kvm-scripts/kvsh
-sudo curl -L -o /usr/local/bin/dvm https://github.com/alainpham/cloud-native-appdev-lab-role/raw/master/templates/kvm-scripts/dvm
-
-sudo chmod 755 /usr/local/bin/vmcreate
-sudo chmod 755 /usr/local/bin/lsvm
-sudo chmod 755 /usr/local/bin/kvsh
-sudo chmod 755 /usr/local/bin/dvm
 
 ```
 
@@ -429,9 +544,9 @@ List of plugins to install
 ### Maven
 
 ```
-curl -L -o /tmp/maven.tar.gz https://dlcdn.apache.org/maven/maven-3/3.9.1/binaries/apache-maven-3.9.1-bin.tar.gz
+curl -L -o /tmp/maven.tar.gz https://dlcdn.apache.org/maven/maven-3/3.9.3/binaries/apache-maven-3.9.3-bin.tar.gz
 sudo tar xzvf /tmp/maven.tar.gz  -C /opt/appimages/
-sudo ln -s /opt/appimages/apache-maven-3.9.1/bin/mvn /usr/local/bin/mvn
+sudo ln -s /opt/appimages/apache-maven-3.9.3/bin/mvn /usr/local/bin/mvn
 
 ```
 
@@ -445,10 +560,12 @@ dbeaver and helm
 ```console
 sudo snap install dbeaver-ce
 sudo snap install helm --classic
+sudo snap install blender --classic
 
 helm completion bash | sudo tee /etc/bash_completion.d/helm > /dev/null
 
 ```
+
 
 k9s
 https://github.com/derailed/k9s/releases
@@ -461,19 +578,42 @@ sudo tar -xzvf k9s_Linux_amd64.tar.gz  -C /usr/local/bin/ k9s
 kubectl
 
 ```
-curl -LO "https://dl.k8s.io/release/v1.25.9/bin/linux/amd64/kubectl"
+curl -LO "https://dl.k8s.io/release/v1.25.11/bin/linux/amd64/kubectl"
 sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
+```
+
+rpi-imager
+
+```
+
+sudo snap install rpi-imager
+
+```
+
+yt-dlp
+
+```
+
+sudo curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp
+sudo chmod a+rx /usr/local/bin/yt-dlp
+
+alias yt='yt-dlp -f "bestvideo[ext=mp4][vcodec^=avc1][height<=?1080][fps<=?30]+bestaudio[ext=m4a]" --embed-thumbnail -o "%(title)s.%(ext)s"'
 ```
 
 google cloud
 
 ```
+
+sudo apt-get install apt-transport-https ca-certificates gnupg curl sudo
+
 echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
 
-curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo tee /usr/share/keyrings/cloud.google.gpg
+curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
 
 sudo apt-get update && sudo apt-get install google-cloud-cli
+
+
 sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin
 ```
 
@@ -532,15 +672,22 @@ ssh-keygen -f ~/.ssh/vm
 ```
 
 ```
-debianimage=debian-11-genericcloud-amd64-20230501-1367
 
-vmcreate master 3072 4 $debianimage 10 40G 1G debian11
-vmcreate node01 2048 4 $debianimage 11 40G 1G debian11
-vmcreate node02 2048 4 $debianimage 12 40G 1G debian11
-vmcreate node03 2048 4 $debianimage 13 40G 1G debian11
+ubuntuimage=jammy-server-cloudimg-amd64
+variant=ubuntujammy
 
-vmcreate sandbox 6144 4  $debianimage 30 40G 1G debian11
-vmcreate splunk 6144 4  $debianimage 40 40G 1G debian11
+image=debian-12-genericcloud-amd64-20230711-1438
+variant=debiantesting
+
+vmcreate master 3072 4 $image 10 40G 1G $variant
+vmcreate node01 2048 4 $image 11 40G 1G $variant
+vmcreate node02 2048 4 $image 12 40G 1G $variant
+vmcreate node03 2048 4 $image 13 40G 1G $variant
+
+vmcreate splunk 6144 4  $image 40 40G 1G $variant
+vmcreate vrbx 6144 4  $image 30 40G 1G $variant
+
+
 
 ```
 
@@ -548,15 +695,15 @@ vmcreate splunk 6144 4  $debianimage 40 40G 1G debian11
 ### Delete vms example
 
 ```
-dvm master
-dvm node01
-dvm node02
-dvm node03
+vmdl master
+vmdl node01
+vmdl node02
+vmdl node03
 
-dvm splunk
+vmdl splunk
 
 
-dvm sandbox
+vmdl vrbx
 
 ```
 
@@ -839,7 +986,7 @@ sudo cp /usr/share/doc/pipewire/examples/ld.so.conf.d/pipewire-jack-*.conf /etc/
 
 
 
-mkdir -d /etc/pipewire/pipewire.conf.d/
+sudo mkdir -p /etc/pipewire/pipewire.conf.d/
 sudo cp 10-virtual-sinks.conf /etc/pipewire/pipewire.conf.d/
 
 sudo vi /etc/security/limits.d/95-pipewire.conf
@@ -849,7 +996,88 @@ sudo vi /etc/security/limits.d/95-pipewire.conf
 @pipewire - nice -19
 @pipewire - memlock unlimited
 
+
+
+pw-link alsa_input.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.analog-stereo:capture_FL mic01-processed:input_FL
+pw-link alsa_input.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.analog-stereo:capture_FL mic01-processed:input_FR
+
+pw-link alsa_input.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.analog-stereo:capture_FR mic02-processed:input_FL
+pw-link alsa_input.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.analog-stereo:capture_FR mic02-processed:input_FR
+
+pw-link mic01-processed:capture_FL to-caller:input_FL
+pw-link mic01-processed:capture_FR to-caller:input_FR
+
+pw-link mic02-processed:capture_FL to-caller:input_FL
+pw-link mic02-processed:capture_FR to-caller:input_FR
+
+
+
+pw-link from-caller:monitor_FL alsa_output.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.analog-stereo:playback_FL
+pw-link from-caller:monitor_FR alsa_output.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.analog-stereo:playback_FR
+
+pw-link desktop:monitor_FL alsa_output.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.analog-stereo:playback_FL
+pw-link desktop:monitor_FR alsa_output.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.analog-stereo:playback_FR
+
+
+pw-link desktop:monitor_FL to-caller:input_FL
+pw-link desktop:monitor_FR to-caller:input_FR
+
+
+
+
+
+
+pw-link alsa_input.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.capture.0.0:capture_FL mic01-processed:input_FL
+pw-link alsa_input.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.capture.0.0:capture_FL mic01-processed:input_FR
+
+pw-link alsa_input.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.capture.0.0:capture_FR mic02-processed:input_FL
+pw-link alsa_input.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.capture.0.0:capture_FR mic02-processed:input_FR
+
+pw-link mic01-processed:capture_FL to-caller:input_FL
+pw-link mic01-processed:capture_FR to-caller:input_FR
+
+pw-link mic02-processed:capture_FL to-caller:input_FL
+pw-link mic02-processed:capture_FR to-caller:input_FR
+
+
+
+pw-link from-caller:monitor_FL alsa_output.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.playback.0.0:playback_FL
+pw-link from-caller:monitor_FR alsa_output.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.playback.0.0:playback_FR
+
+pw-link desktop:monitor_FL alsa_output.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.playback.0.0:playback_FL
+pw-link desktop:monitor_FR alsa_output.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.playback.0.0:playback_FR
+
+pw-link desktop:monitor_FL to-caller:input_FL
+pw-link desktop:monitor_FR to-caller:input_FR
+
 ```
+
+
+## Pure jack
+
+```
+#before start
+pacmd suspend true
+
+pactl load-module module-jack-source source_name=mic01-processed client_name=mic01-processed channels=2 connect=0
+pactl load-module module-jack-source source_name=mic02-processed client_name=mic02-processed channels=2 connect=0
+pactl load-module module-jack-source source_name=to-caller client_name=to-caller channels=2 connect=0
+pactl load-module module-jack-source source_name=mics-raw client_name=mics-raw channels=2 connect=0
+
+pactl load-module module-jack-sink sink_name=from-caller client_name=from-caller channels=2 connect=0
+pactl load-module module-jack-sink sink_name=from-desktop client_name=from-desktop channels=2 connect=0
+
+pacmd set-default-sink from-desktop
+pacmd set-default-source to-caller
+
+
+
+
+#after stop
+pacmd suspend false
+```
+
+
 ## Archived steps
 
 ### dnsmasq with Network Manager

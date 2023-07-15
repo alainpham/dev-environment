@@ -39,8 +39,8 @@ echo "$(date -R) creating machine named $1 with $MEM MB of RAM and $CPUS vcpu(s)
 echo "$(date -R) creating cloud-init iso"
 SSH_PUB_KEY=`cat ~/.ssh/id_rsa.pub`
 
-SSH_PRIVVM_KEY=`cat ~/.sshvm/vm | sed 's/^/    /'`
-SSH_PUBVM_KEY=`cat ~/.sshvm/vm.pub`
+SSH_PRIVVM_KEY=`cat ~/.ssh/vm | sed 's/^/    /'`
+SSH_PUBVM_KEY=`cat ~/.ssh/vm.pub`
 
 
 cat > $USER_DATA << _EOF_
@@ -132,4 +132,3 @@ rm $USER_DATA $META_DATA
 echo "$(date -R) DONE. SSH to $1 using cloud-user@$IP , with  username 'cloud-user'."
 
 ansible 127.0.0.1 -m lineinfile --become -a "path=/etc/hosts regexp='^.*$IP\s.*$' line='$IP $1' state=present"
-
