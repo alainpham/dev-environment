@@ -42,6 +42,8 @@
   - [Predownload docker images](#predownload-docker-images)
   - [Pipewire virtual sinks](#pipewire-virtual-sinks)
   - [Pure jack](#pure-jack)
+  - [Pure pulse audio](#pure-pulse-audio)
+  - [Davinci Resolve](#davinci-resolve)
   - [Archived steps](#archived-steps)
     - [dnsmasq with Network Manager](#dnsmasq-with-network-manager)
   - [Configure sound](#configure-sound)
@@ -200,9 +202,14 @@ sound
 debian 12
 
 ```
-sudo apt install ncdu git ansible docker.io python3-docker docker-compose apparmor tmux vim openjdk-17-jdk prometheus-node-exporter htop curl lshw rsync mediainfo ffmpeg python3-mutagen iperf3 dnsmasq imagemagick qemu-system qemu-utils virtinst libvirt-clients libvirt-daemon-system libguestfs-tools bridge-utils libosinfo-bin lsp-plugins-lv2 calf-plugins ardour v4l-utils flatpak virt-manager mediainfo-gui v4l2loopback-utils easytag gimp avldrums.lv2 openssh-server freeplane ifuse libimobiledevice-utils xournal inkscape npm apt-cacher-ng skopeo golang-go dnsutils bmon lm-sensors psensor apt-transport-https genisoimage obs-studio haruna snapd
+sudo apt install ncdu git ansible docker.io python3-docker docker-compose apparmor tmux vim openjdk-17-jdk prometheus-node-exporter htop curl lshw rsync mediainfo ffmpeg python3-mutagen iperf3 dnsmasq imagemagick qemu-system qemu-utils virtinst libvirt-clients libvirt-daemon-system libguestfs-tools bridge-utils libosinfo-bin lsp-plugins-lv2 calf-plugins ardour v4l-utils flatpak virt-manager mediainfo-gui v4l2loopback-utils easytag gimp avldrums.lv2 openssh-server freeplane ifuse libimobiledevice-utils xournal inkscape npm apt-cacher-ng skopeo golang-go dnsutils bmon lm-sensors psensor apt-transport-https genisoimage obs-studio haruna snapd 
 
-sudo apt install pulseaudio-module-jack jackd qjackctl kdenlive
+sudo apt install pulseaudio-module-jack jackd qjackctl kdenlive pulsemixer pulseeffects linux-cpupower
+
+sudo apt install nvidia-detect 
+sudo apt install nvidia-driver 
+
+
 ```
 
 ubuntu 22.04 dekstop
@@ -617,6 +624,44 @@ sudo apt-get update && sudo apt-get install google-cloud-cli
 sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin
 ```
 
+MLV APP
+
+```
+
+appname=mlvapp
+appimageurl="https://github.com/ilia3101/MLV-App/releases/download/QTv1.14/MLV.App.v1.14.Linux.x86_64.AppImage"
+appiconurl="https://github.com/alainpham/appp/raw/master/mlvapp/icon.png"
+
+appimagefolder="/opt/appimages"
+appimagepath=${appimagefolder}/${appname}/${appname}.AppImage
+appiconpath=${appimagefolder}/${appname}/${appname}.png
+appshortcutpath=/usr/share/applications/${appname}.desktop
+
+echo "appname = $appname"
+echo "appimageurl = $appimageurl"
+
+
+echo "creating folder.."
+sudo mkdir -p ${appimagefolder}/${appname}
+echo "Downloading.."
+sudo curl -L -o ${appimagepath} ${appimageurl}
+sudo curl -L -o ${appiconpath} ${appiconurl}
+sudo chmod 755 ${appimagepath}
+
+echo "Creating link.."
+sudo bash -c "cat > ${appshortcutpath} << _EOF_
+[Desktop Entry]
+Encoding=UTF-8
+Type=Application
+Name=${appname}
+Comment=${appname}
+Exec=${appimagepath}
+Icon=${appiconpath}
+Terminal=false
+_EOF_"
+
+```
+
 kind kubernetes 
 
 ```console
@@ -676,7 +721,7 @@ ssh-keygen -f ~/.ssh/vm
 ubuntuimage=jammy-server-cloudimg-amd64
 variant=ubuntujammy
 
-image=debian-12-genericcloud-amd64-20230711-1438
+image=debian-12-genericcloud-amd64-20230802-1460
 variant=debiantesting
 
 vmcreate master 3072 4 $image 10 40G 1G $variant
@@ -1075,6 +1120,80 @@ pacmd set-default-source to-caller
 
 #after stop
 pacmd suspend false
+
+
+
+avoid stutter
+
+/etc/pulse/default.pa
+
+put to 
+
+load-module module-udev-detect tsched=0
+
+
+echo governor | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+```
+## Pure pulse audio
+
+```
+pacmd list-sinks
+pacmd list-sources
+
+rm /tmp/pulsemodule.log
+
+pulseaudio -k
+
+speaker="bluez_sink.04_52_C7_09_DC_69.a2dp_sink"
+mic="alsa_input.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.analog-stereo"
+
+# audio sink from desktop
+pactl load-module module-null-sink sink_name=from-desktop sink_properties=device.description="from-desktop">>/tmp/pulsemodule.log
+pacmd set-default-sink from-desktop
+
+# audio sink from caller
+pactl load-module module-null-sink sink_name=from-caller sink_properties=device.description="from-caller">>/tmp/pulsemodule.log
+
+# audio sink mix to caller
+pactl load-module module-null-sink sink_name=to-caller-sink sink_properties=device.description="to-caller-sink">>/tmp/pulsemodule.log
+pactl load-module module-remap-source  source_name=to-caller master=to-caller-sink.monitor source_properties=device.description="to-caller"
+
+pacmd set-default-source to-caller-src
+
+# connect from-desktop to speakers
+pactl load-module module-loopback source="from-desktop.monitor" sink="${speaker}" latency_msec=1 >>/tmp/pulsemodule.log
+
+# connect from-caller to speakers
+pactl load-module module-loopback source="from-caller.monitor" sink="${speaker}" latency_msec=1>>/tmp/pulsemodule.log
+
+# connect from-desktop to to-caller-sink
+pactl load-module module-loopback source=from-desktop.monitor sink=to-caller-sink latency_msec=1 >> /tmp/pulsemodule.log
+
+# split mic into 2
+pactl load-module module-remap-source source_name=mic01-processed master=${mic} master_channel_map="front-left" channel_map="mono" source_properties=device.description="mic01-processed"
+pactl load-module module-remap-source source_name=mic02-processed master=${mic} master_channel_map="front-right" channel_map="mono" source_properties=device.description="mic02-processed"
+pactl load-module module-remap-source source_name=mics-raw master=${mic} source_properties=device.description="mics-raw"
+
+# connect microphone to to-caller-sink
+
+pactl load-module module-loopback source="mic01-processed" sink=to-caller-sink latency_msec=1 >> /tmp/pulsemodule.log
+pactl load-module module-loopback source="mic02-processed" sink=to-caller-sink latency_msec=1 >> /tmp/pulsemodule.log
+
+# set proper mic volume
+pactl set-source-volume mic01-processed 120%
+pactl set-source-volume mic02-processed 0%
+pactl set-sink-volume from-desktop 95%
+pactl set-sink-volume from-caller 95%
+
+```
+
+## Davinci Resolve
+
+```
+sudo apt install fakeroot xorriso
+sudo apt install nvidia-opencl-icd libcuda1 libnvidia-encode1
+
+./makeresolvedeb_1.6.4_multi.sh DaVinci_Resolve_18.5_Linux.run
 ```
 
 
