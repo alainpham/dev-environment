@@ -1142,11 +1142,13 @@ pacmd list-sources
 
 rm /tmp/pulsemodule.log
 
-pulseaudio -k
 
+speaker="alsa_output.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.analog-stereo"
 speaker="bluez_sink.04_52_C7_09_DC_69.a2dp_sink"
+
 mic="alsa_input.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.analog-stereo"
 
+pulseaudio -k
 # audio sink from desktop
 pactl load-module module-null-sink sink_name=from-desktop sink_properties=device.description="from-desktop">>/tmp/pulsemodule.log
 pacmd set-default-sink from-desktop
