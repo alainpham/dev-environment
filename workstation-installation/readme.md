@@ -1136,6 +1136,12 @@ echo governor | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 ```
 ## Pure pulse audio
 
+setup virtual devices
+
+```
+sudo cp ./../pipewire-conf/pulsesetup.sh /usr/local/bin/
+```
+
 ```
 pacmd list-sinks
 pacmd list-sources
@@ -1162,14 +1168,16 @@ pactl load-module module-remap-source  source_name=to-caller master=to-caller-si
 
 pacmd set-default-source to-caller-src
 
+# connect from-desktop to to-caller-sink
+pactl load-module module-loopback source=from-desktop.monitor sink=to-caller-sink latency_msec=1 source_dont_move=true sink_dont_move=true >> /tmp/pulsemodule.log
+
+### CONNECT PHYSICAL DEVICES
+
 # connect from-desktop to speakers
 pactl load-module module-loopback source="from-desktop.monitor" sink="${speaker}" latency_msec=1 >>/tmp/pulsemodule.log
 
 # connect from-caller to speakers
 pactl load-module module-loopback source="from-caller.monitor" sink="${speaker}" latency_msec=1>>/tmp/pulsemodule.log
-
-# connect from-desktop to to-caller-sink
-pactl load-module module-loopback source=from-desktop.monitor sink=to-caller-sink latency_msec=1 >> /tmp/pulsemodule.log
 
 # split mic into 2
 pactl load-module module-remap-source source_name=mic01-processed master=${mic} master_channel_map="front-left" channel_map="mono" source_properties=device.description="mic01-processed"
@@ -1178,8 +1186,8 @@ pactl load-module module-remap-source source_name=mics-raw master=${mic} source_
 
 # connect microphone to to-caller-sink
 
-pactl load-module module-loopback source="mic01-processed" sink=to-caller-sink latency_msec=1 >> /tmp/pulsemodule.log
-pactl load-module module-loopback source="mic02-processed" sink=to-caller-sink latency_msec=1 >> /tmp/pulsemodule.log
+pactl load-module module-loopback source="mic01-processed" sink=to-caller-sink latency_msec=1 source_dont_move=true sink_dont_move=true  >> /tmp/pulsemodule.log
+pactl load-module module-loopback source="mic02-processed" sink=to-caller-sink latency_msec=1 source_dont_move=true sink_dont_move=true  >> /tmp/pulsemodule.log
 
 # set proper mic volume
 pactl set-source-volume mic01-processed 120%
