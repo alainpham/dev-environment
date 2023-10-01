@@ -1,3 +1,3 @@
 
 #!/bin/sh
-curl -s "https://www.duckdns.org/update?domains=${duckdomain}&token=${ducktoken}&txt=${CERTBOT_VALIDATION}"
+curl -s "https://www.duckdns.org/update?domains=${duckdomainraw}&token=${ducktoken}&txt=${CERTBOT_VALIDATION}"
