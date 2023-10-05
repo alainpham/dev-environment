@@ -41,13 +41,20 @@
     - [Generate Key Pair and others](#generate-key-pair-and-others)
   - [Predownload docker images](#predownload-docker-images)
   - [Pipewire virtual sinks](#pipewire-virtual-sinks)
-  - [Pure jack](#pure-jack)
-  - [Pure pulse audio](#pure-pulse-audio)
-  - [Davinci Resolve](#davinci-resolve)
-  - [Archived steps](#archived-steps)
-    - [dnsmasq with Network Manager](#dnsmasq-with-network-manager)
-  - [Configure sound](#configure-sound)
-  - [DNS/DHCP server for local homellab on RPI](#dnsdhcp-server-for-local-homellab-on-rpi)
+- [audio sink from desktop](#audio-sink-from-desktop)
+- [audio sink from caller](#audio-sink-from-caller)
+- [audio sink mix to caller](#audio-sink-mix-to-caller)
+- [connect from-desktop to to-caller-sink](#connect-from-desktop-to-to-caller-sink)
+    - [CONNECT PHYSICAL DEVICES](#connect-physical-devices)
+- [connect from-desktop to speakers](#connect-from-desktop-to-speakers)
+- [connect from-caller to speakers](#connect-from-caller-to-speakers)
+- [split mic into 2](#split-mic-into-2)
+- [connect microphone to to-caller-sink](#connect-microphone-to-to-caller-sink)
+- [set proper mic volume](#set-proper-mic-volume)
+- [/etc/NetworkManager/conf.d/00-use-dnsmasq.conf](#etcnetworkmanagerconfd00-use-dnsmasqconf)
+- [](#)
+- [This enabled the dnsmasq plugin.](#this-enabled-the-dnsmasq-plugin)
+- [Example static IP configuration:](#example-static-ip-configuration)
 
 # Workstation Installs
 
@@ -369,9 +376,14 @@ ln -s /home/workdrive/apps/tls /home/${USER}/apps/tls
 export duckdomain=vrbx.duckdns.org
 
 export duckdomain=aphm.duckdns.org
+export duckdomainraw=aphm.duckdns.org
 
 export duckdomain=kebx.duckdns.org
 
+export duckdomain=awon.cpss.duckdns.org
+
+export duckdomain=bbee.cpss.duckdns.org
+export duckdomainraw=cpss.duckdns.org
 
 certbot certonly \
   --non-interactive \
@@ -609,7 +621,11 @@ sudo tar -xzvf k9s_Linux_amd64.tar.gz  -C /usr/local/bin/ k9s
 kubectl
 
 ```
+<<<<<<< HEAD
 curl -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+=======
+curl -LO "https://dl.k8s.io/release/v1.27.5/bin/linux/amd64/kubectl"
+>>>>>>> c82dad92e3f1b5df1364ba2462de36ea4f1de2da
 sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
 ```
@@ -1067,40 +1083,11 @@ sudo vi /etc/security/limits.d/95-pipewire.conf
 
 
 
-pw-link alsa_input.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.analog-stereo:capture_FL mic01-processed:input_FL
-pw-link alsa_input.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.analog-stereo:capture_FL mic01-processed:input_FR
+pw-link alsa_input.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.pro-input-0:capture_AUX0 mic01-processed:input_FL
+pw-link alsa_input.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.pro-input-0:capture_AUX0 mic01-processed:input_FR
 
-pw-link alsa_input.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.analog-stereo:capture_FR mic02-processed:input_FL
-pw-link alsa_input.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.analog-stereo:capture_FR mic02-processed:input_FR
-
-pw-link mic01-processed:capture_FL to-caller:input_FL
-pw-link mic01-processed:capture_FR to-caller:input_FR
-
-pw-link mic02-processed:capture_FL to-caller:input_FL
-pw-link mic02-processed:capture_FR to-caller:input_FR
-
-
-
-pw-link from-caller:monitor_FL alsa_output.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.analog-stereo:playback_FL
-pw-link from-caller:monitor_FR alsa_output.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.analog-stereo:playback_FR
-
-pw-link desktop:monitor_FL alsa_output.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.analog-stereo:playback_FL
-pw-link desktop:monitor_FR alsa_output.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.analog-stereo:playback_FR
-
-
-pw-link desktop:monitor_FL to-caller:input_FL
-pw-link desktop:monitor_FR to-caller:input_FR
-
-
-
-
-
-
-pw-link alsa_input.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.capture.0.0:capture_FL mic01-processed:input_FL
-pw-link alsa_input.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.capture.0.0:capture_FL mic01-processed:input_FR
-
-pw-link alsa_input.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.capture.0.0:capture_FR mic02-processed:input_FL
-pw-link alsa_input.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.capture.0.0:capture_FR mic02-processed:input_FR
+pw-link alsa_input.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.pro-input-0:capture_AUX1 mic02-processed:input_FL
+pw-link alsa_input.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.pro-input-0:capture_AUX1 mic02-processed:input_FR
 
 pw-link mic01-processed:capture_FL to-caller:input_FL
 pw-link mic01-processed:capture_FR to-caller:input_FR
@@ -1110,16 +1097,38 @@ pw-link mic02-processed:capture_FR to-caller:input_FR
 
 
 
-pw-link from-caller:monitor_FL alsa_output.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.playback.0.0:playback_FL
-pw-link from-caller:monitor_FR alsa_output.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.playback.0.0:playback_FR
+pw-link from-caller:monitor_FL alsa_output.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.pro-output-0:playback_AUX0
+pw-link from-caller:monitor_FR alsa_output.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.pro-output-0:playback_AUX1
 
-pw-link desktop:monitor_FL alsa_output.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.playback.0.0:playback_FL
-pw-link desktop:monitor_FR alsa_output.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.playback.0.0:playback_FR
+pw-link from-desktop:monitor_FL alsa_output.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.pro-output-0:playback_AUX0
+pw-link from-desktop:monitor_FR alsa_output.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.pro-output-0:playback_AUX1
 
-pw-link desktop:monitor_FL to-caller:input_FL
-pw-link desktop:monitor_FR to-caller:input_FR
 
-```
+pw-link from-desktop:monitor_FL to-caller:input_FL
+pw-link from-desktop:monitor_FR to-caller:input_FR
+
+
+
+
+minimal
+
+pw-link alsa_input.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.pro-input-0:capture_AUX0 mic01-processed:input_FL
+pw-link alsa_input.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.pro-input-0:capture_AUX0 mic01-processed:input_FR
+
+pw-link alsa_input.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.pro-input-0:capture_AUX1 mic02-processed:input_FL
+pw-link alsa_input.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.pro-input-0:capture_AUX1 mic02-processed:input_FR
+
+pw-link mic01-processed:capture_FL to-caller:input_FL
+pw-link mic01-processed:capture_FR to-caller:input_FR
+
+pw-link mic02-processed:capture_FL to-caller:input_FL
+pw-link mic02-processed:capture_FR to-caller:input_FR
+
+pw-link from-caller:monitor_FL alsa_output.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.pro-output-0:playback_AUX0
+pw-link from-caller:monitor_FR alsa_output.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.pro-output-0:playback_AUX1
+
+pw-link from-desktop:monitor_FL alsa_output.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.pro-output-0:playback_AUX0
+pw-link from-desktop:monitor_FR alsa_output.usb-Focusrite_Scarlett_2i2_USB_Y8QWAQ69B26B58-00.pro-output-0:playback_AUX1
 
 
 ## Pure jack
@@ -1163,8 +1172,22 @@ echo governor | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 setup virtual devices
 
 ```
+sudo bash -c 'cat > /etc/modules-load.d/snd_aloop.conf << _EOF_
+snd_aloop
+_EOF_'
+
 sudo cp ./../pipewire-conf/pulsesetup.sh /usr/local/bin/
+sudo cp ./../pipewire-conf/pulsesetup-alsa.sh /usr/local/bin/pulsesetup.sh
+
 ```
+
+put this in /etc/pulse/default.pa
+```
+load-module module-alsa-sink sink_name=to-caller-alsa-sink sink_properties=device.description="to-caller-alsa-sink"  device=hw:Loopback,1
+load-module module-alsa-source source_name=to-caller source_properties=device.description="to-caller"  device=hw:Loopback,0
+set-default-source to-caller
+```
+
 
 ```
 pacmd list-sinks
