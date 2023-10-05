@@ -621,11 +621,7 @@ sudo tar -xzvf k9s_Linux_amd64.tar.gz  -C /usr/local/bin/ k9s
 kubectl
 
 ```
-<<<<<<< HEAD
 curl -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
-=======
-curl -LO "https://dl.k8s.io/release/v1.27.5/bin/linux/amd64/kubectl"
->>>>>>> c82dad92e3f1b5df1364ba2462de36ea4f1de2da
 sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
 ```
