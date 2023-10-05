@@ -212,6 +212,18 @@ sudo apt install nvidia-driver
 
 ```
 
+Windows wsl ubuntu
+
+```
+sudo apt install ncdu docker.io ansible docker-compose openjdk-17-jdk prometheus-node-exporter ffmpeg python3-mutagen iperf3 imagemagick skopeo bmon
+
+
+ /etc/profile.d/keep_wsl_running.sh
+eval $(keychain -q)
+```
+
+
+
 ubuntu 22.04 dekstop
 
 ```
@@ -551,9 +563,11 @@ List of plugins to install
 ### Maven
 
 ```
-curl -L -o /tmp/maven.tar.gz https://dlcdn.apache.org/maven/maven-3/3.9.3/binaries/apache-maven-3.9.3-bin.tar.gz
+sudo mkdir /opt/appimages/
+mvnversion=3.9.5
+curl -L -o /tmp/maven.tar.gz https://dlcdn.apache.org/maven/maven-3/${mvnversion}/binaries/apache-maven-${mvnversion}-bin.tar.gz
 sudo tar xzvf /tmp/maven.tar.gz  -C /opt/appimages/
-sudo ln -s /opt/appimages/apache-maven-3.9.3/bin/mvn /usr/local/bin/mvn
+sudo ln -s /opt/appimages/apache-maven-${mvnversion}/bin/mvn /usr/local/bin/mvn
 
 ```
 
@@ -568,6 +582,16 @@ dbeaver and helm
 sudo snap install dbeaver-ce
 sudo snap install helm --classic
 sudo snap install blender --classic
+
+
+
+or this for helm
+
+curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+sudo apt-get install apt-transport-https --yes
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+sudo apt-get update
+sudo apt-get install helm
 
 helm completion bash | sudo tee /etc/bash_completion.d/helm > /dev/null
 
@@ -585,7 +609,7 @@ sudo tar -xzvf k9s_Linux_amd64.tar.gz  -C /usr/local/bin/ k9s
 kubectl
 
 ```
-curl -LO "https://dl.k8s.io/release/v1.25.11/bin/linux/amd64/kubectl"
+curl -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
 sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
 ```
