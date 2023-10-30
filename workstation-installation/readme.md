@@ -224,6 +224,8 @@ Windows wsl ubuntu
 ```
 sudo apt install ncdu docker.io ansible docker-compose openjdk-17-jdk prometheus-node-exporter ffmpeg python3-mutagen iperf3 imagemagick skopeo bmon
 
+sudo apt install openssh-server tar unzip zip git-filter-repo
+
 
  /etc/profile.d/keep_wsl_running.sh
 eval $(keychain -q)
