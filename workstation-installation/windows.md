@@ -16,12 +16,17 @@ double default value click and set blank as key
 
 install in microsoft store
 KATE
-ZOOM
 obs
 
 Install installers
 OBS
 Openjdk windows
 VSCODE
+Zoom
 SLACK
 MultiMonitorTool Nirsoft
+vlc
+notepadd ++
+focusrite 3rd gen driver
+
+for dell g 15 : Ethernet driver to avoid drops.
