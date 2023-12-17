@@ -219,12 +219,19 @@ sudo apt install nvidia-driver
 
 ```
 
+debian 12 work vm
+```
+sudo apt install ncdu git ansible docker.io python3-docker docker-compose apparmor tmux vim openjdk-17-jdk prometheus-node-exporter htop curl lshw rsync mediainfo ffmpeg python3-mutagen iperf3 dnsmasq imagemagick qemu-system qemu-utils virtinst libvirt-clients libvirt-daemon-system libguestfs-tools bridge-utils libosinfo-bin lsp-plugins-lv2 calf-plugins ardour v4l-utils flatpak virt-manager mediainfo-gui v4l2loopback-utils easytag gimp avldrums.lv2 openssh-server freeplane ifuse libimobiledevice-utils xournal inkscape npm apt-cacher-ng skopeo golang-go dnsutils bmon lm-sensors psensor apt-transport-https genisoimage obs-studio haruna snapd  ntp
+
+```
+
 Windows wsl ubuntu
 
 ```
-sudo apt install ncdu docker.io ansible docker-compose openjdk-17-jdk prometheus-node-exporter ffmpeg python3-mutagen iperf3 imagemagick skopeo bmon
+sudo apt install ncdu docker.io ansible docker-compose openjdk-17-jdk prometheus-node-exporter htop curl rsync mediainfo ffmpeg python3-mutagen iperf3 imagemagick skopeo bmon genisoimage snapd
 
-sudo apt install openssh-server tar unzip zip git-filter-repo
+sudo apt install openssh-server tar unzip zip git-filter-repo keychain
+sudo snap install --classic certbot
 
 
  /etc/profile.d/keep_wsl_running.sh
@@ -257,6 +264,12 @@ minimalistic micro server on kvm ubuntu or debian
 sudo apt install git ansible docker.io python3-docker docker-compose skopeo apparmor tmux vim openjdk-17-jdk-headless prometheus-node-exporter curl rsync ncdu  dnsutils bmon lm-sensors
 ```
 
+linux box online debian
+
+```
+sudo apt install git ansible docker.io python3-docker docker-compose skopeo tmux vim openjdk-17-jdk-headless curl rsync ncdu  dnsutils bmon prometheus-node-exporter wireguard-tools iptables  resolvconf ntp
+```
+
 minimal debian 11 kubernetes host
 ```console
 apt install sudo
@@ -269,6 +282,7 @@ sudo adduser $USER libvirt
 sudo adduser $USER docker
 sudo adduser $USER audio
 sudo adduser $USER pipewire
+sudo adduser $USER vboxsf
 ```
 
 ## Start virsh network
@@ -299,6 +313,10 @@ sudo bash -c 'cat > /etc/docker/daemon.json << _EOF_
 _EOF_'
 
 sudo systemctl restart docker
+
+
+to truncate files : 
+sudo sh -c "truncate -s 0 /var/lib/docker/containers/*/*-json.log"
 ```
 
 ```
@@ -373,9 +391,14 @@ mkdir -p /home/workdrive/apps/tls
 ln -s /home/workdrive/apps/tls /home/${USER}/apps/tls
 
 
+export email=XXXX@YYY.com
+export ducktoken=XXXXX
 
+export duckdomain=alainpham.duckdns.org
+export duckdomainraw=alainpham.duckdns.org
 
 export duckdomain=vrbx.duckdns.org
+export duckdomainraw=vrbx.duckdns.org
 
 export duckdomain=aphm.duckdns.org
 export duckdomainraw=aphm.duckdns.org
@@ -387,6 +410,9 @@ export duckdomain=awon.cpss.duckdns.org
 export duckdomain=bbee.cpss.duckdns.org
 export duckdomainraw=cpss.duckdns.org
 
+export tlsfolder=/home/workdrive/apps/tls
+export tlsfolder=/home/apham/apps/tls
+
 certbot certonly \
   --non-interactive \
   --agree-tos \
@@ -394,14 +420,14 @@ certbot certonly \
   --manual-auth-hook duckdns.sh \
   --email "$email" \
   --preferred-challenges dns \
-  --config-dir /home/workdrive/apps/tls/cfg \
-  --work-dir /home/workdrive/apps/tls/ \
-  --logs-dir /home/workdrive/apps/tls/logs \
+  --config-dir $tlsfolder/cfg \
+  --work-dir $tlsfolder/ \
+  --logs-dir $tlsfolder/logs \
   -d "*.${duckdomain}"  -v
 
 
 
-openssl pkcs12 -export -out /home/workdrive/apps/tls/cfg/live/${duckdomain}/privkey.p12  -in /home/workdrive/apps/tls/cfg/live/${duckdomain}/fullchain.pem -inkey /home/workdrive/apps/tls/cfg/live/${duckdomain}/privkey.pem -passin pass:password -passout pass:password
+openssl pkcs12 -export -out ${tlsfolder}/cfg/live/${duckdomain}/privkey.p12  -in ${tlsfolder}/cfg/live/${duckdomain}/fullchain.pem -inkey ${tlsfolder}/cfg/live/${duckdomain}/privkey.pem -passin pass:password -passout pass:password
 
 
 ```
@@ -616,14 +642,15 @@ k9s
 https://github.com/derailed/k9s/releases
 
 ```console
-curl -LO https://github.com/derailed/k9s/releases/download/v0.27.4/k9s_Linux_amd64.tar.gz
+curl -LO https://github.com/derailed/k9s/releases/download/v0.29.1/k9s_Linux_amd64.tar.gz
 sudo tar -xzvf k9s_Linux_amd64.tar.gz  -C /usr/local/bin/ k9s
+rm k9s_Linux_amd64.tar.gz
 ```
 
 kubectl
 
 ```
-curl -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+curl -LO "https://dl.k8s.io/release/v1.27.3/bin/linux/amd64/kubectl"
 sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
 ```
@@ -643,7 +670,7 @@ yt-dlp
 sudo curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp
 sudo chmod a+rx /usr/local/bin/yt-dlp
 
-alias yt='yt-dlp -f "bestvideo[ext=mp4][vcodec^=avc1][height<=?1080][fps<=?30]+bestaudio[ext=m4a]" --embed-thumbnail -o "%(title)s.%(ext)s"'
+echo "alias yt='yt-dlp -f \"bestvideo[ext=mp4][vcodec^=avc1][height<=?1080][fps<=?30]+bestaudio[ext=m4a]\" --embed-thumbnail -o \"%(title)s.%(ext)s\"'"| sudo tee /etc/profile.d/aliases.sh
 ```
 
 google cloud
@@ -661,6 +688,16 @@ sudo apt-get update && sudo apt-get install google-cloud-cli
 
 sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin
 ```
+
+
+aws eks
+
+```
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+```
+
 
 MLV APP
 

@@ -4,6 +4,16 @@ install chrome
 
 wsl --install
 
+wsl --export Ubuntu c:\Temp\UbuntuBackup.tar
+wsl --unregister Ubuntu
+wsl --import Ubuntu c:\Linux c:\Temp\UbuntuBackup.tar
+
+
+/etc/wsl.conf
+[user]
+default=apham
+
+
 old context menu 
 
 
@@ -16,7 +26,8 @@ double default value click and set blank as key
 
 install in microsoft store
 KATE
-obs
+
+Whatsapp
 
 Install installers
 OBS
@@ -28,5 +39,12 @@ MultiMonitorTool Nirsoft
 vlc
 notepadd ++
 focusrite 3rd gen driver
+dbeaver
+voicemeeter banana
+gimp
+
+https://github.com/winfsp/sshfs-win?tab=readme-ov-file
+
 
 for dell g 15 : Ethernet driver to avoid drops.
+
