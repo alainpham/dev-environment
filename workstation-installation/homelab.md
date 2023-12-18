@@ -46,6 +46,7 @@ sudo adduser $USER docker
 # configure basic folder mapping
 mkdir -p /home/${USER}/apps
 sudo mkdir -p /mnt/extdrv01
+sudo mkdir -p /mnt/extdrv02
 
 # add following line to /etc/fstab for automount
 sudo blkid
@@ -54,7 +55,7 @@ UUID=bc86dbce-e2c8-4628-b516-91db86acc8ca /mnt/extdrv01 ext4 rw,relatime,nofail,
 
 ln -s /mnt/extdrv01/apps /home/${USER}/apps
 
-docker network create --driver=bridge --subnet=172.18.0.0/16 --gateway=172.18.0.1 primenet
+docker network create --opt com.docker.network.bridge.name=primenet --driver=bridge --subnet=172.18.0.0/16 --gateway=172.18.0.1 primenet
 
 # minimalistic logs
 
