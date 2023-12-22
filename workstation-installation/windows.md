@@ -48,3 +48,6 @@ https://github.com/winfsp/sshfs-win?tab=readme-ov-file
 
 for dell g 15 : Ethernet driver to avoid drops.
 
+
+make hyperv and wsl communicate
+Get-NetIPInterface | select ifIndex,InterfaceAlias,AddressFamily,ConnectionState,Forwarding | Sort-Object -Property IfIndex | Format-Table

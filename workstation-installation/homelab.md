@@ -4,14 +4,14 @@
 # Variables 
 export APPUSER=apham
 
-export KUBE_VERSION=v1.27.3
+export KUBE_VERSION=v1.27.8
 export K9S_VERSION=v0.29.1
 export KIND_VERSION=v0.20.0
 
 export CERTBOT_DUCKDNS_VERSION=v1.3
 export DUCKDNS_TOKEN=xxxx-xxxx-xxx-xxx-xxxxx
 export EMAIL=xxx@yyy.com
-export WILDCARD_DOMAIN=*.yourowndomain.duckdns.org
+export WILDCARD_DOMAIN=yourowndomain.duckdns.org
 
 export ARCH="amd64" 
 export GCLOUD_HOSTED_METRICS_URL="https://prometheus-prod-01-eu-west-0.grafana.net/api/prom/push" 
@@ -21,12 +21,14 @@ export GCLOUD_HOSTED_LOGS_URL="https://logs-prod-eu-west-0.grafana.net/loki/api/
 export GCLOUD_HOSTED_LOGS_ID="xxx" 
 export GCLOUD_RW_API_KEY=XXXXX
 
-export NGINX_INGRESS_VERSION=1.9.4
+export NGINX_INGRESS_VERSION=1.9.5
 export NGINX_INGRESS_KUBE_WEBHOOK_CERTGEN_VERSION=v20231011-8b53cabe0
 
 export MVN_VERSION=3.9.6
 
 export DOCKER_BUILDX_VERSION=v0.12.0
+
+export LOCAL_PATH_PROVISIONER_VERSION=v0.0.26
 
 # basics
 su
@@ -37,9 +39,38 @@ echo "${APPUSER} ALL=(ALL) NOPASSWD:ALL" | sudo EDITOR='tee -a' visudo -f /etc/s
 
 exit
 
+sudo bash -c 'cat > /etc/profile.d/super_aliases.sh << _EOF_
+alias ll="ls -larth"
+_EOF_'
+
+# on debian fresh installs with virtual box
+# The primary network interface
+sudo bash -c 'cat > /etc/network/interfaces.d/hostnetwork << _EOF_
+auto enp0s8
+iface enp0s8 inet static
+address 192.168.56.10
+netmask 255.255.255.0
+_EOF_'
+
+address 172.24.247.100/20
+netmask 255.255.0.0
+dns 172.24.240.1 
+
+
+
 # install essentials
 
-sudo apt install git ansible docker.io python3-docker docker-compose skopeo tmux vim openjdk-17-jdk-headless curl rsync ncdu  dnsutils bmon wireguard-tools iptables resolvconf ntp ntpstat htop iperf3 bash-completion ffmpeg
+sudo apt install git ansible docker.io python3-docker docker-compose skopeo tmux vim  curl rsync ncdu  dnsutils bmon wireguard-tools iptables  ntp ntpstat htop iperf3 bash-completion ffmpeg
+
+# if network manager is installed
+sudo apt install systemd-resolved
+
+# if only simple netwoking is used
+sudo apt install resolvconf 
+
+sudo apt install openjdk-17-jdk-headless
+
+sudo reboot now
 
 sudo adduser $USER docker
 
@@ -62,7 +93,7 @@ docker network create --opt com.docker.network.bridge.name=primenet --driver=bri
 sudo bash -c 'cat > /etc/docker/daemon.json << _EOF_
 {
   "log-opts": {
-    "max-size": "20m",
+    "max-size": "10m",
     "max-file": "2" 
   }
 }
@@ -70,10 +101,21 @@ _EOF_'
 
 sudo mkdir -p /usr/lib/docker/cli-plugins
 sudo curl -SL https://github.com/docker/buildx/releases/download/${DOCKER_BUILDX_VERSION}/buildx-${DOCKER_BUILDX_VERSION}.linux-amd64 -o /usr/lib/docker/cli-plugins/docker-buildx
+
+sudo curl -SL https://github.com/docker/buildx/releases/download/${DOCKER_BUILDX_VERSION}/buildx-${DOCKER_BUILDX_VERSION}.linux-arm-v7 -o /usr/lib/docker/cli-plugins/docker-buildx
+
 sudo chmod 755 /usr/lib/docker/cli-plugins/docker-buildx
 
 sudo systemctl restart docker
 
+docker buildx create --name multibuilder --platform linux/amd64,linux/arm/v7,linux/arm64/v8 --use
+
+# Journal size limit
+
+sudo vi /etc/systemd/journald.conf
+SystemMaxUse=100M
+
+sudo systemctl restart systemd-journald.service
 
 # configure apt cacher ng only on one server awon.lan
 sudo apt install apt-cacher-ng
@@ -171,7 +213,7 @@ nodes:
     protocol: TCP
 EOF
 
-docker run --rm --name certbot -v "$(pwd)/sensitive/letsencrypt/data:/etc/letsencrypt" -v "$(pwd)/sensitive/letsencrypt/logs:/var/log/letsencrypt" infinityofspace/certbot_dns_duckdns:${CERTBOT_DUCKDNS_VERSION} \
+docker run --rm --name certbot --user 1000:1000 -v "$(pwd)/sensitive/letsencrypt/data:/etc/letsencrypt" -v "$(pwd)/sensitive/letsencrypt/logs:/var/log/letsencrypt" infinityofspace/certbot_dns_duckdns:${CERTBOT_DUCKDNS_VERSION} \
    certonly \
      --non-interactive \
      --agree-tos \
@@ -190,7 +232,24 @@ sudo kubectl -n ingress-nginx create  secret tls nginx-ingress-tls  --key="$(pwd
 kubectl apply -f https://raw.githubusercontent.com/alainpham/cloud_native_lab/master/playbooks/gke/ingress-hostport.yaml
 
 
+# reusable certificat 
 
+mkdir -p /home/${USER}/apps/tls/cfg /home/${USER}/apps/tls/logs
+
+docker run --rm --name certbot  -v "/home/${USER}/apps/tls/cfg:/etc/letsencrypt" -v "/home/${USER}/apps/tls/logs:/var/log/letsencrypt" infinityofspace/certbot_dns_duckdns:${CERTBOT_DUCKDNS_VERSION} \
+   certonly \
+     --non-interactive \
+     --agree-tos \
+     --email ${EMAIL} \
+     --preferred-challenges dns \
+     --authenticator dns-duckdns \
+     --dns-duckdns-token ${DUCKDNS_TOKEN} \
+     --dns-duckdns-propagation-seconds 5 \
+     -d "*.${WILDCARD_DOMAIN}"
+
+sudo chown -R ${USER}:${USER} /home/${USER}/apps/tls/cfg
+
+openssl pkcs12 -export -out /home/${USER}/apps/tls/cfg/live/${WILDCARD_DOMAIN}/privkey.p12  -in /home/${USER}/apps/tls/cfg/live/${WILDCARD_DOMAIN}/fullchain.pem -inkey  /home/${USER}/apps/tls/cfg/live/${WILDCARD_DOMAIN}/privkey.pem -passin pass:password -passout pass:password
 
 
 # wireguard
@@ -215,5 +274,58 @@ docker run -d \
   --sysctl="net.ipv4.conf.all.src_valid_mark=1" \
   --restart unless-stopped \
   linuxserver/wireguard:1.0.20210914
+
+```
+
+
+
+
+# Kubernetes
+
+```bash
+cat <<EOF | sudo tee /etc/modules-load.d/containerd.conf 
+overlay 
+br_netfilter
+EOF
+
+sudo modprobe overlay 
+sudo modprobe br_netfilter
+
+cat <<EOF | sudo tee /etc/sysctl.d/99-kubernetes-k8s.conf
+net.bridge.bridge-nf-call-iptables = 1
+net.ipv4.ip_forward = 1 
+net.bridge.bridge-nf-call-ip6tables = 1 
+EOF
+
+containerd config default | sudo tee /etc/containerd/config.toml >/dev/null 2>&1
+
+sudo vi /etc/containerd/config.toml
+SystemdCgroup = true
+sudo systemctl restart containerd
+sudo systemctl enable containerd
+
+sudo apt-get install -y apt-transport-https ca-certificates curl
+
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.27/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.27/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
+sudo apt-get update
+
+sudo apt-get install -y kubelet kubeadm kubectl
+kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
+
+sudo kubeadm init --control-plane-endpoint=master.cxw.duckdns.org  --pod-network-cidr=10.244.0.0/16
+
+kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
+
+kubectl create ns ingress-nginx
+
+kubectl -n ingress-nginx create secret tls nginx-ingress-tls  --key="/home/${USER}/apps/tls/cfg/live/${WILDCARD_DOMAIN}/privkey.pem"   --cert="/home/${USER}/apps/tls/cfg/live/${WILDCARD_DOMAIN}/fullchain.pem"  --dry-run=client -o yaml | kubectl apply -f -
+
+kubectl taint node ${HOSTNAME} node-role.kubernetes.io/control-plane:NoSchedule-
+
+wget -O /tmp/ingress.yaml https://raw.githubusercontent.com/alainpham/dev-environment/master/workstation-installation/templates/ingress-hostport-notoleration.yaml
+envsubst < /tmp/ingress.yaml | kubectl -n ingress-nginx apply -f -
 
 ```
