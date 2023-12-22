@@ -505,6 +505,10 @@ spec:
         kubernetes.io/os: linux
       serviceAccountName: ingress-nginx
       terminationGracePeriodSeconds: 0
+      volumes:
+      - name: webhook-cert
+        secret:
+          secretName: ingress-nginx-admission
 ---
 apiVersion: batch/v1
 kind: Job
