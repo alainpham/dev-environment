@@ -29,6 +29,7 @@ export MVN_VERSION=3.9.6
 export DOCKER_BUILDX_VERSION=v0.12.0
 
 export LOCAL_PATH_PROVISIONER_VERSION=v0.0.26
+export METRICS_SERVER_VERSION=v0.6.4
 
 # basics
 su
@@ -319,6 +320,8 @@ sudo kubeadm init --control-plane-endpoint=master.cxw.duckdns.org  --pod-network
 
 kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
 
+# ingress
+
 kubectl create ns ingress-nginx
 
 kubectl -n ingress-nginx create secret tls nginx-ingress-tls  --key="/home/${USER}/apps/tls/cfg/live/${WILDCARD_DOMAIN}/privkey.pem"   --cert="/home/${USER}/apps/tls/cfg/live/${WILDCARD_DOMAIN}/fullchain.pem"  --dry-run=client -o yaml | kubectl apply -f -
@@ -328,4 +331,11 @@ kubectl taint node ${HOSTNAME} node-role.kubernetes.io/control-plane:NoSchedule-
 wget -O /tmp/ingress.yaml https://raw.githubusercontent.com/alainpham/dev-environment/master/workstation-installation/templates/ingress-hostport-notoleration.yaml
 envsubst < /tmp/ingress.yaml | kubectl -n ingress-nginx apply -f -
 
+# storage
+wget -O /tmp/local-path-provisioner.yaml https://raw.githubusercontent.com/alainpham/dev-environment/master/workstation-installation/templates/local-path-provisioner.yaml
+envsubst < /tmp/local-path-provisioner.yaml | kubectl apply -f -
+
+# metrics
+
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/${METRICS_SERVER_VERSION}/components.yaml
 ```
