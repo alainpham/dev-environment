@@ -336,6 +336,5 @@ wget -O /tmp/local-path-provisioner.yaml https://raw.githubusercontent.com/alain
 envsubst < /tmp/local-path-provisioner.yaml | kubectl apply -f -
 
 # metrics
-
 kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/${METRICS_SERVER_VERSION}/components.yaml
 ```
