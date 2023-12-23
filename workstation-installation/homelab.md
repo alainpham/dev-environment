@@ -8,18 +8,8 @@ export KUBE_VERSION=v1.27.8
 export K9S_VERSION=v0.29.1
 export KIND_VERSION=v0.20.0
 
+export WILDCARD_DOMAIN=${HOSTNAME}.duckdns.org
 export CERTBOT_DUCKDNS_VERSION=v1.3
-export DUCKDNS_TOKEN=xxxx-xxxx-xxx-xxx-xxxxx
-export EMAIL=xxx@yyy.com
-export WILDCARD_DOMAIN=yourowndomain.duckdns.org
-
-export ARCH="amd64" 
-export GCLOUD_HOSTED_METRICS_URL="https://prometheus-prod-01-eu-west-0.grafana.net/api/prom/push" 
-export GCLOUD_HOSTED_METRICS_ID="xxx" 
-export GCLOUD_SCRAPE_INTERVAL="60s" 
-export GCLOUD_HOSTED_LOGS_URL="https://logs-prod-eu-west-0.grafana.net/loki/api/v1/push" 
-export GCLOUD_HOSTED_LOGS_ID="xxx" 
-export GCLOUD_RW_API_KEY=XXXXX
 
 export NGINX_INGRESS_VERSION=1.9.5
 export NGINX_INGRESS_KUBE_WEBHOOK_CERTGEN_VERSION=v20231011-8b53cabe0
@@ -30,6 +20,11 @@ export DOCKER_BUILDX_VERSION=v0.12.0
 
 export LOCAL_PATH_PROVISIONER_VERSION=v0.0.26
 export METRICS_SERVER_VERSION=v0.6.4
+
+# Sensitive
+export DUCKDNS_TOKEN=xxxx-xxxx-xxx-xxx-xxxxx
+export EMAIL=xxx@yyy.com
+
 
 # basics
 su
@@ -168,7 +163,7 @@ ssh-keygen
 
 sh -c "$(curl -fsSL https://storage.googleapis.com/cloud-onboarding/agent/scripts/grafanacloud-install.sh)"
 
-
+# do integrations in grafana cloud
 
 
 # Install kubectl
@@ -321,7 +316,6 @@ sudo kubeadm init --control-plane-endpoint=master.cxw.duckdns.org  --pod-network
 kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
 
 # ingress
-
 kubectl create ns ingress-nginx
 
 kubectl -n ingress-nginx create secret tls nginx-ingress-tls  --key="/home/${USER}/apps/tls/cfg/live/${WILDCARD_DOMAIN}/privkey.pem"   --cert="/home/${USER}/apps/tls/cfg/live/${WILDCARD_DOMAIN}/fullchain.pem"  --dry-run=client -o yaml | kubectl apply -f -
@@ -336,5 +330,50 @@ wget -O /tmp/local-path-provisioner.yaml https://raw.githubusercontent.com/alain
 envsubst < /tmp/local-path-provisioner.yaml | kubectl apply -f -
 
 # metrics
-kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/${METRICS_SERVER_VERSION}/components.yaml
+wget -O /tmp/metrics-server.yaml https://raw.githubusercontent.com/alainpham/dev-environment/master/workstation-installation/templates/metrics-server.yaml
+envsubst < /tmp/metrics-server.yaml | kubectl apply -f -
+
+# Grafana Cloud Kubernetes integrations
+
+curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+sudo apt-get install apt-transport-https --yes
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+sudo apt-get update
+sudo apt-get install helm
+helm completion bash | sudo tee /etc/bash_completion.d/helm > /dev/null
+
+
+helm repo add grafana https://grafana.github.io/helm-charts &&
+  helm repo update &&
+  helm upgrade --install --atomic --timeout 120s grafana-k8s-monitoring grafana/k8s-monitoring \
+    --namespace "agents" --create-namespace --values - <<EOF
+cluster:
+  name: ${HOSTNAME}
+externalServices:
+  prometheus:
+    host: ${MIMIR_HOST}
+    basicAuth:
+      username: "${MIMIR_USR}"
+      password: ${key}
+  loki:
+    host: ${LOKI_HOST}
+    basicAuth:
+      username: "${LOKI_USR}"
+      password: ${key}
+  tempo:
+    host: ${TEMPO_URL}
+    basicAuth:
+      username: "${TEMPO_USR}"
+      password: ${key}
+metrics:
+  cost:
+    enabled: false
+opencost:
+  enabled: false
+traces:
+  enabled: true
+EOF
+
+# uninstall
+helm uninstall grafana-k8s-monitoring -n agents
 ```
