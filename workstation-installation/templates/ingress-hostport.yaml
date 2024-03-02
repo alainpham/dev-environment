@@ -488,13 +488,17 @@ spec:
             cpu: 100m
             memory: 90Mi
         securityContext:
-          allowPrivilegeEscalation: true
+          allowPrivilegeEscalation: false
           capabilities:
             add:
             - NET_BIND_SERVICE
             drop:
             - ALL
+          readOnlyRootFilesystem: false
+          runAsNonRoot: true
           runAsUser: 101
+          seccompProfile:
+            type: RuntimeDefault
         volumeMounts:
         - mountPath: /usr/local/certificates/
           name: webhook-cert
@@ -504,7 +508,7 @@ spec:
         ingress-ready: "true"
         kubernetes.io/os: linux
       serviceAccountName: ingress-nginx
-      terminationGracePeriodSeconds: 0
+      terminationGracePeriodSeconds: 300
       tolerations:
       - effect: NoSchedule
         key: node-role.kubernetes.io/master

@@ -4,22 +4,32 @@
 # Variables 
 export APPUSER=apham
 
-export KUBE_VERSION=v1.27.8
-export K9S_VERSION=v0.29.1
-export KIND_VERSION=v0.20.0
+export KUBE_VERSION=v1.27.11
+export K9S_VERSION=v0.31.9
+export KIND_VERSION=v0.22.0
 
 export WILDCARD_DOMAIN=${HOSTNAME}.duckdns.org
+# https://github.com/infinityofspace/certbot_dns_duckdns
 export CERTBOT_DUCKDNS_VERSION=v1.3
 
-export NGINX_INGRESS_VERSION=1.9.5
-export NGINX_INGRESS_KUBE_WEBHOOK_CERTGEN_VERSION=v20231011-8b53cabe0
+# https://metallb.universe.tf/installation/
+export METALLB_VERSION=v0.14.3
 
+# https://github.com/kubernetes/ingress-nginx/blob/main/deploy/static/provider/baremetal/deploy.yaml
+export NGINX_INGRESS_VERSION=1.10.0
+export NGINX_INGRESS_KUBE_WEBHOOK_CERTGEN_VERSION=v1.4.0
+
+# https://maven.apache.org/docs/history.html
 export MVN_VERSION=3.9.6
 
-export DOCKER_BUILDX_VERSION=v0.12.0
+# https://github.com/docker/buildx
+export DOCKER_BUILDX_VERSION=v0.12.1
 
+# https://github.com/rancher/local-path-provisioner
 export LOCAL_PATH_PROVISIONER_VERSION=v0.0.26
-export METRICS_SERVER_VERSION=v0.6.4
+
+# https://github.com/kubernetes-sigs/metrics-server
+export METRICS_SERVER_VERSION=v0.7.0
 
 # Sensitive
 export DUCKDNS_TOKEN=xxxx-xxxx-xxx-xxx-xxxxx
@@ -31,6 +41,7 @@ su
 apt update && apt upgrade
 apt install sudo
 
+echo "apham ALL=(ALL) NOPASSWD:ALL" | sudo EDITOR='tee -a' visudo -f /etc/sudoers.d/nopwd
 echo "${APPUSER} ALL=(ALL) NOPASSWD:ALL" | sudo EDITOR='tee -a' visudo -f /etc/sudoers.d/nopwd
 
 exit
@@ -48,23 +59,29 @@ address 192.168.56.10
 netmask 255.255.255.0
 _EOF_'
 
-address 172.24.247.100/20
-netmask 255.255.0.0
-dns 172.24.240.1 
 
 
+# grub quickstart
+sudo vi /etc/default/grub
+GRUB_TIMEOUT=0
+sudo update-grub
+
+# remember to remove dns-search section on vms with static ips
+sudo vi /etc/network/interfaces
 
 # install essentials
 
-sudo apt install git ansible docker.io python3-docker docker-compose skopeo tmux vim  curl rsync ncdu  dnsutils bmon wireguard-tools iptables  ntp ntpstat htop iperf3 bash-completion ffmpeg
+sudo apt install git ansible docker.io python3-docker docker-compose skopeo tmux vim  curl rsync ncdu  dnsutils bmon wireguard-tools iptables  ntp ntpstat htop iperf3 bash-completion ffmpeg ntfs-3g openjdk-17-jdk-headless
 
-# if network manager is installed
+# install wsl
+
+sudo apt install git ansible docker.io python3-docker docker-compose skopeo tmux vim  curl rsync ncdu  dnsutils bmon   ntp ntpstat htop iperf3 bash-completion ffmpeg 
+
+# if network manager is installed actually not needed
 sudo apt install systemd-resolved
 
 # if only simple netwoking is used
 sudo apt install resolvconf 
-
-sudo apt install openjdk-17-jdk-headless
 
 sudo reboot now
 
@@ -157,11 +174,31 @@ echo "<settings><localRepository>/mnt/extdrv01/apps/maven/repository/</localRepo
 
 ssh-keygen
 
+# reusable certificat 
+
+mkdir -p /home/${USER}/apps/tls/cfg /home/${USER}/apps/tls/logs
+
+docker run --rm --name certbot  -v "/home/${USER}/apps/tls/cfg:/etc/letsencrypt" -v "/home/${USER}/apps/tls/logs:/var/log/letsencrypt" infinityofspace/certbot_dns_duckdns:${CERTBOT_DUCKDNS_VERSION} \
+   certonly \
+     --non-interactive \
+     --agree-tos \
+     --email ${EMAIL} \
+     --preferred-challenges dns \
+     --authenticator dns-duckdns \
+     --dns-duckdns-token ${DUCKDNS_TOKEN} \
+     --dns-duckdns-propagation-seconds 10 \
+     -d "*.${WILDCARD_DOMAIN}"
+
+sudo chown -R ${USER}:${USER} /home/${USER}/apps/tls/cfg
+
+openssl pkcs12 -export -out /home/${USER}/apps/tls/cfg/live/${WILDCARD_DOMAIN}/privkey.p12  -in /home/${USER}/apps/tls/cfg/live/${WILDCARD_DOMAIN}/fullchain.pem -inkey  /home/${USER}/apps/tls/cfg/live/${WILDCARD_DOMAIN}/privkey.pem -passin pass:password -passout pass:password
+
+
 # run ansible scripts to run docker containers
 
 # add grafana agent with linux node integration
-
 sh -c "$(curl -fsSL https://storage.googleapis.com/cloud-onboarding/agent/scripts/grafanacloud-install.sh)"
+sudo usermod -a -G docker grafana-agent
 
 # do integrations in grafana cloud
 
@@ -169,7 +206,8 @@ sh -c "$(curl -fsSL https://storage.googleapis.com/cloud-onboarding/agent/script
 # Install kubectl
 
 curl -LO "https://dl.k8s.io/release/${KUBE_VERSION}/bin/linux/amd64/kubectl"
-sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+sudo cp kubectl /usr/local/bin/kubectl
+sudo chmod 755 /usr/local/bin/kubectl
 kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
 rm kubectl
 
@@ -209,46 +247,10 @@ nodes:
     protocol: TCP
 EOF
 
-docker run --rm --name certbot --user 1000:1000 -v "$(pwd)/sensitive/letsencrypt/data:/etc/letsencrypt" -v "$(pwd)/sensitive/letsencrypt/logs:/var/log/letsencrypt" infinityofspace/certbot_dns_duckdns:${CERTBOT_DUCKDNS_VERSION} \
-   certonly \
-     --non-interactive \
-     --agree-tos \
-     --email ${EMAIL} \
-     --preferred-challenges dns \
-     --authenticator dns-duckdns \
-     --dns-duckdns-token ${DUCKDNS_TOKEN} \
-     --dns-duckdns-propagation-seconds 15 \
-     -d "${WILDCARD_DOMAIN}"
-
-kubectl create ns ingress-nginx
-
-sudo kubectl -n ingress-nginx create  secret tls nginx-ingress-tls  --key="$(pwd)/sensitive/letsencrypt/data/live/yourowndomain.duckdns.org/privkey.pem"   --cert="$(pwd)/sensitive/letsencrypt/data/live/yourowndomain.duckdns.org/fullchain.pem"  --dry-run=client -o yaml | kubectl apply -f -
-
-
 kubectl apply -f https://raw.githubusercontent.com/alainpham/cloud_native_lab/master/playbooks/gke/ingress-hostport.yaml
 
 
-# reusable certificat 
-
-mkdir -p /home/${USER}/apps/tls/cfg /home/${USER}/apps/tls/logs
-
-docker run --rm --name certbot  -v "/home/${USER}/apps/tls/cfg:/etc/letsencrypt" -v "/home/${USER}/apps/tls/logs:/var/log/letsencrypt" infinityofspace/certbot_dns_duckdns:${CERTBOT_DUCKDNS_VERSION} \
-   certonly \
-     --non-interactive \
-     --agree-tos \
-     --email ${EMAIL} \
-     --preferred-challenges dns \
-     --authenticator dns-duckdns \
-     --dns-duckdns-token ${DUCKDNS_TOKEN} \
-     --dns-duckdns-propagation-seconds 5 \
-     -d "*.${WILDCARD_DOMAIN}"
-
-sudo chown -R ${USER}:${USER} /home/${USER}/apps/tls/cfg
-
-openssl pkcs12 -export -out /home/${USER}/apps/tls/cfg/live/${WILDCARD_DOMAIN}/privkey.p12  -in /home/${USER}/apps/tls/cfg/live/${WILDCARD_DOMAIN}/fullchain.pem -inkey  /home/${USER}/apps/tls/cfg/live/${WILDCARD_DOMAIN}/privkey.pem -passin pass:password -passout pass:password
-
-
-# wireguard
+# wireguard vpnup.sh
 
 docker run -d \
   --name=wireguard \
@@ -259,7 +261,7 @@ docker run -d \
   -e TZ=Etc/UTC \
   -e SERVERURL=euas.duckdns.org `#optional` \
   -e SERVERPORT=51820 `#optional` \
-  -e PEERS=euas,awon,work,surf,iphone8PlusQuang,ipadQuang `#optional` \
+  -e PEERS=euas,awon,work,surf,iphone8PlusQuang,ipadQuang,cipi,iphone8PlusDong,iphone8PlusHuyen,iphoneHoa,iPadMax,iphoneHang,iphoneHuyenAnh,iphoneDavid,surfHuyen,bbee,tvPoissy,tvCPoissy,arev,leno `#optional` \
   -e PEERDNS="no" \
   -e INTERNAL_SUBNET=10.13.13.0 `#optional` \
   -e ALLOWEDIPS=10.13.13.0/24 `#optional` \
@@ -271,7 +273,88 @@ docker run -d \
   --restart unless-stopped \
   linuxserver/wireguard:1.0.20210914
 
+# coredns file
+
+. {
+    loop
+    health
+    forward . /etc/resolv.conf
+}
+
+vlan {
+    file /config/coredns/internal.conf
+    log
+    errors 
+}
+
+awon.cpss.duckdns.org {
+    file /config/coredns/internal.conf
+    log
+    errors
+}
+
+bbee.cpss.duckdns.org {
+    file /config/coredns/internal.conf
+    log
+    errors
+}
+
+cipi.pssy.duckdns.org {
+    file /config/coredns/internal.conf
+    log
+    errors
+}
+
+arev.pssy.duckdns.org {
+    file /config/coredns/internal.conf
+    log
+    errors
+}
+
+# internal.conf
+vlan. IN SOA dns.vlan. admin.vlan. 1986112600 7200 3600 1209600 3600
+
+
+# c poissy
+cpss.duckdns.org. IN SOA dns.cpss.duckdns.org. admin.cpss.duckdns.org. 1986112600 7200 3600 1209600 3600
+awon.cpss.duckdns.org. IN A 10.13.13.3
+*.awon.cpss.duckdns.org. IN A 10.13.13.3
+awon.vlan. IN CNAME awon.cpss.duckdns.org.
+*.awon.vlan. IN CNAME awon.cpss.duckdns.org.
+
+bbee.cpss.duckdns.org. IN A 10.13.13.17
+*.bbee.cpss.duckdns.org. IN A 10.13.13.17
+bbee.vlan. IN CNAME bbee.cpss.duckdns.org.
+*.bbee.vlan. IN CNAME bbee.cpss.duckdns.org.
+
+# poissy
+pssy.duckdns.org. IN SOA dns.pssy.duckdns.org. admin.pssy.duckdns.org. 1986112600 7200 3600 1209600 3600
+
+cipi.pssy.duckdns.org. IN A 10.13.13.8
+*.cipi.pssy.duckdns.org. IN A 10.13.13.8
+cipi.vlan. IN CNAME cipi.pssy.duckdns.org.
+*.cipi.vlan. IN CNAME cipi.pssy.duckdns.org.
+
+arev.pssy.duckdns.org. IN A 10.13.13.20
+*.arev.pssy.duckdns.org. IN A 10.13.13.20
+arev.vlan. IN CNAME arev.pssy.duckdns.org.
+*.arev.vlan. IN CNAME arev.pssy.duckdns.org.
+
+
+# showpeer.sh
+docker exec -it wireguard /app/show-peer $1
+cat wg/config/peer_$1/peer_$1.conf
+
+# list config
+cat wg/config/peer_*/peer*.conf
+# client
+
+sudo vi /etc/wireguard/wg0.conf
+
+sudo systemctl enable wg-quick@wg0
+
 ```
+
 
 
 
@@ -300,27 +383,72 @@ SystemdCgroup = true
 sudo systemctl restart containerd
 sudo systemctl enable containerd
 
-sudo apt-get install -y apt-transport-https ca-certificates curl
+sudo apt install -y apt-transport-https ca-certificates curl
 
 curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.27/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 
 echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.27/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
 
-sudo apt-get update
+sudo apt update
+sudo apt install -y kubelet kubeadm kubectl
 
-sudo apt-get install -y kubelet kubeadm kubectl
 kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
 
-sudo kubeadm init --control-plane-endpoint=master.cxw.duckdns.org  --pod-network-cidr=10.244.0.0/16
+curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+sudo apt update
+sudo apt install helm
+helm completion bash | sudo tee /etc/bash_completion.d/helm > /dev/null
+
+
+sudo kubeadm init --control-plane-endpoint=cxw.duckdns.org  --pod-network-cidr=10.244.0.0/16
+
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
+
+or
+
+kubectl create ns kube-flannel
+kubectl label --overwrite ns kube-flannel pod-security.kubernetes.io/enforce=privileged
+
+helm repo add flannel https://flannel-io.github.io/flannel/
+helm install flannel --set podCidr="10.244.0.0/16" --namespace kube-flannel flannel/flannel
+
+kubectl taint node ${HOSTNAME} node-role.kubernetes.io/control-plane:NoSchedule-
+
+# calico
+kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.0/manifests/calico.yaml
+
+# metal LB
+
+kubectl get configmap kube-proxy -n kube-system -o yaml | \
+sed -e "s/strictARP: false/strictARP: true/" | \
+kubectl apply -f - -n kube-system
+
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/${METALLB_VERSION}/config/manifests/metallb-native.yaml
+
+cat <<EOF | kubectl apply -f -
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: standard-pool
+  namespace: metallb-system
+spec:
+  addresses:
+  - 192.168.199.110-192.168.199.240
+EOF
+
+
 
 # ingress
 kubectl create ns ingress-nginx
 
 kubectl -n ingress-nginx create secret tls nginx-ingress-tls  --key="/home/${USER}/apps/tls/cfg/live/${WILDCARD_DOMAIN}/privkey.pem"   --cert="/home/${USER}/apps/tls/cfg/live/${WILDCARD_DOMAIN}/fullchain.pem"  --dry-run=client -o yaml | kubectl apply -f -
 
-kubectl taint node ${HOSTNAME} node-role.kubernetes.io/control-plane:NoSchedule-
 
 wget -O /tmp/ingress.yaml https://raw.githubusercontent.com/alainpham/dev-environment/master/workstation-installation/templates/ingress-hostport-notoleration.yaml
 envsubst < /tmp/ingress.yaml | kubectl -n ingress-nginx apply -f -
@@ -333,14 +461,10 @@ envsubst < /tmp/local-path-provisioner.yaml | kubectl apply -f -
 wget -O /tmp/metrics-server.yaml https://raw.githubusercontent.com/alainpham/dev-environment/master/workstation-installation/templates/metrics-server.yaml
 envsubst < /tmp/metrics-server.yaml | kubectl apply -f -
 
+
+
 # Grafana Cloud Kubernetes integrations
 
-curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
-sudo apt-get install apt-transport-https --yes
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
-sudo apt-get update
-sudo apt-get install helm
-helm completion bash | sudo tee /etc/bash_completion.d/helm > /dev/null
 
 
 helm repo add grafana https://grafana.github.io/helm-charts &&
@@ -376,4 +500,54 @@ EOF
 
 # uninstall
 helm uninstall grafana-k8s-monitoring -n agents
+
+
+# test pings and network things
+
+kubectl run tmp-shell --rm -i --tty --image nicolaka/netshoot
+
+# test metal LB
+cat <<EOF | kubectl apply -f -
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+EOF
+
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  annotations:
+    metallb.universe.tf/loadBalancerIPs: 192.168.199.111
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: nginx
+  type: LoadBalancer
+EOF
+
 ```
+
+
+sshfs
+
+ net use X: \\sshfs\apham@awon.cpss.duckdns.org:22123

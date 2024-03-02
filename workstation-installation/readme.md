@@ -9,6 +9,7 @@
   - [Configure Dolphine](#configure-dolphine)
   - [Configure Panel](#configure-panel)
   - [Configure apt-cacher-ng server](#configure-apt-cacher-ng-server)
+  - [Create a user](#create-a-user)
   - [Passwordless sudo](#passwordless-sudo)
   - [Redirect ssh keys to non default folder](#redirect-ssh-keys-to-non-default-folder)
   - [apt cacher ng client config](#apt-cacher-ng-client-config)
@@ -152,8 +153,18 @@ add at the end of
 PassThroughPattern: ^(.*):443$
 ```
 
+## Create a user
+
+```
+adduser apham
+passwd apham
+```
+
+
 
 ## Passwordless sudo
+
+
 
 ```
 echo 'apham ALL=(ALL) NOPASSWD:ALL' | sudo EDITOR='tee -a' visudo -f /etc/sudoers.d/nopwd
@@ -201,13 +212,7 @@ _EOF_'
 ## Packages installed
 
 ### From official repo
-
-
-sound
-
-
 debian 12
-
 ```
 sudo apt install ncdu git ansible docker.io python3-docker docker-compose apparmor tmux vim openjdk-17-jdk prometheus-node-exporter htop curl lshw rsync mediainfo ffmpeg python3-mutagen iperf3 dnsmasq imagemagick qemu-system qemu-utils virtinst libvirt-clients libvirt-daemon-system libguestfs-tools bridge-utils libosinfo-bin lsp-plugins-lv2 calf-plugins ardour v4l-utils flatpak virt-manager mediainfo-gui v4l2loopback-utils easytag gimp avldrums.lv2 openssh-server freeplane ifuse libimobiledevice-utils xournal inkscape npm apt-cacher-ng skopeo golang-go dnsutils bmon lm-sensors psensor apt-transport-https genisoimage obs-studio haruna snapd 
 
@@ -228,7 +233,7 @@ sudo apt install ncdu git ansible docker.io python3-docker docker-compose apparm
 Windows wsl ubuntu
 
 ```
-sudo apt install ncdu docker.io ansible docker-compose openjdk-17-jdk prometheus-node-exporter htop curl rsync mediainfo ffmpeg python3-mutagen iperf3 imagemagick skopeo bmon genisoimage snapd
+sudo apt install ncdu docker.io ansible docker-compose openjdk-17-jdk prometheus-node-exporter htop curl rsync mediainfo ffmpeg python3-mutagen iperf3 imagemagick skopeo bmon genisoimage snapd ntp ntpstat
 
 sudo apt install openssh-server tar unzip zip git-filter-repo keychain
 sudo snap install --classic certbot
@@ -238,6 +243,23 @@ sudo snap install --classic certbot
 eval $(keychain -q)
 ```
 
+Windows WSL rockylinux
+```
+dnf update -y
+dnf install -y sudo
+sudo dnf install -y systemd 
+sudo dnf install -y bash-completion
+
+```
+WSL config
+```
+/etc/wsl.conf
+
+[boot]
+systemd=true
+[user]
+default=apham
+```
 
 
 ubuntu 22.04 dekstop
