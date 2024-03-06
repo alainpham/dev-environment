@@ -362,7 +362,7 @@ spec:
     app.kubernetes.io/component: controller
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/name: ingress-nginx
-  type: NodePort
+  type: LoadBalancer
 ---
 apiVersion: v1
 kind: Service
@@ -505,17 +505,9 @@ spec:
           readOnly: true
       dnsPolicy: ClusterFirst
       nodeSelector:
-        ingress-ready: "true"
         kubernetes.io/os: linux
       serviceAccountName: ingress-nginx
       terminationGracePeriodSeconds: 300
-      tolerations:
-      - effect: NoSchedule
-        key: node-role.kubernetes.io/master
-        operator: Equal
-      - effect: NoSchedule
-        key: node-role.kubernetes.io/control-plane
-        operator: Equal
       volumes:
       - name: webhook-cert
         secret:
@@ -559,13 +551,17 @@ spec:
         name: create
         securityContext:
           allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 65532
+          seccompProfile:
+            type: RuntimeDefault
       nodeSelector:
         kubernetes.io/os: linux
       restartPolicy: OnFailure
-      securityContext:
-        fsGroup: 2000
-        runAsNonRoot: true
-        runAsUser: 2000
       serviceAccountName: ingress-nginx-admission
 ---
 apiVersion: batch/v1
@@ -608,13 +604,17 @@ spec:
         name: patch
         securityContext:
           allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 65532
+          seccompProfile:
+            type: RuntimeDefault
       nodeSelector:
         kubernetes.io/os: linux
       restartPolicy: OnFailure
-      securityContext:
-        fsGroup: 2000
-        runAsNonRoot: true
-        runAsUser: 2000
       serviceAccountName: ingress-nginx-admission
 ---
 apiVersion: networking.k8s.io/v1
@@ -631,29 +631,6 @@ metadata:
     ingressclass.kubernetes.io/is-default-class: "true"
 spec:
   controller: k8s.io/ingress-nginx
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  labels:
-    app.kubernetes.io/component: admission-webhook
-    app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/part-of: ingress-nginx
-    app.kubernetes.io/version: ${NGINX_INGRESS_VERSION}
-  name: ingress-nginx-admission
-  namespace: ingress-nginx
-spec:
-  egress:
-  - {}
-  podSelector:
-    matchLabels:
-      app.kubernetes.io/component: admission-webhook
-      app.kubernetes.io/instance: ingress-nginx
-      app.kubernetes.io/name: ingress-nginx
-  policyTypes:
-  - Ingress
-  - Egress
 ---
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration

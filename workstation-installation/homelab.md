@@ -5,7 +5,7 @@
 export APPUSER=apham
 
 export KUBE_VERSION=v1.27.11
-export K9S_VERSION=v0.31.9
+export K9S_VERSION=v0.32.3
 export KIND_VERSION=v0.22.0
 
 export WILDCARD_DOMAIN=${HOSTNAME}.duckdns.org
@@ -50,6 +50,10 @@ sudo bash -c 'cat > /etc/profile.d/super_aliases.sh << _EOF_
 alias ll="ls -larth"
 _EOF_'
 
+# remember to remove dns-search section on vms with static ips
+sudo vi /etc/network/interfaces
+
+
 # on debian fresh installs with virtual box
 # The primary network interface
 sudo bash -c 'cat > /etc/network/interfaces.d/hostnetwork << _EOF_
@@ -66,8 +70,6 @@ sudo vi /etc/default/grub
 GRUB_TIMEOUT=0
 sudo update-grub
 
-# remember to remove dns-search section on vms with static ips
-sudo vi /etc/network/interfaces
 
 # install essentials
 
@@ -178,6 +180,8 @@ ssh-keygen
 
 mkdir -p /home/${USER}/apps/tls/cfg /home/${USER}/apps/tls/logs
 
+# do the sensitive thing
+
 docker run --rm --name certbot  -v "/home/${USER}/apps/tls/cfg:/etc/letsencrypt" -v "/home/${USER}/apps/tls/logs:/var/log/letsencrypt" infinityofspace/certbot_dns_duckdns:${CERTBOT_DUCKDNS_VERSION} \
    certonly \
      --non-interactive \
@@ -203,7 +207,7 @@ sudo usermod -a -G docker grafana-agent
 # do integrations in grafana cloud
 
 
-# Install kubectl
+# Install kubectl optional
 
 curl -LO "https://dl.k8s.io/release/${KUBE_VERSION}/bin/linux/amd64/kubectl"
 sudo cp kubectl /usr/local/bin/kubectl
@@ -383,7 +387,7 @@ SystemdCgroup = true
 sudo systemctl restart containerd
 sudo systemctl enable containerd
 
-sudo apt install -y apt-transport-https ca-certificates curl
+sudo apt install -y apt-transport-https ca-certificates
 
 curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.27/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 
@@ -394,6 +398,7 @@ sudo apt install -y kubelet kubeadm kubectl
 
 kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
 
+# helm
 curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
 
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
@@ -408,20 +413,28 @@ mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
+# copy to local machine 
+ssh cxw "cat ~/.kube/config" > ~/.kube/config
+
 kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
-
-or
-
-kubectl create ns kube-flannel
-kubectl label --overwrite ns kube-flannel pod-security.kubernetes.io/enforce=privileged
-
-helm repo add flannel https://flannel-io.github.io/flannel/
-helm install flannel --set podCidr="10.244.0.0/16" --namespace kube-flannel flannel/flannel
-
 kubectl taint node ${HOSTNAME} node-role.kubernetes.io/control-plane:NoSchedule-
 
+# or
+
+# kubectl create ns kube-flannel
+# kubectl label --overwrite ns kube-flannel pod-security.kubernetes.io/enforce=privileged
+
+# helm repo add flannel https://flannel-io.github.io/flannel/
+# helm install flannel --set podCidr="10.244.0.0/16" --namespace kube-flannel flannel/flannel
+
+
 # calico
-kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.0/manifests/calico.yaml
+# kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.0/manifests/calico.yaml
+
+
+# storage
+wget -O /tmp/local-path-provisioner.yaml https://raw.githubusercontent.com/alainpham/dev-environment/master/workstation-installation/templates/local-path-provisioner.yaml
+envsubst '${LOCAL_PATH_PROVISIONER_VERSION}'  < /tmp/local-path-provisioner.yaml | kubectl apply -f -
 
 # metal LB
 
@@ -443,19 +456,13 @@ spec:
 EOF
 
 
-
 # ingress
 kubectl create ns ingress-nginx
 
 kubectl -n ingress-nginx create secret tls nginx-ingress-tls  --key="/home/${USER}/apps/tls/cfg/live/${WILDCARD_DOMAIN}/privkey.pem"   --cert="/home/${USER}/apps/tls/cfg/live/${WILDCARD_DOMAIN}/fullchain.pem"  --dry-run=client -o yaml | kubectl apply -f -
 
-
 wget -O /tmp/ingress.yaml https://raw.githubusercontent.com/alainpham/dev-environment/master/workstation-installation/templates/ingress-hostport-notoleration.yaml
 envsubst < /tmp/ingress.yaml | kubectl -n ingress-nginx apply -f -
-
-# storage
-wget -O /tmp/local-path-provisioner.yaml https://raw.githubusercontent.com/alainpham/dev-environment/master/workstation-installation/templates/local-path-provisioner.yaml
-envsubst < /tmp/local-path-provisioner.yaml | kubectl apply -f -
 
 # metrics
 wget -O /tmp/metrics-server.yaml https://raw.githubusercontent.com/alainpham/dev-environment/master/workstation-installation/templates/metrics-server.yaml
@@ -511,7 +518,7 @@ cat <<EOF | kubectl apply -f -
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-test
+  name: nginx
 spec:
   replicas: 1
   selector:
@@ -524,7 +531,7 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: nginx:latest
+        image: nginx:1.25.4-alpine
         ports:
         - containerPort: 80
 EOF
@@ -535,7 +542,7 @@ kind: Service
 metadata:
   name: nginx
   annotations:
-    metallb.universe.tf/loadBalancerIPs: 192.168.199.111
+    metallb.universe.tf/loadBalancerIPs: 192.168.199.240
 spec:
   ports:
   - port: 80
