@@ -70,14 +70,17 @@ sudo vi /etc/default/grub
 GRUB_TIMEOUT=0
 sudo update-grub
 
-# minimal
-sudo apt install git docker.io python3-docker docker-compose vim curl rsync ncdu dnsutils bmon ntp ntpstat htop bash-completion
-
-# install barebones
-sudo apt install git ansible docker.io python3-docker docker-compose skopeo tmux vim  curl rsync ncdu dnsutils bmon ntp ntpstat htop bash-completion openjdk-17-jdk-headless
+# minimal docker host
+sudo apt install git docker.io python3-docker docker-compose skopeo tmux vim curl rsync ncdu dnsutils bmon ntp ntpstat htop bash-completion
 
 # install essentials
-sudo apt install git ansible docker.io python3-docker docker-compose skopeo tmux vim  curl rsync ncdu  dnsutils bmon wireguard-tools iptables ntp ntpstat htop iperf3 bash-completion ffmpeg ntfs-3g openjdk-17-jdk-headless
+sudo apt install ansible openjdk-17-jdk-headless iperf3 ntfs-3g
+
+# install desktop
+sudo apt install ffmpeg lm-sensors mediainfo imagemagick gimp ifuse libimobiledevice-utils xournal inkscape obs-studio haruna
+
+# wireguard
+sudo apt install wireguard-tools iptables
 
 # install wsl
 
