@@ -4,8 +4,8 @@
 # Variables 
 export APPUSER=apham
 
-export KUBE_VERSION=v1.27.11
-export K9S_VERSION=v0.32.3
+export KUBE_VERSION=v1.27.13
+export K9S_VERSION=v0.32.4
 export KIND_VERSION=v0.22.0
 
 export WILDCARD_DOMAIN=${HOSTNAME}.duckdns.org
@@ -16,20 +16,20 @@ export CERTBOT_DUCKDNS_VERSION=v1.3
 export METALLB_VERSION=v0.14.3
 
 # https://github.com/kubernetes/ingress-nginx/blob/main/deploy/static/provider/baremetal/deploy.yaml
-export NGINX_INGRESS_VERSION=1.10.0
+export NGINX_INGRESS_VERSION=1.10.1
 export NGINX_INGRESS_KUBE_WEBHOOK_CERTGEN_VERSION=v1.4.0
 
 # https://maven.apache.org/docs/history.html
 export MVN_VERSION=3.9.6
 
 # https://github.com/docker/buildx
-export DOCKER_BUILDX_VERSION=v0.12.1
+export DOCKER_BUILDX_VERSION=v0.14.0
 
 # https://github.com/rancher/local-path-provisioner
 export LOCAL_PATH_PROVISIONER_VERSION=v0.0.26
 
 # https://github.com/kubernetes-sigs/metrics-server
-export METRICS_SERVER_VERSION=v0.7.0
+export METRICS_SERVER_VERSION=v0.7.1
 
 # Sensitive
 export DUCKDNS_TOKEN=xxxx-xxxx-xxx-xxx-xxxxx
@@ -70,14 +70,18 @@ sudo vi /etc/default/grub
 GRUB_TIMEOUT=0
 sudo update-grub
 
+# minimal
+sudo apt install git docker.io python3-docker docker-compose vim curl rsync ncdu dnsutils bmon ntp ntpstat htop bash-completion
+
+# install barebones
+sudo apt install git ansible docker.io python3-docker docker-compose skopeo tmux vim  curl rsync ncdu dnsutils bmon ntp ntpstat htop bash-completion openjdk-17-jdk-headless
 
 # install essentials
-
-sudo apt install git ansible docker.io python3-docker docker-compose skopeo tmux vim  curl rsync ncdu  dnsutils bmon wireguard-tools iptables  ntp ntpstat htop iperf3 bash-completion ffmpeg ntfs-3g openjdk-17-jdk-headless
+sudo apt install git ansible docker.io python3-docker docker-compose skopeo tmux vim  curl rsync ncdu  dnsutils bmon wireguard-tools iptables ntp ntpstat htop iperf3 bash-completion ffmpeg ntfs-3g openjdk-17-jdk-headless
 
 # install wsl
 
-sudo apt install git ansible docker.io python3-docker docker-compose skopeo tmux vim  curl rsync ncdu  dnsutils bmon   ntp ntpstat htop iperf3 bash-completion ffmpeg 
+sudo apt install git ansible docker.io python3-docker docker-compose skopeo tmux vim  curl rsync ncdu  dnsutils bmon ntp ntpstat htop iperf3 bash-completion ffmpeg 
 
 # if network manager is installed actually not needed
 sudo apt install systemd-resolved
@@ -200,12 +204,7 @@ openssl pkcs12 -export -out /home/${USER}/apps/tls/cfg/live/${WILDCARD_DOMAIN}/p
 
 # run ansible scripts to run docker containers
 
-# add grafana agent with linux node integration
-sh -c "$(curl -fsSL https://storage.googleapis.com/cloud-onboarding/agent/scripts/grafanacloud-install.sh)"
-sudo usermod -a -G docker grafana-agent
-
 # do integrations in grafana cloud
-
 
 # Install kubectl optional
 
@@ -464,6 +463,11 @@ kubectl -n ingress-nginx create secret tls nginx-ingress-tls  --key="/home/${USE
 wget -O /tmp/ingress.yaml https://raw.githubusercontent.com/alainpham/dev-environment/master/workstation-installation/templates/ingress-hostport-notoleration.yaml
 envsubst < /tmp/ingress.yaml | kubectl -n ingress-nginx apply -f -
 
+# or ingress LB
+
+wget -O /tmp/ingresslb.yaml https://raw.githubusercontent.com/alainpham/dev-environment/master/workstation-installation/templates/ingress-loadbalancer-notoleration.yaml
+envsubst < /tmp/ingresslb.yaml | kubectl -n ingress-nginx apply -f -
+
 # metrics
 wget -O /tmp/metrics-server.yaml https://raw.githubusercontent.com/alainpham/dev-environment/master/workstation-installation/templates/metrics-server.yaml
 envsubst < /tmp/metrics-server.yaml | kubectl apply -f -
@@ -471,8 +475,6 @@ envsubst < /tmp/metrics-server.yaml | kubectl apply -f -
 
 
 # Grafana Cloud Kubernetes integrations
-
-
 
 helm repo add grafana https://grafana.github.io/helm-charts &&
   helm repo update &&
