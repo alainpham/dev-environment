@@ -419,6 +419,11 @@ spec:
         app.kubernetes.io/part-of: ingress-nginx
         app.kubernetes.io/version: ${NGINX_INGRESS_VERSION}
     spec:
+      tolerations:
+        - key: "node-role.kubernetes.io/control-plane"
+          operator: "Exists"
+          value: "true"
+          effect: "NoSchedule"
       containers:
       - args:
         - /nginx-ingress-controller
@@ -512,6 +517,7 @@ spec:
       - name: webhook-cert
         secret:
           secretName: ingress-nginx-admission
+
 ---
 apiVersion: batch/v1
 kind: Job
@@ -535,6 +541,11 @@ spec:
         app.kubernetes.io/version: ${NGINX_INGRESS_VERSION}
       name: ingress-nginx-admission-create
     spec:
+      tolerations:
+        - key: "node-role.kubernetes.io/control-plane"
+          operator: "Exists"
+          value: "true"
+          effect: "NoSchedule"
       containers:
       - args:
         - create
@@ -586,6 +597,11 @@ spec:
         app.kubernetes.io/version: ${NGINX_INGRESS_VERSION}
       name: ingress-nginx-admission-patch
     spec:
+      tolerations:
+        - key: "node-role.kubernetes.io/control-plane"
+          operator: "Exists"
+          value: "true"
+          effect: "NoSchedule"
       containers:
       - args:
         - patch

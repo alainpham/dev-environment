@@ -5,6 +5,7 @@
 export APPUSER=apham
 
 export KUBE_VERSION=v1.27.13
+# https://github.com/derailed/k9s/releases
 export K9S_VERSION=v0.32.4
 export KIND_VERSION=v0.22.0
 
@@ -17,7 +18,7 @@ export METALLB_VERSION=v0.14.3
 
 # https://github.com/kubernetes/ingress-nginx/blob/main/deploy/static/provider/baremetal/deploy.yaml
 export NGINX_INGRESS_VERSION=1.10.1
-export NGINX_INGRESS_KUBE_WEBHOOK_CERTGEN_VERSION=v1.4.0
+export NGINX_INGRESS_KUBE_WEBHOOK_CERTGEN_VERSION=v1.4.1
 
 # https://maven.apache.org/docs/history.html
 export MVN_VERSION=3.9.6
@@ -70,14 +71,48 @@ sudo vi /etc/default/grub
 GRUB_TIMEOUT=0
 sudo update-grub
 
+# minimal host
+sudo apt install git tmux vim curl rsync ncdu dnsutils bmon ntp ntpstat htop bash-completion
+
+
 # minimal docker host
-sudo apt install git docker.io python3-docker docker-compose skopeo tmux vim curl rsync ncdu dnsutils bmon ntp ntpstat htop bash-completion
+sudo apt install docker.io python3-docker docker-compose skopeo
 
 # install essentials
 sudo apt install ansible openjdk-17-jdk-headless iperf3 ntfs-3g
 
 # install desktop
-sudo apt install ffmpeg lm-sensors mediainfo imagemagick gimp ifuse libimobiledevice-utils xournal inkscape obs-studio haruna
+sudo apt install ffmpeg lm-sensors mediainfo imagemagick gimp ifuse libimobiledevice-utils xournal inkscape obs-studio haruna handbrake
+
+sudo apt install software-properties-common
+
+sudo apt-get install libdvd-pkg
+
+sudo dpkg-reconfigure libdvd-pkg
+
+sudo mkdir /opt/debs
+cd /opt/debs
+sudo curl -Lo chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+
+sudo apt install /opt/debs/chrome.deb
+
+sudo curl -Lo vscode.deb "https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64
+"
+
+sudo apt install /opt/debs/vscode.deb
+
+# virtualization
+
+sudo apt install qemu-system qemu-utils virtinst libvirt-clients libvirt-daemon-system libguestfs-tools bridge-utils libosinfo-bin virt-manager genisoimage
+
+sudo curl -Lo /usr/local/bin/vmcreate https://raw.githubusercontent.com/alainpham/dev-environment/master/kvm-scripts/vmcreate
+sudo curl -Lo /usr/local/bin/vmdl https://raw.githubusercontent.com/alainpham/dev-environment/master/kvm-scripts/vmdl
+sudo curl -Lo /usr/local/bin/vmls https://raw.githubusercontent.com/alainpham/dev-environment/master/kvm-scripts/vmls
+sudo curl -Lo /usr/local/bin/vmsh https://raw.githubusercontent.com/alainpham/dev-environment/master/kvm-scripts/vmsh
+
+sudo chmod 755 /usr/local/bin/vmcreate /usr/local/bin/vmdl /usr/local/bin/vmls /usr/local/bin/vmsh 
+
+
 
 # wireguard
 sudo apt install wireguard-tools iptables
@@ -361,10 +396,32 @@ sudo systemctl enable wg-quick@wg0
 
 ```
 
+# Creating virtual machines
 
+```
 
+sudo virsh net-autostart default
+sudo virsh net-start default
 
+sudo mkdir -p /home/workdrive/virt/images
+sudo mkdir -p /home/workdrive/virt/runtime
+sudo chown -R apham:apham /home/workdrive/
 
+curl -Lo /home/workdrive/virt/images/debian-12-genericcloud-amd64.qcow2  https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2
+
+virt-install --os-variant list
+
+ssh-keygen -f ~/.ssh/vm
+
+vmcreate <node-name> <ram-MB> <vcpus> <source-image> <mac-ip-suffix> <disk-size> <data-size> <os-variant>
+
+vmcreate master 1024 2 debian-12-genericcloud-amd64 10 40G 1G debiantesting
+
+vmsh master
+
+vmdl master
+
+```
 # Kubernetes
 
 ```bash
@@ -409,7 +466,7 @@ sudo apt install helm
 helm completion bash | sudo tee /etc/bash_completion.d/helm > /dev/null
 
 
-sudo kubeadm init --control-plane-endpoint=cxw.duckdns.org  --pod-network-cidr=10.244.0.0/16
+sudo kubeadm init --control-plane-endpoint=${WILDCARD_DOMAIN}  --pod-network-cidr=10.244.0.0/16
 
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
