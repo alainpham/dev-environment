@@ -420,7 +420,7 @@ spec:
         app.kubernetes.io/version: ${NGINX_INGRESS_VERSION}
     spec:
       nodeSelector:
-        node-role.kubernetes.io/control-plane: "true"
+        node-role.kubernetes.io/control-plane: ""
       tolerations:
         - key: "node-role.kubernetes.io/control-plane"
           operator: "Exists"
@@ -543,7 +543,7 @@ spec:
       name: ingress-nginx-admission-create
     spec:
       nodeSelector:
-        node-role.kubernetes.io/control-plane: "true"
+        node-role.kubernetes.io/control-plane: ""
       tolerations:
         - key: "node-role.kubernetes.io/control-plane"
           operator: "Exists"
@@ -600,7 +600,7 @@ spec:
       name: ingress-nginx-admission-patch
     spec:
       nodeSelector:
-        node-role.kubernetes.io/control-plane: "true"
+        node-role.kubernetes.io/control-plane: ""
       tolerations:
         - key: "node-role.kubernetes.io/control-plane"
           operator: "Exists"
