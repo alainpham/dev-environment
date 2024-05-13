@@ -419,8 +419,6 @@ spec:
         app.kubernetes.io/part-of: ingress-nginx
         app.kubernetes.io/version: ${NGINX_INGRESS_VERSION}
     spec:
-      nodeSelector:
-        node-role.kubernetes.io/control-plane: ""
       tolerations:
         - key: "node-role.kubernetes.io/control-plane"
           operator: "Exists"
@@ -512,6 +510,7 @@ spec:
       dnsPolicy: ClusterFirst
       nodeSelector:
         kubernetes.io/os: linux
+        node-role.kubernetes.io/control-plane: ""
       serviceAccountName: ingress-nginx
       terminationGracePeriodSeconds: 300
       volumes:
@@ -542,8 +541,6 @@ spec:
         app.kubernetes.io/version: ${NGINX_INGRESS_VERSION}
       name: ingress-nginx-admission-create
     spec:
-      nodeSelector:
-        node-role.kubernetes.io/control-plane: ""
       tolerations:
         - key: "node-role.kubernetes.io/control-plane"
           operator: "Exists"
@@ -574,6 +571,7 @@ spec:
             type: RuntimeDefault
       nodeSelector:
         kubernetes.io/os: linux
+        node-role.kubernetes.io/control-plane: ""
       restartPolicy: OnFailure
       serviceAccountName: ingress-nginx-admission
 ---
@@ -599,8 +597,6 @@ spec:
         app.kubernetes.io/version: ${NGINX_INGRESS_VERSION}
       name: ingress-nginx-admission-patch
     spec:
-      nodeSelector:
-        node-role.kubernetes.io/control-plane: ""
       tolerations:
         - key: "node-role.kubernetes.io/control-plane"
           operator: "Exists"
@@ -633,6 +629,7 @@ spec:
             type: RuntimeDefault
       nodeSelector:
         kubernetes.io/os: linux
+        node-role.kubernetes.io/control-plane: ""
       restartPolicy: OnFailure
       serviceAccountName: ingress-nginx-admission
 ---
