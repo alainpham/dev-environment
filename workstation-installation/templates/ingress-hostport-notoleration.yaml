@@ -419,12 +419,8 @@ spec:
         app.kubernetes.io/part-of: ingress-nginx
         app.kubernetes.io/version: ${NGINX_INGRESS_VERSION}
     spec:
-      nodeAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          nodeSelectorTerms:
-          - matchExpressions:
-            - key: node-role.kubernetes.io/control-plane
-              operator: Exists
+      nodeSelector:
+        node-role.kubernetes.io/control-plane: "true"
       tolerations:
         - key: "node-role.kubernetes.io/control-plane"
           operator: "Exists"
@@ -546,12 +542,8 @@ spec:
         app.kubernetes.io/version: ${NGINX_INGRESS_VERSION}
       name: ingress-nginx-admission-create
     spec:
-      nodeAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          nodeSelectorTerms:
-          - matchExpressions:
-            - key: node-role.kubernetes.io/control-plane
-              operator: Exists
+      nodeSelector:
+        node-role.kubernetes.io/control-plane: "true"
       tolerations:
         - key: "node-role.kubernetes.io/control-plane"
           operator: "Exists"
@@ -607,12 +599,8 @@ spec:
         app.kubernetes.io/version: ${NGINX_INGRESS_VERSION}
       name: ingress-nginx-admission-patch
     spec:
-      nodeAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          nodeSelectorTerms:
-          - matchExpressions:
-            - key: node-role.kubernetes.io/control-plane
-              operator: Exists
+      nodeSelector:
+        node-role.kubernetes.io/control-plane: "true"
       tolerations:
         - key: "node-role.kubernetes.io/control-plane"
           operator: "Exists"
