@@ -1,0 +1,20 @@
+ssh_pwauth: True
+ssh_authorized_keys:
+  - $SSH_PUB_KEY
+ssh_keys:
+  rsa_private: | 
+$SSH_PRIVVM_KEY
+  rsa_public: $SSH_PUBVM_KEY
+users:
+  - name: $TARGET_USER
+    gecos: $TARGET_USER
+    shell: /bin/bash
+    lock-passwd: false
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    ssh_authorized_keys:
+      - $SSH_PUB_KEY
+chpasswd:
+  list: |
+    root: $TARGET_USER_PASSWORD
+    ${TARGET_USER}: $TARGET_USER_PASSWORD
+  expire: False

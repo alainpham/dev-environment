@@ -1,0 +1,50 @@
+#!/usr/bin/env python3
+
+import argparse
+import os
+import mutagen
+
+def showall(args):
+    for filename in os.listdir(args.folder):
+        file_path = os.path.join(args.folder, filename)
+        if os.path.isfile(file_path) and file_path.endswith(".m4a"):
+            try:
+                print(f"trying  {file_path}")
+                audio = mutagen.File(file_path)
+                print(audio.tags.pprint());
+                # audio.tags['©ART'] = 'Kinderlieder'
+                # audio.save();
+            except Exception as e:
+                print(f"Error updating {file_path}: {e}")
+
+def updateall(args):
+    for filename in os.listdir(args.folder):
+        file_path = os.path.join(args.folder, filename)
+        if os.path.isfile(file_path) and file_path.endswith(".m4a"):
+            try:
+                print(f"trying  {file_path}")
+                audio = mutagen.File(file_path)
+                print(audio.tags.pprint());
+                # audio.tags['©ART'] = 'Kinderlieder'
+                # audio.save();
+            except Exception as e:
+                print(f"Error updating {file_path}: {e}")
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Script for editing music metadata")
+    subparsers = parser.add_subparsers(help="sub-command help")
+
+    # list tags of whole folder
+    parser_showall = subparsers.add_parser('show', help='show tags of whole folder')
+    parser_showall.add_argument('folder', type=str, help='Folder')
+    parser_showall.set_defaults(func=showall)
+
+    args = parser.parse_args()
+    if hasattr(args, 'func'):
+        args.func(args)
+    else:
+        parser.print_help()
+
+if __name__ == "__main__":
+    main()

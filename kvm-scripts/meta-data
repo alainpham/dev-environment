@@ -1,0 +1,2 @@
+instance-id: $TARGET_HOSTNAME
+local-hostname: $TARGET_HOSTNAME

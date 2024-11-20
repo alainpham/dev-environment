@@ -62,8 +62,8 @@ users:
       - $SSH_PUB_KEY
 chpasswd:
   list: |
-     root: password
-     cloud-user: password
+     root:password
+     cloud-user:password
   expire: False
 _EOF_
 

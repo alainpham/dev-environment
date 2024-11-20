@@ -1294,7 +1294,7 @@ pactl load-module module-loopback source="mic01-processed" sink=to-caller-sink l
 pactl load-module module-loopback source="mic02-processed" sink=to-caller-sink latency_msec=1 source_dont_move=true sink_dont_move=true  >> /tmp/pulsemodule.log
 
 # set proper mic volume
-pactl set-source-volume mic01-processed 120%
+pactl set-source-volume mic01-processed 100%
 pactl set-source-volume mic02-processed 0%
 pactl set-sink-volume from-desktop 95%
 pactl set-sink-volume from-caller 95%

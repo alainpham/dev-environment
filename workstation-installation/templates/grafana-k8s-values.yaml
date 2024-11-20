@@ -1,0 +1,85 @@
+cluster:
+  name: ${WILDCARD_DOMAIN}
+externalServices:
+  prometheus:
+    host: ${MIMIR_HOST}
+    basicAuth:
+      username: "${MIMIR_USR}"
+      password: "${MIMIR_KEY}"
+  loki:
+    host: "${LOKI_HOST}"
+    basicAuth:
+      username: "${LOKI_USR}"
+      password: "${LOKI_KEY}"
+  tempo:
+    host: "https://${TEMPO_URL}"
+    basicAuth:
+      username: "${TEMPO_USR}"
+      password: "${TEMPO_KEY}"
+metrics:
+  enabled: true
+  cost:
+    enabled: false
+  node-exporter:
+    enabled: true
+logs:
+  enabled: true
+  pod_logs:
+    enabled: true
+  cluster_events:
+    enabled: true
+traces:
+  enabled: true
+receivers:
+  grpc:
+    enabled: true
+  http:
+    enabled: true
+  zipkin:
+    enabled: true
+opencost:
+  enabled: false
+kube-state-metrics:
+  nodeSelector:
+    kubernetes.io/os: linux
+    node-role.kubernetes.io/control-plane: ""
+  tolerations:
+    - key: node-role.kubernetes.io/control-plane
+      effect: NoSchedule
+      operator: Exists
+  enabled: true
+prometheus-node-exporter:
+  enabled: true
+prometheus-operator-crds:
+  enabled: true
+alloy:
+  controller:
+    type: statefulset
+    nodeSelector:
+      kubernetes.io/os: linux
+      node-role.kubernetes.io/control-plane: ""
+    tolerations: 
+      - key: node-role.kubernetes.io/control-plane
+        effect: NoSchedule
+        operator: Exists
+alloy-events:
+  controller:
+    type: deployment
+    replicas: 1  # Only one replica should be used, otherwise multiple copies of cluster events might get sent to Loki.
+    nodeSelector:
+      kubernetes.io/os: linux
+      node-role.kubernetes.io/control-plane: ""
+    tolerations: 
+      - key: node-role.kubernetes.io/control-plane
+        effect: NoSchedule
+        operator: Exists
+alloy-logs: {}
+configValidator:
+  enabled: true
+  nodeSelector:
+    kubernetes.io/os: linux
+    node-role.kubernetes.io/control-plane: ""
+  tolerations:
+    - key: node-role.kubernetes.io/control-plane
+      effect: NoSchedule
+      operator: Exists

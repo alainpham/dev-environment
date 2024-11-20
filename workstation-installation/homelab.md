@@ -4,9 +4,9 @@
 # Variables 
 export APPUSER=apham
 
-export KUBE_VERSION=v1.27.13
+export KUBE_VERSION=v1.28.11
 # https://github.com/derailed/k9s/releases
-export K9S_VERSION=v0.32.4
+export K9S_VERSION=v0.32.5
 export KIND_VERSION=v0.22.0
 
 export WILDCARD_DOMAIN=${HOSTNAME}.duckdns.org
@@ -24,10 +24,10 @@ export NGINX_INGRESS_KUBE_WEBHOOK_CERTGEN_VERSION=v1.4.1
 export MVN_VERSION=3.9.6
 
 # https://github.com/docker/buildx
-export DOCKER_BUILDX_VERSION=v0.14.0
+export DOCKER_BUILDX_VERSION=v0.16.0
 
 # https://github.com/rancher/local-path-provisioner
-export LOCAL_PATH_PROVISIONER_VERSION=v0.0.26
+export LOCAL_PATH_PROVISIONER_VERSION=v0.0.28
 
 # https://github.com/kubernetes-sigs/metrics-server
 export METRICS_SERVER_VERSION=v0.7.1
@@ -72,8 +72,12 @@ GRUB_TIMEOUT=0
 sudo update-grub
 
 # minimal host
-sudo apt install git tmux vim curl rsync ncdu dnsutils bmon ntp ntpstat htop bash-completion
+sudo apt install git tmux vim curl rsync ncdu dnsutils bmon ntp ntpstat htop bash-completion gpg whois cloud-guest-utils
 
+apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# minimal host for kube
+sudo apt install containerd
 
 # minimal docker host
 sudo apt install docker.io python3-docker docker-compose skopeo
@@ -96,8 +100,7 @@ sudo curl -Lo chrome.deb https://dl.google.com/linux/direct/google-chrome-stable
 
 sudo apt install /opt/debs/chrome.deb
 
-sudo curl -Lo vscode.deb "https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64
-"
+sudo curl -Lo vscode.deb "https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64"
 
 sudo apt install /opt/debs/vscode.deb
 
@@ -111,7 +114,6 @@ sudo curl -Lo /usr/local/bin/vmls https://raw.githubusercontent.com/alainpham/de
 sudo curl -Lo /usr/local/bin/vmsh https://raw.githubusercontent.com/alainpham/dev-environment/master/kvm-scripts/vmsh
 
 sudo chmod 755 /usr/local/bin/vmcreate /usr/local/bin/vmdl /usr/local/bin/vmls /usr/local/bin/vmsh 
-
 
 
 # wireguard
@@ -220,9 +222,11 @@ ssh-keygen
 
 # reusable certificat 
 
+rm -rf /home/${USER}/apps/tls
 mkdir -p /home/${USER}/apps/tls/cfg /home/${USER}/apps/tls/logs
 
 # do the sensitive thing
+
 
 docker run --rm --name certbot  -v "/home/${USER}/apps/tls/cfg:/etc/letsencrypt" -v "/home/${USER}/apps/tls/logs:/var/log/letsencrypt" infinityofspace/certbot_dns_duckdns:${CERTBOT_DUCKDNS_VERSION} \
    certonly \
@@ -232,7 +236,7 @@ docker run --rm --name certbot  -v "/home/${USER}/apps/tls/cfg:/etc/letsencrypt"
      --preferred-challenges dns \
      --authenticator dns-duckdns \
      --dns-duckdns-token ${DUCKDNS_TOKEN} \
-     --dns-duckdns-propagation-seconds 10 \
+     --dns-duckdns-propagation-seconds 20 \
      -d "*.${WILDCARD_DOMAIN}"
 
 sudo chown -R ${USER}:${USER} /home/${USER}/apps/tls/cfg
@@ -409,6 +413,8 @@ sudo chown -R apham:apham /home/workdrive/
 
 curl -Lo /home/workdrive/virt/images/debian-12-genericcloud-amd64.qcow2  https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2
 
+curl -Lo /home/workdrive/virt/images/debian-12-generic-amd64.qcow2  https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2
+
 virt-install --os-variant list
 
 ssh-keygen -f ~/.ssh/vm
@@ -416,6 +422,8 @@ ssh-keygen -f ~/.ssh/vm
 vmcreate <node-name> <ram-MB> <vcpus> <source-image> <mac-ip-suffix> <disk-size> <data-size> <os-variant>
 
 vmcreate master 1024 2 debian-12-genericcloud-amd64 10 40G 1G debiantesting
+vmcreate master 1024 2 debian-12-generic-amd64 10 15G 1G debiantesting
+
 
 vmsh master
 
@@ -448,9 +456,9 @@ sudo systemctl enable containerd
 
 sudo apt install -y apt-transport-https ca-certificates
 
-curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.27/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 
-echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.27/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
 
 sudo apt update
 sudo apt install -y kubelet kubeadm kubectl
@@ -467,6 +475,11 @@ helm completion bash | sudo tee /etc/bash_completion.d/helm > /dev/null
 
 
 sudo kubeadm init --control-plane-endpoint=${WILDCARD_DOMAIN}  --pod-network-cidr=10.244.0.0/16
+
+sudo kubeadm token create helloo.mynameiskubeadm0
+
+# make nodes join
+sudo kubeadm join hp00:6443 --token helloo.mynameiskubeadm0 --discovery-token-unsafe-skip-ca-verification
 
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
@@ -538,34 +551,95 @@ envsubst < /tmp/metrics-server.yaml | kubectl apply -f -
 
 helm repo add grafana https://grafana.github.io/helm-charts &&
   helm repo update &&
-  helm upgrade --install --atomic --timeout 120s grafana-k8s-monitoring grafana/k8s-monitoring \
+  helm upgrade --install --atomic --timeout 300s grafana-k8s-monitoring grafana/k8s-monitoring \
     --namespace "agents" --create-namespace --values - <<EOF
 cluster:
-  name: ${HOSTNAME}
+  name: ${WILDCARD_DOMAIN}
 externalServices:
   prometheus:
     host: ${MIMIR_HOST}
     basicAuth:
       username: "${MIMIR_USR}"
-      password: ${key}
+      password: "${MIMIR_KEY}"
   loki:
-    host: ${LOKI_HOST}
+    host: "${LOKI_HOST}"
     basicAuth:
       username: "${LOKI_USR}"
-      password: ${key}
+      password: "${LOKI_KEY}"
   tempo:
-    host: ${TEMPO_URL}
+    host: "https://${TEMPO_URL}"
     basicAuth:
       username: "${TEMPO_USR}"
-      password: ${key}
+      password: "${TEMPO_KEY}"
 metrics:
+  enabled: true
   cost:
     enabled: false
-opencost:
-  enabled: false
+  node-exporter:
+    enabled: true
+logs:
+  enabled: true
+  pod_logs:
+    enabled: true
+  cluster_events:
+    enabled: true
 traces:
   enabled: true
+receivers:
+  grpc:
+    enabled: true
+  http:
+    enabled: true
+  zipkin:
+    enabled: true
+opencost:
+  enabled: false
+kube-state-metrics:
+  nodeSelector:
+    kubernetes.io/os: linux
+    node-role.kubernetes.io/control-plane: ""
+  tolerations:
+    - key: node-role.kubernetes.io/control-plane
+      effect: NoSchedule
+      operator: Exists
+  enabled: true
+prometheus-node-exporter:
+  enabled: true
+prometheus-operator-crds:
+  enabled: true
+alloy:
+  controller:
+    type: statefulset
+    nodeSelector:
+      kubernetes.io/os: linux
+      node-role.kubernetes.io/control-plane: ""
+    tolerations: 
+      - key: node-role.kubernetes.io/control-plane
+        effect: NoSchedule
+        operator: Exists
+alloy-events:
+  controller:
+    type: deployment
+    replicas: 1  # Only one replica should be used, otherwise multiple copies of cluster events might get sent to Loki.
+    nodeSelector:
+      kubernetes.io/os: linux
+      node-role.kubernetes.io/control-plane: ""
+    tolerations: 
+      - key: node-role.kubernetes.io/control-plane
+        effect: NoSchedule
+        operator: Exists
+alloy-logs: {}
+configValidator:
+  enabled: true
+  nodeSelector:
+    kubernetes.io/os: linux
+    node-role.kubernetes.io/control-plane: ""
+  tolerations:
+    - key: node-role.kubernetes.io/control-plane
+      effect: NoSchedule
+      operator: Exists
 EOF
+
 
 # uninstall
 helm uninstall grafana-k8s-monitoring -n agents

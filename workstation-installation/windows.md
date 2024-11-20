@@ -50,6 +50,7 @@ for dell g 15 : Ethernet driver to avoid drops. deactivate killer priorituzation
 
 
 make hyperv and wsl communicate
+```
 Get-NetIPInterface | select ifIndex,InterfaceAlias,AddressFamily,ConnectionState,Forwarding | Sort-Object -Property IfIndex | Format-Table
 
 Get-NetIPInterface | `
@@ -64,6 +65,11 @@ Get-NetIPInterface | `
 where {$_.InterfaceAlias -eq 'vEthernet (WSL (Hyper-V firewall))'} | `
 Set-NetIPInterface -Forwarding Enabled -Verbose
 
+
+
+Get-NetIPInterface | where {$_.InterfaceAlias -eq 'vEthernet (WSL)' -or $_.InterfaceAlias -eq 'vEthernet (Default Switch)' -or $_.InterfaceAlias -eq 'vEthernet (std)'} | Set-NetIPInterface -Forwarding Enabled -Verbose
+
+```
 add windows route to route metallb inside hyperv
 
 route -p add 192.168.199.0 mask 255.255.255.0 192.168.199.100 if 3
@@ -73,7 +79,7 @@ Set-NetConnectionProfile -InterfaceAlias "vEthernet (std)" -NetworkCategory  Pri
 set frewall to private
 
 Get-NetConnectionProfile
-Set-NetConnectionProfile -InterfaceIndex 17 -NetworkCategory Private
+Set-NetConnectionProfile -InterfaceIndex 5 -NetworkCategory Private
 
 Nat gateway
 
@@ -106,3 +112,30 @@ reg add "HKEY_CLASSES_ROOT\Directory\Background\shell\WSLVSCode" /v Icon /t REG_
 
 
 
+
+
+create a bat file
+powershell.exe -Command "D:\workdrive-win\windows-startup-scripts\wsl-hyperv-network.ps1"
+
+
+how to set hyper v switch ip on host machine
+
+list all stuff with predefined ip addresses.
+hnsdiag list networks
+
+```
+ netsh interface ipv4 show addresses
+ netsh interface ip set address name="vEthernet (std)" static 192.168.199.1 255.255.255.0 none
+Set-NetConnectionProfile -InterfaceAlias "vEthernet (std)" -NetworkCategory  Private
+Set-NetConnectionProfile -InterfaceAlias "Ethernet" -NetworkCategory  Private
+
+```
+ set std to private
+
+
+ Windows Firewall ping enable 
+Search for and open Windows Firewall.
+Select Advanced Settings on the left.
+From the left pane of the resulting window, select Inbound Rules.
+In the right pane, find the rules titled File and Printer Sharing (Echo Request - ICMPv4-In).
+Right-click each rule and choose Enable Rule.
